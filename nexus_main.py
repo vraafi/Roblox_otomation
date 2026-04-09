@@ -6,6 +6,7 @@ import requests
 import aiofiles
 import signal
 import sys
+import random
 from aiohttp import web
 from rich.panel import Panel
 
@@ -251,8 +252,8 @@ async def run_orchestrator():
         evolution_level = 1
         generation_counter = 1
 
-        # Indeks rotasi agent yang persisten antar task (tidak reset tiap siklus)
-        agent_idx = 0
+        # Indeks rotasi agent yang random tiap restart untuk distribusi beban
+        agent_idx = random.randint(0, len(ACTIVE_AGENTS) - 1) if ACTIVE_AGENTS else 0
 
         while True:
             console_terminal_interface.print(
@@ -277,22 +278,21 @@ async def run_orchestrator():
                     f"\n[bold blue]--- Task {task_num}/{total_tasks}: {task['name']} ---[/bold blue]"
                 )
 
+                import time
+                task_start_time = time.time()
+                task_timeout = 900  # 15 menit timeout per task
                 completed = False
                 prev_err = ""
                 prev_code = ""
-                max_real_attempts = 6    # Percobaan nyata (bukan rate limit)
-                max_total_attempts = 14  # Batas total termasuk rate limit (agar tidak infinite)
                 real_attempt_count = 0
-                total_attempt_count = 0
 
-                while real_attempt_count < max_real_attempts and total_attempt_count < max_total_attempts:
+                while not completed and (time.time() - task_start_time) < task_timeout:
                     # Pilih agent berikutnya dalam rotasi round-robin
                     current_agent = ACTIVE_AGENTS[agent_idx % len(ACTIVE_AGENTS)]
                     agent_idx += 1
-                    total_attempt_count += 1
 
                     console_terminal_interface.print(
-                        f"[bold cyan]  Percobaan {real_attempt_count + 1}/{max_real_attempts} → [{current_agent['name']}][/bold cyan]"
+                        f"[bold cyan]  Percobaan {real_attempt_count + 1} → [{current_agent['name']}] (waktu tersisa: {int(task_timeout - (time.time() - task_start_time))}s)[/bold cyan]"
                     )
 
                     try:
@@ -317,6 +317,20 @@ async def run_orchestrator():
                     if completed:
                         tasks_done += 1
                         break  # Berhasil → lanjut ke task berikutnya
+
+                    if "RATE_LIMIT" in prev_err:
+                        console_terminal_interface.print(
+                            f"[bold yellow]  Rate limit terdeteksi, menunggu 60 detik...[/bold yellow]"
+                        )
+                        await asyncio.sleep(60)  # Tunggu cooldown per-key
+                    else:
+                        real_attempt_count += 1  # Hanya count attempt jika bukan rate limit
+
+                if not completed:
+                    console_terminal_interface.print(
+                        f"[bold red]CRITICAL HALT: Task {task['name']} gagal dalam timeout 15 menit. Error terakhir: {prev_err[:200]}...[/bold red]"
+                    )
+                    # Lanjut ke task berikutnya meskipun gagal, sesuai permintaan awal
 
                     # Rate limit TIDAK dihitung sebagai percobaan nyata —
                     # quota adalah masalah infrastruktur, bukan kualitas kode

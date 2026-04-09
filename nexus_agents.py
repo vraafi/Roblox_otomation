@@ -8,6 +8,8 @@ import signal
 import tempfile
 from typing import Tuple
 
+from nexus_healer import ApexKeyRotator
+
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
 from nexus_config import (
@@ -20,13 +22,12 @@ from nexus_config import (
 from nexus_database import retrieve_ecosystem_context, save_verified_module
 from nexus_compiler import AbsoluteOmniValidator, NativeLuauCompiler
 
+# Inisialisasi per-key cooldown rotator
+_key_rotator = ApexKeyRotator([a["api_key"] for a in ACTIVE_AGENTS if a["api_key"]])
+
 # FAKTA MUTLAK: Hanya 1 request ke Gemini CLI pada satu waktu (Sequential Queue)
 # Semaphore(1) memastikan agent benar-benar antri satu per satu, tidak ada spam paralel
 CLI_EXECUTION_SEMAPHORE = asyncio.Semaphore(1)
-
-# Global rate-limit backoff state
-_GLOBAL_RATE_LIMIT_UNTIL: float = 0.0
-_GLOBAL_RATE_LIMIT_LOCK = asyncio.Lock()
 
 # Variabel aman untuk mencegah Markdown Parser UI memecah file secara visual
 MARKDOWN_BLOCK = "```"
@@ -42,49 +43,17 @@ def extract_pure_luau_code(raw_payload: str) -> str:
     return code.strip()
 
 
-async def _wait_global_rate_limit():
-    """Tunggu jika ada global rate-limit cooldown aktif."""
-    import time
-    global _GLOBAL_RATE_LIMIT_UNTIL
-    now = time.monotonic()
-    if now < _GLOBAL_RATE_LIMIT_UNTIL:
-        wait_secs = _GLOBAL_RATE_LIMIT_UNTIL - now
-        console_terminal_interface.print(
-            f"[bold yellow][Global Rate Limit] Semua agent dalam cooldown. Menunggu {wait_secs:.0f} detik...[/bold yellow]"
-        )
-        await asyncio.sleep(wait_secs)
-
-
-async def _set_global_rate_limit(cooldown_seconds: float = 60.0):
-    """Aktifkan global cooldown agar semua agent berhenti sementara."""
-    import time
-    global _GLOBAL_RATE_LIMIT_UNTIL
-    async with _GLOBAL_RATE_LIMIT_LOCK:
-        new_until = time.monotonic() + cooldown_seconds
-        if new_until > _GLOBAL_RATE_LIMIT_UNTIL:
-            _GLOBAL_RATE_LIMIT_UNTIL = new_until
-            console_terminal_interface.print(
-                f"[bold red][Global Rate Limit] Cooldown diaktifkan selama {cooldown_seconds:.0f} detik.[/bold red]"
-            )
-
-
 async def execute_gemini_cli_pure(agent: dict, system_instruction: str, prompt_payload: str) -> Tuple[bool, str]:
     """
     EKSEKUTOR MUTLAK SEQUENTIAL (File-to-File IPC): 100% Native CLI Execution.
     DIPERBAIKI:
     - Semaphore(1) = hanya 1 request aktif pada satu waktu, agent benar-benar antri
-    - Global rate-limit cooldown agar tidak spam saat quota habis
+    - Per-key rate-limit cooldown agar key lain tetap bekerja
     - Fallback model otomatis Gemini 3.1 -> 3 -> 2.5
     - Tidak ada stdin/stdout pipe conflict
     """
-    # Cek global rate limit sebelum masuk semaphore
-    await _wait_global_rate_limit()
-
     async with CLI_EXECUTION_SEMAPHORE:
-        # Cek lagi setelah masuk semaphore (mungkin berubah saat menunggu)
-        await _wait_global_rate_limit()
-
-        api_key = agent.get("api_key", "")
+        api_key = _key_rotator.get_key()
         if not api_key:
             return False, "API_KEY_KOSONG"
 
@@ -165,8 +134,8 @@ async def execute_gemini_cli_pure(agent: dict, system_instruction: str, prompt_p
                     if process.returncode != 0:
                         error_details = stderr_data.decode("utf-8", errors="ignore").strip().lower()
                         if "429" in error_details or "quota" in error_details or "exhausted" in error_details or "rate" in error_details:
-                            # Aktifkan global cooldown 60 detik agar semua agent berhenti
-                            await _set_global_rate_limit(60.0)
+                            # Aktifkan per-key cooldown 60 detik agar key ini berhenti, key lain lanjut
+                            _key_rotator.mark_rate_limited(api_key)
                             return False, "RATE_LIMIT_REACHED"
                         last_error = f"CLI_ERROR ({model_name}): {error_details[:300]}"
                         continue
@@ -320,7 +289,7 @@ class OmniSynthesizerAgent:
         else:
             if "RATE_LIMIT" in result_data:
                 console_terminal_interface.print(
-                    f"[bold yellow][{agent['name']}] Rate limit terdeteksi. Global cooldown aktif, akan dilanjutkan...[/bold yellow]"
+                    f"[bold yellow][{agent['name']}] Rate limit terdeteksi. Per-key cooldown aktif, akan dilanjutkan...[/bold yellow]"
                 )
                 # Cooldown sudah diset di dalam execute_gemini_cli_pure, tidak perlu sleep lagi di sini
             return False, result_data, previous_code

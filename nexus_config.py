@@ -85,6 +85,7 @@ _gemini_cli_candidates = [
     os.path.expanduser("~/.local/share/pnpm/gemini"),
     "/usr/local/bin/gemini",
     "/usr/bin/gemini",
+    "/home/codespace/nvm/current/bin/gemini",  # Tambahan untuk dev container
 ]
 
 def _find_gemini_cli() -> str:
