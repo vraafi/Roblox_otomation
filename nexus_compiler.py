@@ -199,6 +199,7 @@ class NativeLuauCompiler:
                 "VariableUnused",
                 "TableLiteral",
                 "SameLineStatement",
+                "MultiLineStatement",
                 "DeprecatedApi",
                 "LintNeverEndingLoop",
                 "CommentDirective",
