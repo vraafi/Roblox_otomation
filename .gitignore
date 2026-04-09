@@ -1,0 +1,14 @@
+.env.nexus
+.env
+*.env
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.sqlite
+*.rbxl
+temp_io_matrix/
+nexus_healer.log
+nexus_*.backup
+nexus_*.temp
