@@ -1,6 +1,7 @@
 local player = game.Players.LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local InventorySystem = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("InventorySystem"))
+local AssetRegistry = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("AssetRegistry"))
 
 local UI = Instance.new("ScreenGui")
 UI.Name = "AlbionUI"
@@ -8,16 +9,20 @@ UI.ResetOnSpawn = false
 UI.Parent = player:WaitForChild("PlayerGui")
 
 -- Basic Status UI
-local healthBar = Instance.new("Frame")
+local healthBar = Instance.new("ImageLabel")
+healthBar.Image = AssetRegistry.UI.HealthBar
 healthBar.Size = UDim2.new(0, 200, 0, 20)
 healthBar.Position = UDim2.new(0.5, -100, 0.9, 0)
 healthBar.BackgroundColor3 = Color3.new(1, 0, 0)
+healthBar.ImageColor3 = Color3.new(1, 0.2, 0.2)
 healthBar.Parent = UI
 
-local manaBar = Instance.new("Frame")
+local manaBar = Instance.new("ImageLabel")
+manaBar.Image = AssetRegistry.UI.ManaBar
 manaBar.Size = UDim2.new(0, 200, 0, 20)
 manaBar.Position = UDim2.new(0.5, -100, 0.9, 25)
 manaBar.BackgroundColor3 = Color3.new(0, 0, 1)
+manaBar.ImageColor3 = Color3.new(0.2, 0.2, 1)
 manaBar.Parent = UI
 
 -- Inventory UI (48 slots container)
@@ -32,8 +37,17 @@ uigrid_inv.CellSize = UDim2.new(0, 40, 0, 40)
 uigrid_inv.Parent = inventoryFrame
 
 for i = 1, 48 do
-    local slot = Instance.new("TextButton")
-    slot.Text = tostring(i)
+    local slot = Instance.new("ImageButton")
+    slot.Image = AssetRegistry.UI.SlotBackground
+    slot.ImageColor3 = Color3.new(0.4, 0.4, 0.4)
+
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Size = UDim2.new(1, 0, 1, 0)
+    textLabel.BackgroundTransparency = 1
+    textLabel.Text = tostring(i)
+    textLabel.TextColor3 = Color3.new(1,1,1)
+    textLabel.Parent = slot
+
     slot.BackgroundColor3 = Color3.new(0.4, 0.4, 0.4)
     slot.Parent = inventoryFrame
 
@@ -54,8 +68,17 @@ uigrid_eq.CellSize = UDim2.new(0, 45, 0, 45)
 uigrid_eq.Parent = equipmentFrame
 
 for i = 1, 10 do
-    local eqSlot = Instance.new("TextButton")
-    eqSlot.Text = "EQ"..i
+    local eqSlot = Instance.new("ImageButton")
+    eqSlot.Image = AssetRegistry.UI.SlotBackground
+    eqSlot.ImageColor3 = Color3.new(0.5, 0.5, 0.5)
+
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Size = UDim2.new(1, 0, 1, 0)
+    textLabel.BackgroundTransparency = 1
+    textLabel.Text = "EQ"..i
+    textLabel.TextColor3 = Color3.new(1,1,1)
+    textLabel.Parent = eqSlot
+
     eqSlot.BackgroundColor3 = Color3.new(0.5, 0.5, 0.5)
     eqSlot.Parent = equipmentFrame
 
