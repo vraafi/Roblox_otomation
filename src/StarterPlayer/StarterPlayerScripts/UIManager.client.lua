@@ -4,6 +4,7 @@ local InventorySystem = require(ReplicatedStorage:WaitForChild("Shared"):WaitFor
 
 local UI = Instance.new("ScreenGui")
 UI.Name = "AlbionUI"
+UI.ResetOnSpawn = false
 UI.Parent = player:WaitForChild("PlayerGui")
 
 -- Basic Status UI
