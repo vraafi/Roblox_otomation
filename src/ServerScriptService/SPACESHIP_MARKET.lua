@@ -19,6 +19,35 @@ function SpaceshipMarket.Initialize()
     print("Spaceship Market initializing...")
 
     for _, npcData in ipairs(MarketNPCs) do
+        -- Build the physical Market Stall
+        local stall = Instance.new("Model")
+        stall.Name = npcData.Name .. "_Stall"
+
+        local floor = Instance.new("Part")
+        floor.Size = Vector3.new(20, 1, 20)
+        floor.Position = npcData.Position - Vector3.new(0, 2.5, 0)
+        floor.Anchored = true
+        floor.Color = Color3.fromRGB(40, 40, 45)
+        floor.Material = Enum.Material.Metal
+        floor.Parent = stall
+
+        local counter = Instance.new("Part")
+        counter.Size = Vector3.new(16, 4, 3)
+        counter.Position = npcData.Position + Vector3.new(0, 0, 5)
+        counter.Anchored = true
+        counter.Color = Color3.fromRGB(80, 80, 80)
+        counter.Material = Enum.Material.DiamondPlate
+        counter.Parent = stall
+
+        local neonSign = Instance.new("Part")
+        neonSign.Size = Vector3.new(16, 2, 1)
+        neonSign.Position = npcData.Position + Vector3.new(0, 8, 5)
+        neonSign.Anchored = true
+        neonSign.Color = (npcData.Name == "Apothecary_Vael") and Color3.fromRGB(150, 50, 255) or Color3.fromRGB(50, 150, 255)
+        neonSign.Material = Enum.Material.Neon
+        neonSign.Parent = stall
+
+        -- The NPC
         local npc = Instance.new("Model")
         npc.Name = npcData.Name
 
@@ -39,7 +68,10 @@ function SpaceshipMarket.Initialize()
         end)
 
         npc.PrimaryPart = rootPart
-        npc.Parent = workspace
+        npc.Parent = stall
+
+        stall.PrimaryPart = floor
+        stall.Parent = workspace
     end
 
     -- Setup the NPC Sell Price Floor logic

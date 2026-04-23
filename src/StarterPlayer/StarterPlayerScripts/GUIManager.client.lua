@@ -17,13 +17,16 @@ function GUIManager.Initialize()
     GUIManager.CreateVitalsHUD(screenGui)
     GUIManager.CreateInventoryScreen(screenGui)
     GUIManager.CreateFleaMarketScreen(screenGui)
+    GUIManager.CreateMapScreen(screenGui)
 
-    -- Bind Inventory to Tab key
+    -- Bind keys (Inventory -> Tab/I, Map -> M)
     local UserInputService = game:GetService("UserInputService")
     UserInputService.InputBegan:Connect(function(input, isProcessed)
         if isProcessed then return end
         if input.KeyCode == Enum.KeyCode.Tab or input.KeyCode == Enum.KeyCode.I then
             GUIManager.ToggleInventory()
+        elseif input.KeyCode == Enum.KeyCode.M then
+            GUIManager.ToggleMap()
         end
     end)
 
@@ -64,6 +67,134 @@ function GUIManager.Initialize()
         marketBtn.MouseButton1Click:Connect(function()
             GUIManager.ToggleFleaMarket()
         end)
+
+        local mapBtn = Instance.new("TextButton")
+        mapBtn.Name = "MobileMapButton"
+        mapBtn.Size = UDim2.new(0, 60, 0, 60)
+        mapBtn.Position = UDim2.new(0, 20, 0, 290)
+        mapBtn.BackgroundColor3 = Color3.fromRGB(50, 150, 200)
+        mapBtn.TextColor3 = Color3.new(1, 1, 1)
+        mapBtn.Text = "MAP"
+        mapBtn.Font = Enum.Font.SourceSansBold
+        mapBtn.Parent = screenGui
+
+        local corner3 = Instance.new("UICorner")
+        corner3.CornerRadius = UDim.new(0.5, 0)
+        corner3.Parent = mapBtn
+
+        mapBtn.MouseButton1Click:Connect(function()
+            GUIManager.ToggleMap()
+        end)
+    end
+end
+
+local mapScreen = nil
+
+function GUIManager.CreateMapScreen(parentGui)
+    mapScreen = Instance.new("Frame")
+    mapScreen.Name = "MapScreen"
+    mapScreen.Size = UDim2.new(0.8, 0, 0.8, 0)
+    mapScreen.Position = UDim2.new(0.1, 0, 0.1, 0)
+    mapScreen.BackgroundColor3 = Color3.fromRGB(20, 25, 20)
+    mapScreen.BackgroundTransparency = 0.1
+    mapScreen.Visible = false
+    mapScreen.Parent = parentGui
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0.05, 0)
+    corner.Parent = mapScreen
+
+    local title = Instance.new("TextLabel")
+    title.Name = "MapTitle"
+    title.Size = UDim2.new(1, -50, 0, 40)
+    title.Position = UDim2.new(0, 10, 0, 0)
+    title.BackgroundTransparency = 1
+    title.Text = "TACTICAL MAP: Initializing..."
+    title.TextColor3 = Color3.new(1,1,1)
+    title.Font = Enum.Font.SourceSansBold
+    title.TextSize = 24
+    title.TextXAlignment = Enum.TextXAlignment.Left
+    title.Parent = mapScreen
+
+    local closeBtn = Instance.new("TextButton")
+    closeBtn.Name = "CloseButton"
+    closeBtn.Size = UDim2.new(0, 40, 0, 40)
+    closeBtn.Position = UDim2.new(1, -45, 0, 5)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+    closeBtn.Text = "X"
+    closeBtn.TextColor3 = Color3.new(1, 1, 1)
+    closeBtn.Font = Enum.Font.SourceSansBold
+    closeBtn.TextSize = 24
+    closeBtn.Parent = mapScreen
+
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(0.2, 0)
+    btnCorner.Parent = closeBtn
+
+    closeBtn.MouseButton1Click:Connect(function()
+        GUIManager.ToggleMap(false)
+    end)
+
+    local mapDisplay = Instance.new("Frame")
+    mapDisplay.Name = "MapDisplay"
+    mapDisplay.Size = UDim2.new(0.95, 0, 0.85, 0)
+    mapDisplay.Position = UDim2.new(0.025, 0, 0.1, 0)
+    mapDisplay.BackgroundColor3 = Color3.fromRGB(10, 15, 10)
+    mapDisplay.Parent = mapScreen
+
+    -- A label to hold dynamic map data/icons
+    local mapContent = Instance.new("TextLabel")
+    mapContent.Name = "MapContent"
+    mapContent.Size = UDim2.new(1, -20, 1, -20)
+    mapContent.Position = UDim2.new(0, 10, 0, 10)
+    mapContent.BackgroundTransparency = 1
+    mapContent.Text = "Loading topographical data..."
+    mapContent.TextColor3 = Color3.fromRGB(150, 255, 150)
+    mapContent.Font = Enum.Font.Code
+    mapContent.TextSize = 18
+    mapContent.TextXAlignment = Enum.TextXAlignment.Left
+    mapContent.TextYAlignment = Enum.TextYAlignment.Top
+    mapContent.Parent = mapDisplay
+end
+
+function GUIManager.ToggleMap(forceState)
+    if not mapScreen then return end
+
+    if forceState ~= nil then
+        mapScreen.Visible = forceState
+    else
+        mapScreen.Visible = not mapScreen.Visible
+    end
+
+    if _G.SetMenuState then _G.SetMenuState(mapScreen.Visible) end
+
+    if mapScreen.Visible then
+        local player = game.Players.LocalPlayer
+        local char = player.Character
+        local mapContent = mapScreen.MapDisplay.MapContent
+        local mapTitle = mapScreen.MapTitle
+
+        if char and char:FindFirstChild("HumanoidRootPart") then
+            local yPos = char.HumanoidRootPart.Position.Y
+            -- Use elevation (Y axis) to deduce location since Lobby is Y=1000+
+            if yPos > 800 then
+                mapTitle.Text = "TACTICAL MAP: O'Neill Spaceship Lobby"
+                mapContent.Text = "LOCATION: Safe Zone - Century-Class Orbital Habitat\n\n" ..
+                                  "POINTS OF INTEREST:\n" ..
+                                  "[ ] Quartermaster Riggs (Weapons/Armor) : East Wing\n" ..
+                                  "[ ] Apothecary Vael (Magic/Consumables) : West Wing\n" ..
+                                  "[ ] Fantasy Portal Domain : North Hangar\n" ..
+                                  "[ ] Player Stash / Extraction Deposit : South Hangar\n\n" ..
+                                  "WARNING: Ensure gear loadout does not exceed 70kg before entering portal."
+            else
+                mapTitle.Text = "TACTICAL MAP: Kalimantan Macro-Biome"
+                mapContent.Text = "LOCATION: Combat Zone - Kalimantan Grid (1330km x 960km)\n\n" ..
+                                  "TOPOGRAPHY: Proceed with extreme caution. Hostile ecosystem detected.\n" ..
+                                  "[ ! ] Alpha Extraction Zone: Central Grid (0, 0)\n\n" ..
+                                  "WEATHER ADVISORY: Monitoring for Seasonal Shifts and Meteor Strikes.\n" ..
+                                  "STATUS: " .. tostring(math.floor(char.Humanoid.Health)) .. " / " .. tostring(char.Humanoid.MaxHealth) .. " HP"
+            end
+        end
     end
 end
 
