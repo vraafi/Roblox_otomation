@@ -16,6 +16,7 @@ function GUIManager.Initialize()
 
     GUIManager.CreateVitalsHUD(screenGui)
     GUIManager.CreateInventoryScreen(screenGui)
+    GUIManager.CreateFleaMarketScreen(screenGui)
 
     -- Bind Inventory to Tab key
     local UserInputService = game:GetService("UserInputService")
@@ -26,7 +27,7 @@ function GUIManager.Initialize()
         end
     end)
 
-    -- Create an on-screen button for Mobile users to open inventory
+    -- Create on-screen buttons for Mobile users
     if UserInputService.TouchEnabled then
         local invBtn = Instance.new("TextButton")
         invBtn.Name = "MobileInvButton"
@@ -44,6 +45,24 @@ function GUIManager.Initialize()
 
         invBtn.MouseButton1Click:Connect(function()
             GUIManager.ToggleInventory()
+        end)
+
+        local marketBtn = Instance.new("TextButton")
+        marketBtn.Name = "MobileMarketButton"
+        marketBtn.Size = UDim2.new(0, 60, 0, 60)
+        marketBtn.Position = UDim2.new(0, 20, 0, 220)
+        marketBtn.BackgroundColor3 = Color3.fromRGB(200, 150, 50)
+        marketBtn.TextColor3 = Color3.new(1, 1, 1)
+        marketBtn.Text = "MARKET"
+        marketBtn.Font = Enum.Font.SourceSansBold
+        marketBtn.Parent = screenGui
+
+        local corner2 = Instance.new("UICorner")
+        corner2.CornerRadius = UDim.new(0.5, 0)
+        corner2.Parent = marketBtn
+
+        marketBtn.MouseButton1Click:Connect(function()
+            GUIManager.ToggleFleaMarket()
         end)
     end
 end
@@ -113,6 +132,158 @@ function GUIManager.CreateVitalsHUD(parentGui)
 end
 
 local inventoryScreen = nil
+local marketScreen = nil
+
+function GUIManager.CreateFleaMarketScreen(parentGui)
+    marketScreen = Instance.new("Frame")
+    marketScreen.Name = "FleaMarketScreen"
+    marketScreen.Size = UDim2.new(0.7, 0, 0.8, 0)
+    marketScreen.Position = UDim2.new(0.15, 0, 0.1, 0)
+    marketScreen.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+    marketScreen.BackgroundTransparency = 0.05
+    marketScreen.Visible = false
+    marketScreen.Parent = parentGui
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0.05, 0)
+    corner.Parent = marketScreen
+
+    local title = Instance.new("TextLabel")
+    title.Size = UDim2.new(1, -50, 0, 40)
+    title.Position = UDim2.new(0, 10, 0, 0)
+    title.BackgroundTransparency = 1
+    title.Text = "FLEA MARKET (Player-to-Player)"
+    title.TextColor3 = Color3.new(1,1,1)
+    title.Font = Enum.Font.SourceSansBold
+    title.TextSize = 24
+    title.TextXAlignment = Enum.TextXAlignment.Left
+    title.Parent = marketScreen
+
+    -- 'X' Close Button
+    local closeBtn = Instance.new("TextButton")
+    closeBtn.Name = "CloseButton"
+    closeBtn.Size = UDim2.new(0, 40, 0, 40)
+    closeBtn.Position = UDim2.new(1, -45, 0, 5)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+    closeBtn.Text = "X"
+    closeBtn.TextColor3 = Color3.new(1, 1, 1)
+    closeBtn.Font = Enum.Font.SourceSansBold
+    closeBtn.TextSize = 24
+    closeBtn.Parent = marketScreen
+
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(0.2, 0)
+    btnCorner.Parent = closeBtn
+
+    closeBtn.MouseButton1Click:Connect(function()
+        GUIManager.ToggleFleaMarket(false)
+    end)
+
+    -- Search Bar
+    local searchBar = Instance.new("TextBox")
+    searchBar.Name = "SearchBar"
+    searchBar.Size = UDim2.new(0.4, 0, 0, 30)
+    searchBar.Position = UDim2.new(0, 10, 0, 50)
+    searchBar.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
+    searchBar.TextColor3 = Color3.new(1,1,1)
+    searchBar.PlaceholderText = "Search items..."
+    searchBar.Font = Enum.Font.SourceSans
+    searchBar.TextSize = 18
+    searchBar.Parent = marketScreen
+
+    -- Categories
+    local categories = {"All", "Weapon", "Armor", "ValuableLoot", "Consumable"}
+    for i, cat in ipairs(categories) do
+        local catBtn = Instance.new("TextButton")
+        catBtn.Size = UDim2.new(0, 100, 0, 30)
+        catBtn.Position = UDim2.new(0.42 + ((i-1)*0.11), 0, 0, 50)
+        catBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+        catBtn.Text = cat
+        catBtn.TextColor3 = Color3.new(1,1,1)
+        catBtn.Parent = marketScreen
+    end
+
+    -- Listing Area
+    local listFrame = Instance.new("ScrollingFrame")
+    listFrame.Name = "Listings"
+    listFrame.Size = UDim2.new(0.95, 0, 0.7, 0)
+    listFrame.Position = UDim2.new(0.025, 0, 0.2, 0)
+    listFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+    listFrame.Parent = marketScreen
+
+    local layout = Instance.new("UIListLayout")
+    layout.Padding = UDim.new(0, 5)
+    layout.Parent = listFrame
+end
+
+function GUIManager.ToggleFleaMarket(forceState)
+    if not marketScreen then return end
+
+    if forceState ~= nil then
+        marketScreen.Visible = forceState
+    else
+        marketScreen.Visible = not marketScreen.Visible
+    end
+
+    if _G.SetMenuState then _G.SetMenuState(marketScreen.Visible) end
+
+    local UserInputService = game:GetService("UserInputService")
+    if marketScreen.Visible then
+        UserInputService.MouseIconEnabled = true
+        UserInputService.MouseBehavior = Enum.MouseBehavior.Default
+
+        -- Pull active listings from the server
+        local events = game:GetService("ReplicatedStorage"):FindFirstChild("Events")
+        if events then
+            local marketReq = events:FindFirstChild("MarketRequest")
+            if marketReq then
+                task.spawn(function()
+                    local success, listings = marketReq:InvokeServer("GetMarket", "All", "")
+                    if success and listings then
+                        local listFrame = marketScreen:FindFirstChild("Listings")
+                        if listFrame then
+                            -- Clear old UI
+                            for _, child in ipairs(listFrame:GetChildren()) do
+                                if child:IsA("Frame") then child:Destroy() end
+                            end
+
+                            -- Populate new UI
+                            for _, listing in ipairs(listings) do
+                                local frame = Instance.new("Frame")
+                                frame.Size = UDim2.new(1, 0, 0, 40)
+                                frame.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
+
+                                local text = Instance.new("TextLabel")
+                                text.Size = UDim2.new(0.7, 0, 1, 0)
+                                text.BackgroundTransparency = 1
+                                text.Text = listing.Name .. " - $" .. tostring(listing.Price)
+                                text.TextColor3 = Color3.new(1,1,1)
+                                text.TextXAlignment = Enum.TextXAlignment.Left
+                                text.Parent = frame
+
+                                local buyBtn = Instance.new("TextButton")
+                                buyBtn.Size = UDim2.new(0.25, 0, 0.8, 0)
+                                buyBtn.Position = UDim2.new(0.75, 0, 0.1, 0)
+                                buyBtn.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+                                buyBtn.Text = "BUY"
+                                buyBtn.TextColor3 = Color3.new(1,1,1)
+                                buyBtn.Parent = frame
+
+                                buyBtn.MouseButton1Click:Connect(function()
+                                    local ok, msg = marketReq:InvokeServer("PurchaseListing", listing.ListingId)
+                                    print("Market Purchase: " .. tostring(msg))
+                                    if ok then frame:Destroy() end
+                                end)
+
+                                frame.Parent = listFrame
+                            end
+                        end
+                    end
+                end)
+            end
+        end
+    end
+end
 
 function GUIManager.CreateInventoryScreen(parentGui)
     inventoryScreen = Instance.new("Frame")

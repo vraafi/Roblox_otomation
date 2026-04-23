@@ -71,6 +71,13 @@ function ItemManager.SpawnPhysicalItem(itemId, position)
             pickupEvent.Parent = events
         end
 
+        -- Add to Server Inventory Data
+        local PlayerManager = require(game:GetService("ServerScriptService"):WaitForChild("PlayerManager"))
+        local playerData = PlayerManager.ActivePlayers[player.UserId]
+        if playerData then
+            table.insert(playerData.Inventory.Items, data.Id)
+        end
+
         -- Send data to the client so it renders on the Tetris Grid
         pickupEvent:FireClient(player, {
             Name = data.Name,
