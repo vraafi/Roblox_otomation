@@ -57,15 +57,22 @@ function PlayerManager.ApplyFallDamage(player, fallDistanceStuds)
     local fallResult = StatSystem.CalculateFallDamage(fallDistanceMeters)
 
     if fallResult.LegDamage > 0 then
-        -- Integrate with Spaceship Lobby's limb health system if it's running
-        -- For now, apply direct damage and status
-        playerData.CurrentHealth = math.max(0, playerData.CurrentHealth - fallResult.LegDamage)
+        local ServerScriptService = game:GetService("ServerScriptService")
+        local SpaceshipLobby = require(ServerScriptService:WaitForChild("LOBBY_SPACESHIP_1"))
 
-        if player.Character and player.Character:FindFirstChild("Humanoid") then
-            player.Character.Humanoid.Health = playerData.CurrentHealth
+        -- Attempt to apply damage specifically to the Left/Right Leg in the Arena Breakout Limb System
+        if SpaceshipLobby.ApplyDamage then
+            -- Randomly pick a leg
+            local hitLeg = math.random() > 0.5 and "LeftLeg" or "RightLeg"
+            SpaceshipLobby.ApplyDamage(player, hitLeg, fallResult.LegDamage)
+            print(player.Name .. " took " .. fallResult.LegDamage .. " damage to " .. hitLeg .. " from falling " .. string.format("%.1f", fallDistanceMeters) .. "m.")
+        else
+            -- Fallback if Lobby system isn't loaded
+            playerData.CurrentHealth = math.max(0, playerData.CurrentHealth - fallResult.LegDamage)
+            if player.Character and player.Character:FindFirstChild("Humanoid") then
+                player.Character.Humanoid.Health = playerData.CurrentHealth
+            end
         end
-
-        print(player.Name .. " took " .. fallResult.LegDamage .. " leg damage from falling " .. string.format("%.1f", fallDistanceMeters) .. "m.")
 
         if fallResult.BrokenLeg then
             playerData.Status = "BrokenLeg"

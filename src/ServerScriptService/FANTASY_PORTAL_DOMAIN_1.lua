@@ -81,13 +81,12 @@ function PortalDomain.StartDomain()
     print("Started domain " .. domainId .. " with " .. #playersInMatch .. " players.")
 
     -- Teleport players to the Macro-Biome (Kalimantan)
-    -- In a real game, you would spawn a new instance of the macro-biome far away.
-    -- Here we teleport them to the center of the existing Kalimantan generation zone.
-    local domainSpawn = Vector3.new(0, 100, 0) -- High enough to not clip into mountains, physics will drop them
+    -- Drop them from the sky (Y=1000) so they don't clip inside the procedurally generated mountains (which can reach Y=600)
+    local domainSpawn = Vector3.new(0, 1000, 0)
 
     for _, player in ipairs(playersInMatch) do
         if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-            -- Safely pivot the character to prevent breaking weld joints
+            -- Give them a parachute or let them take fall damage as a hardcore mechanic
             player.Character:PivotTo(CFrame.new(domainSpawn + Vector3.new(math.random(-50, 50), 0, math.random(-50, 50))))
         end
     end

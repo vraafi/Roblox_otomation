@@ -173,6 +173,49 @@ function GUIManager.CreateInventoryScreen(parentGui)
     gridLayout.CellSize = UDim2.new(0, 50, 0, 50)
     gridLayout.CellPadding = UDim2.new(0, 2, 0, 2)
     gridLayout.Parent = gridFrame
+
+    -- Populate empty grid slots
+    for i = 1, 40 do
+        local slot = Instance.new("Frame")
+        slot.Name = "Slot_" .. i
+        slot.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        slot.BorderSizePixel = 1
+        slot.BorderColor3 = Color3.fromRGB(50, 50, 50)
+        slot.Parent = gridFrame
+    end
+end
+
+-- Simulated function to add an item visually to the Tetris grid
+-- A real game would use complex math to find intersecting free grid spaces based on GridWidth/GridHeight
+function GUIManager.AddItemToGrid(itemName, gridWidth, gridHeight, color)
+    if not inventoryScreen then return end
+    local gridFrame = inventoryScreen:FindFirstChild("Frame")
+    if not gridFrame then return end
+
+    -- Find an empty slot
+    for _, slot in ipairs(gridFrame:GetChildren()) do
+        if slot:IsA("Frame") and #slot:GetChildren() == 0 then
+            local itemGui = Instance.new("Frame")
+            itemGui.Name = "Item_" .. itemName
+            -- Size spans across multiple grid cells based on Tetris dimensions
+            itemGui.Size = UDim2.new(gridWidth, (gridWidth-1)*2, gridHeight, (gridHeight-1)*2)
+            itemGui.BackgroundColor3 = color or Color3.fromRGB(100, 150, 200)
+            itemGui.ZIndex = 2
+
+            local label = Instance.new("TextLabel")
+            label.Size = UDim2.new(1, 0, 1, 0)
+            label.BackgroundTransparency = 1
+            label.Text = itemName
+            label.TextScaled = true
+            label.TextColor3 = Color3.new(1,1,1)
+            label.ZIndex = 3
+            label.Parent = itemGui
+
+            itemGui.Parent = slot
+            return true
+        end
+    end
+    return false
 end
 
 function GUIManager.ToggleInventory(forceState)
@@ -200,10 +243,30 @@ function GUIManager.ToggleInventory(forceState)
     end
 end
 
+-- Listen for Server Events
+local function SetupNetworkListeners()
+    local replicatedStorage = game:GetService("ReplicatedStorage")
+    local events = replicatedStorage:WaitForChild("Events", 5)
+
+    if events then
+        local pickupEvent = events:WaitForChild("ItemPickedUp", 5)
+        if pickupEvent then
+            pickupEvent.OnClientEvent:Connect(function(itemData)
+                -- Receive data from server and visually place it in the Tetris UI
+                local success = GUIManager.AddItemToGrid(itemData.Name, itemData.GridWidth, itemData.GridHeight, itemData.Color)
+                if not success then
+                    warn("Inventory Full! Could not fit " .. itemData.Name)
+                end
+            end)
+        end
+    end
+end
+
 -- Wait a second to ensure player is loaded, then initialize
 task.spawn(function()
     task.wait(1)
     GUIManager.Initialize()
+    SetupNetworkListeners()
 end)
 
 return GUIManager

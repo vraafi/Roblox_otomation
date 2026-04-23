@@ -89,13 +89,8 @@ function MacroBiome.GenerateIsland()
 
                 -- Seed Monsters (Spawned precisely on top of the chunk elevation)
                 if math.random() > 0.5 then
-                    local randomMonsterId = math.random(1, 100)
                     local spawnPos = Vector3.new(chunkX + math.random(-CHUNK_SIZE/2, CHUNK_SIZE/2), elevation + 5, chunkZ + math.random(-CHUNK_SIZE/2, CHUNK_SIZE/2))
-                    MonsterManager.SpawnMonsterByData({
-                        Name = "Island_Beast_"..randomMonsterId,
-                        Health = 200, Damage = 25, Speed = 16, DropCoreLevel = math.random(1, 5),
-                        Color = Color3.new(1,0,0), SpecialAbility = "None"
-                    }, spawnPos)
+                    MonsterManager.SpawnRandomMonster(spawnPos)
                 end
 
                 -- Seed Furniture (Ruins/Loot points)

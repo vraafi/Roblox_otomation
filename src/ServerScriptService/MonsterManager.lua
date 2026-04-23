@@ -4,32 +4,47 @@
 local MonsterManager = {}
 
 -- Because we generated the monster data in chunks, we need to assemble a master dictionary here
--- In a real production environment, this would be moved to ReplicatedStorage/MonsterDatabase.lua
+-- Simulated master data dictionary until batches are fully refactored
 MonsterManager.MasterData = {}
 
--- Dynamically load the data from all the generated batches
 function MonsterManager.Initialize()
     local ServerScriptService = game:GetService("ServerScriptService")
 
-    local batchNames = {
-        "MONSTERS_BATCH_1_6", "MONSTERS_BATCH_7_16", "MONSTERS_BATCH_17_26",
-        "MONSTERS_BATCH_27_36", "MONSTERS_BATCH_37_46", "MONSTERS_BATCH_47_56",
-        "MONSTERS_BATCH_57_66", "MONSTERS_BATCH_67_76", "MONSTERS_BATCH_77_86",
-        "MONSTERS_BATCH_87_96", "MONSTERS_BATCH_97_100"
-    }
-
-    for _, batchName in ipairs(batchNames) do
-        local success, batch = pcall(function() return require(ServerScriptService:WaitForChild(batchName, 2)) end)
-        if success and type(batch) == "table" then
-            -- We extract the local MonsterData table if it was exposed,
-            -- but since our generator didn't expose the raw table, we will simulate the assembly.
-            -- (Note: In a true refactor, the generator would export `batch.Data = MonsterData`)
-        end
-    end
-    print("MonsterManager initialized.")
+    -- In Roblox Luau, if a module doesn't explicitly return a table we can scrape, we must parse it.
+    -- However, since the batches returned an interface with 'SpawnMonster' and not raw data,
+    -- we will instead redirect SpawnRandomMonster to explicitly trigger the exact batch scripts.
+    print("MonsterManager initialized to act as a unified spawn router.")
 end
 
--- Fallback/Simulation definition for testing the refactor structure
+function MonsterManager.SpawnRandomMonster(position)
+    local randomId = math.random(1, 100)
+    local ServerScriptService = game:GetService("ServerScriptService")
+
+    -- Determine which batch file holds this ID
+    local targetBatch
+    if randomId <= 6 then targetBatch = "MONSTERS_BATCH_1_6"
+    elseif randomId <= 16 then targetBatch = "MONSTERS_BATCH_7_16"
+    elseif randomId <= 26 then targetBatch = "MONSTERS_BATCH_17_26"
+    elseif randomId <= 36 then targetBatch = "MONSTERS_BATCH_27_36"
+    elseif randomId <= 46 then targetBatch = "MONSTERS_BATCH_37_46"
+    elseif randomId <= 56 then targetBatch = "MONSTERS_BATCH_47_56"
+    elseif randomId <= 66 then targetBatch = "MONSTERS_BATCH_57_66"
+    elseif randomId <= 76 then targetBatch = "MONSTERS_BATCH_67_76"
+    elseif randomId <= 86 then targetBatch = "MONSTERS_BATCH_77_86"
+    elseif randomId <= 96 then targetBatch = "MONSTERS_BATCH_87_96"
+    else targetBatch = "MONSTERS_BATCH_97_100" end
+
+    -- Execute the actual batch script to spawn the genuine monster
+    local success, module = pcall(function() return require(ServerScriptService:WaitForChild(targetBatch)) end)
+    if success and module and module.SpawnMonster then
+        -- This guarantees we get the exact visual, name, and abilities from the 100 generated tasks
+        -- Example: Crystal Bat, Sand Worm, The Absolute Apex
+        return module.SpawnMonster(randomId, position)
+    else
+        warn("MonsterManager Failed to load batch " .. targetBatch)
+    end
+end
+
 function MonsterManager.SpawnMonsterByData(data, position)
     if not data then return end
 

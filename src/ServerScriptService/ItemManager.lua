@@ -54,7 +54,31 @@ function ItemManager.SpawnPhysicalItem(itemId, position)
 
     prompt.Triggered:Connect(function(player)
         print(player.Name .. " looted " .. data.Name)
-        -- TODO: Hook into InventorySystem here to attempt Tetris grid insertion
+
+        -- Fire RemoteEvent to update client UI
+        local replicatedStorage = game:GetService("ReplicatedStorage")
+        local events = replicatedStorage:FindFirstChild("Events")
+        if not events then
+            events = Instance.new("Folder")
+            events.Name = "Events"
+            events.Parent = replicatedStorage
+        end
+
+        local pickupEvent = events:FindFirstChild("ItemPickedUp")
+        if not pickupEvent then
+            pickupEvent = Instance.new("RemoteEvent")
+            pickupEvent.Name = "ItemPickedUp"
+            pickupEvent.Parent = events
+        end
+
+        -- Send data to the client so it renders on the Tetris Grid
+        pickupEvent:FireClient(player, {
+            Name = data.Name,
+            GridWidth = width,
+            GridHeight = height,
+            Color = data.Color
+        })
+
         part:Destroy()
     end)
 
