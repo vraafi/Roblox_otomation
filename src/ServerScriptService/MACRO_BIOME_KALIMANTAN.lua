@@ -62,16 +62,43 @@ function MacroBiome.GenerateIsland()
                 chunk.Material = isMountain and Enum.Material.Slate or Enum.Material.Grass
                 chunk.Parent = islandFolder
 
-                -- Seed Trees & Rocks (Harvestable Placeholders)
+                -- Seed Specific Flora & Ores (Ecosystem Diversity)
                 for t = 1, math.random(5, 15) do
-                    local isRock = math.random() > 0.7
+                    local resourceType = math.random(1, 100)
                     local resource = Instance.new("Part")
-                    resource.Name = isRock and "Harvestable_Rock" or "Harvestable_Tree"
-                    resource.Size = isRock and Vector3.new(10, 10, 10) or Vector3.new(4, 40, 4)
+
+                    if isMountain then
+                        if resourceType > 80 then
+                            resource.Name = "Iron_Vein"
+                            resource.Color = Color3.fromRGB(160, 160, 160)
+                            resource.Material = Enum.Material.Metal
+                        else
+                            resource.Name = "Copper_Vein"
+                            resource.Color = Color3.fromRGB(184, 115, 51)
+                            resource.Material = Enum.Material.CorrodedMetal
+                        end
+                        resource.Size = Vector3.new(12, 10, 12)
+                    else
+                        if resourceType > 95 then
+                            resource.Name = "Healing_Herb_Node"
+                            resource.Color = Color3.fromRGB(50, 200, 50)
+                            resource.Material = Enum.Material.Neon
+                            resource.Size = Vector3.new(2, 2, 2)
+                        elseif resourceType > 70 then
+                            resource.Name = "Ironwood_Tree"
+                            resource.Color = Color3.fromRGB(80, 50, 30)
+                            resource.Material = Enum.Material.Wood
+                            resource.Size = Vector3.new(6, 60, 6)
+                        else
+                            resource.Name = "Bamboo_Stalk"
+                            resource.Color = Color3.fromRGB(100, 180, 50)
+                            resource.Material = Enum.Material.Wood
+                            resource.Size = Vector3.new(2, 30, 2)
+                        end
+                    end
+
                     resource.Position = Vector3.new(chunkX + math.random(-CHUNK_SIZE/2, CHUNK_SIZE/2), elevation + (resource.Size.Y/2), chunkZ + math.random(-CHUNK_SIZE/2, CHUNK_SIZE/2))
                     resource.Anchored = true
-                    resource.Color = isRock and Color3.fromRGB(150, 150, 150) or Color3.fromRGB(139, 69, 19)
-                    resource.Material = isRock and Enum.Material.Slate or Enum.Material.Wood
                     resource.Parent = islandFolder
                 end
 

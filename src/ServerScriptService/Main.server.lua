@@ -18,6 +18,7 @@ local DailyLogSystem = require(ServerScriptService:WaitForChild("DAILY_LOG_SYSTE
 local AudioSystem = require(ServerScriptService:WaitForChild("AUDIO_SYSTEM_1"))
 local SpaceshipLobby = require(ServerScriptService:WaitForChild("LOBBY_SPACESHIP_1"))
 local PortalDomain = require(ServerScriptService:WaitForChild("FANTASY_PORTAL_DOMAIN_1"))
+local SpaceshipMarket = require(ServerScriptService:WaitForChild("SPACESHIP_MARKET"))
 
 -- Initialize Core Systems
 CombatManager.Initialize()
@@ -25,6 +26,7 @@ DailyLogSystem.Initialize()
 AudioSystem.Initialize()
 SpaceshipLobby.Initialize()
 PortalDomain.Initialize()
+SpaceshipMarket.Initialize()
 
 print("Core Systems Initialized.")
 
