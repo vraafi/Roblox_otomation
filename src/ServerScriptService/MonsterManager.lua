@@ -78,10 +78,22 @@ function MonsterManager.SpawnMonsterByData(data, position)
         bodyPos.Parent = rootPart
     end
 
-    if data.MeshId then
+    -- Attempt visual overhaul first
+    local ServerScriptService = game:GetService("ServerScriptService")
+    local VisualOverhaul = require(ServerScriptService:WaitForChild("VisualAssetOverhaul"))
+
+    -- Inject real catalog MeshID if we mapped it, otherwise fallback
+    local finalMeshId = data.MeshId
+    if VisualOverhaul.MonsterMeshIDs[data.Name] then
+        finalMeshId = VisualOverhaul.MonsterMeshIDs[data.Name]
+    elseif VisualOverhaul.MonsterMeshIDs["Default"] then
+        finalMeshId = VisualOverhaul.MonsterMeshIDs["Default"]
+    end
+
+    if finalMeshId then
         local mesh = Instance.new("SpecialMesh")
         mesh.MeshType = Enum.MeshType.FileMesh
-        mesh.MeshId = data.MeshId
+        mesh.MeshId = finalMeshId
         if data.Name == "The_Absolute_Apex" then mesh.Scale = Vector3.new(3, 3, 3) end
         mesh.Parent = rootPart
     end

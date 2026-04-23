@@ -17,24 +17,69 @@ function ItemManager.SpawnPhysicalItem(itemId, position)
     local height = data.GridHeight or 1
     local width = data.GridWidth or 1
 
-    local part = Instance.new("Part")
-    part.Name = data.Name
-    part.Size = Vector3.new(width * 0.8, 0.5, height * 0.8)
-    part.Position = position
-    part.Color = data.Color or Color3.new(1, 1, 1)
-    part.Material = data.Material or Enum.Material.Plastic
-    part.Parent = workspace
+    -- Attempt visual overhaul first
+    local ServerScriptService = game:GetService("ServerScriptService")
+    local VisualOverhaul = require(ServerScriptService:WaitForChild("VisualAssetOverhaul"))
 
-    if data.MeshId then
-        local mesh = Instance.new("SpecialMesh")
-        mesh.MeshType = Enum.MeshType.FileMesh
-        mesh.MeshId = data.MeshId
-        mesh.Scale = part.Size
-        mesh.Parent = part
-    end
+    local physicalItem
 
-    local prompt = Instance.new("ProximityPrompt")
-    prompt.ActionText = "Pick Up"
+    if data.Type == "Weapon" then
+        physicalItem = VisualOverhaul.BuildCustomWeapon(data, position)
+        physicalItem.Parent = workspace
+
+        -- Need to attach prompt to the primary part
+        local prompt = Instance.new("ProximityPrompt")
+        prompt.ActionText = "Pick Up"
+        prompt.ObjectText = data.Name
+        prompt.Parent = physicalItem.PrimaryPart
+
+        -- Override 'part' variable for the rest of the function logic
+        local model = physicalItem
+
+        prompt.Triggered:Connect(function(player)
+            print(player.Name .. " looted " .. data.Name)
+
+            local replicatedStorage = game:GetService("ReplicatedStorage")
+            local events = replicatedStorage:FindFirstChild("Events")
+            if events and events:FindFirstChild("ItemPickedUp") then
+                events.ItemPickedUp:FireClient(player, {
+                    Name = data.Name,
+                    GridWidth = width,
+                    GridHeight = height,
+                    Color = data.Color
+                })
+            end
+
+            local PlayerManager = require(game:GetService("ServerScriptService"):WaitForChild("PlayerManager"))
+            local playerData = PlayerManager.ActivePlayers[player.UserId]
+            if playerData then
+                table.insert(playerData.Inventory.Items, data.Id)
+            end
+
+            model:Destroy()
+        end)
+
+        return model
+    else
+        -- Fallback to standard block generic generation for standard loot
+        physicalItem = Instance.new("Part")
+        physicalItem.Name = data.Name
+        physicalItem.Size = Vector3.new(width * 0.8, 0.5, height * 0.8)
+        physicalItem.Position = position
+        physicalItem.Color = data.Color or Color3.new(1, 1, 1)
+        physicalItem.Material = data.Material or Enum.Material.Plastic
+        physicalItem.Parent = workspace
+
+        if data.MeshId then
+            local mesh = Instance.new("SpecialMesh")
+            mesh.MeshType = Enum.MeshType.FileMesh
+            mesh.MeshId = data.MeshId
+            mesh.Scale = physicalItem.Size
+            mesh.Parent = physicalItem
+        end
+
+        local prompt = Instance.new("ProximityPrompt")
+        prompt.ActionText = "Pick Up"
 
     -- Format dynamic prompt text based on item type
     local promptTxt = data.Name
@@ -50,46 +95,47 @@ function ItemManager.SpawnPhysicalItem(itemId, position)
     end
 
     prompt.ObjectText = promptTxt
-    prompt.Parent = part
+    prompt.Parent = physicalItem
 
-    prompt.Triggered:Connect(function(player)
-        print(player.Name .. " looted " .. data.Name)
+        prompt.Triggered:Connect(function(player)
+            print(player.Name .. " looted " .. data.Name)
 
-        -- Fire RemoteEvent to update client UI
-        local replicatedStorage = game:GetService("ReplicatedStorage")
-        local events = replicatedStorage:FindFirstChild("Events")
-        if not events then
-            events = Instance.new("Folder")
-            events.Name = "Events"
-            events.Parent = replicatedStorage
-        end
+            -- Fire RemoteEvent to update client UI
+            local replicatedStorage = game:GetService("ReplicatedStorage")
+            local events = replicatedStorage:FindFirstChild("Events")
+            if not events then
+                events = Instance.new("Folder")
+                events.Name = "Events"
+                events.Parent = replicatedStorage
+            end
 
-        local pickupEvent = events:FindFirstChild("ItemPickedUp")
-        if not pickupEvent then
-            pickupEvent = Instance.new("RemoteEvent")
-            pickupEvent.Name = "ItemPickedUp"
-            pickupEvent.Parent = events
-        end
+            local pickupEvent = events:FindFirstChild("ItemPickedUp")
+            if not pickupEvent then
+                pickupEvent = Instance.new("RemoteEvent")
+                pickupEvent.Name = "ItemPickedUp"
+                pickupEvent.Parent = events
+            end
 
-        -- Add to Server Inventory Data
-        local PlayerManager = require(game:GetService("ServerScriptService"):WaitForChild("PlayerManager"))
-        local playerData = PlayerManager.ActivePlayers[player.UserId]
-        if playerData then
-            table.insert(playerData.Inventory.Items, data.Id)
-        end
+            -- Add to Server Inventory Data
+            local PlayerManager = require(game:GetService("ServerScriptService"):WaitForChild("PlayerManager"))
+            local playerData = PlayerManager.ActivePlayers[player.UserId]
+            if playerData then
+                table.insert(playerData.Inventory.Items, data.Id)
+            end
 
-        -- Send data to the client so it renders on the Tetris Grid
-        pickupEvent:FireClient(player, {
-            Name = data.Name,
-            GridWidth = width,
-            GridHeight = height,
-            Color = data.Color
-        })
+            -- Send data to the client so it renders on the Tetris Grid
+            pickupEvent:FireClient(player, {
+                Name = data.Name,
+                GridWidth = width,
+                GridHeight = height,
+                Color = data.Color
+            })
 
-        part:Destroy()
-    end)
+            physicalItem:Destroy()
+        end)
 
-    return part
+        return physicalItem
+    end
 end
 
 -- Calculates a random item ID weighted strictly by its Value.

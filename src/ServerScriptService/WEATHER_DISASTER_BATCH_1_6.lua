@@ -56,6 +56,7 @@ function WeatherDisasterBatch25.TriggerDisaster(disasterId, targetAreaCenter, ar
     print("WARNING: " .. data.Name .. " has begun!")
 
     -- Procedural Visual Effect based on type
+    -- Create base boundary for the weather system
     local effectPart = Instance.new("Part")
     effectPart.Name = "WeatherEffect_" .. data.Name
     effectPart.Shape = Enum.PartType.Cylinder
@@ -64,10 +65,13 @@ function WeatherDisasterBatch25.TriggerDisaster(disasterId, targetAreaCenter, ar
     effectPart.Orientation = Vector3.new(0, 0, 90)
     effectPart.Anchored = true
     effectPart.CanCollide = false
-    effectPart.Transparency = 0.6
-    effectPart.Color = data.Color
-    effectPart.Material = Enum.Material.Neon
+    effectPart.Transparency = 1 -- Hide the cylinder itself
     effectPart.Parent = workspace
+
+    -- Inject realistic particle emitters via Visual Overhaul
+    local ServerScriptService = game:GetService("ServerScriptService")
+    local VisualOverhaul = require(ServerScriptService:WaitForChild("VisualAssetOverhaul"))
+    VisualOverhaul.CreateWeatherParticles(data.Name, effectPart)
 
     local isActive = true
 
