@@ -47,6 +47,37 @@ function PlayerManager.UpdatePlayerStats(playerId)
     playerData.TotalStats = newStats
 end
 
+function PlayerManager.ApplyFallDamage(player, fallDistanceStuds)
+    local playerData = PlayerManager.ActivePlayers[player.UserId]
+    if not playerData then return end
+
+    -- 1 meter is roughly 3.5 studs in Roblox
+    local fallDistanceMeters = fallDistanceStuds / 3.5
+
+    local fallResult = StatSystem.CalculateFallDamage(fallDistanceMeters)
+
+    if fallResult.LegDamage > 0 then
+        -- Integrate with Spaceship Lobby's limb health system if it's running
+        -- For now, apply direct damage and status
+        playerData.CurrentHealth = math.max(0, playerData.CurrentHealth - fallResult.LegDamage)
+
+        if player.Character and player.Character:FindFirstChild("Humanoid") then
+            player.Character.Humanoid.Health = playerData.CurrentHealth
+        end
+
+        print(player.Name .. " took " .. fallResult.LegDamage .. " leg damage from falling " .. string.format("%.1f", fallDistanceMeters) .. "m.")
+
+        if fallResult.BrokenLeg then
+            playerData.Status = "BrokenLeg"
+            print(player.Name .. " suffered a BROKEN LEG.")
+            -- Force walk speed down severely
+            if player.Character and player.Character:FindFirstChild("Humanoid") then
+                player.Character.Humanoid.WalkSpeed = 5
+            end
+        end
+    end
+end
+
 -- Handles death (Arena Breakout logic: lose everything un-secured)
 function PlayerManager.HandlePlayerDeath(playerId)
     local playerData = PlayerManager.ActivePlayers[playerId]

@@ -80,22 +80,15 @@ function PortalDomain.StartDomain()
 
     print("Started domain " .. domainId .. " with " .. #playersInMatch .. " players.")
 
-    -- Teleport players to generation zone
-    local domainSpawn = Vector3.new(0, 0, 5000) -- Far away from spaceship
-
-    -- Build physical domain floor
-    local domainFloor = Instance.new("Part")
-    domainFloor.Name = domainId
-    domainFloor.Size = Vector3.new(500, 2, 500)
-    domainFloor.Position = domainSpawn - Vector3.new(0, 5, 0)
-    domainFloor.Anchored = true
-    domainFloor.Material = Enum.Material.Grass
-    domainFloor.Color = Color3.fromRGB(50, 150, 50)
-    domainFloor.Parent = workspace
+    -- Teleport players to the Macro-Biome (Kalimantan)
+    -- In a real game, you would spawn a new instance of the macro-biome far away.
+    -- Here we teleport them to the center of the existing Kalimantan generation zone.
+    local domainSpawn = Vector3.new(0, 100, 0) -- High enough to not clip into mountains, physics will drop them
 
     for _, player in ipairs(playersInMatch) do
         if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-            player.Character.HumanoidRootPart.Position = domainSpawn + Vector3.new(math.random(-10, 10), 0, math.random(-10, 10))
+            -- Safely pivot the character to prevent breaking weld joints
+            player.Character:PivotTo(CFrame.new(domainSpawn + Vector3.new(math.random(-50, 50), 0, math.random(-50, 50))))
         end
     end
 

@@ -40,12 +40,35 @@ function StatSystem.CalculateTotalStats(equippedGear)
         end
     end
 
-    -- Heavy gear might reduce speed slightly, simulating realism
-    if totalWeight > 20 then
-        totalStats.MoveSpeed = math.max(10, totalStats.MoveSpeed - (totalWeight - 20) * 0.2)
+    -- Encumbrance Logic (Arena Breakout Style)
+    totalStats.TotalWeight = totalWeight
+
+    if totalWeight >= 70 then
+        -- Over-encumbered: Cannot run, only walk slowly
+        totalStats.MoveSpeed = 6
+        totalStats.CanSprint = false
+    elseif totalWeight > 30 then
+        -- Partially encumbered: Scaling slowdown
+        totalStats.MoveSpeed = math.max(10, totalStats.MoveSpeed - (totalWeight - 30) * 0.15)
+        totalStats.CanSprint = true
+    else
+        totalStats.CanSprint = true
     end
 
     return totalStats
+end
+
+-- Fall damage calculation based on studs (1 meter ~ 3.5 studs in Roblox)
+function StatSystem.CalculateFallDamage(fallDistanceMeters)
+    if fallDistanceMeters < 1 then
+        return { LegDamage = 0, BrokenLeg = false }
+    elseif fallDistanceMeters >= 1 and fallDistanceMeters < 3 then
+        -- 1 to 3 meters: Leg damage but no break
+        return { LegDamage = math.floor(fallDistanceMeters * 15), BrokenLeg = false }
+    else
+        -- 3+ meters: Severe damage and broken leg
+        return { LegDamage = math.floor(fallDistanceMeters * 25), BrokenLeg = true }
+    end
 end
 
 return StatSystem

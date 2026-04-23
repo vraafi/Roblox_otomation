@@ -135,6 +135,21 @@ game.Players.PlayerAdded:Connect(function(player)
         humanoid.Died:Connect(function()
             PlayerManager.HandlePlayerDeath(player.UserId)
         end)
+
+        -- Fall Damage tracking
+        local fallStartY = 0
+        humanoid.StateChanged:Connect(function(oldState, newState)
+            if newState == Enum.HumanoidStateType.Freefall then
+                fallStartY = character:GetPivot().Position.Y
+            elseif newState == Enum.HumanoidStateType.Landed then
+                local fallEndY = character:GetPivot().Position.Y
+                local distanceFallen = fallStartY - fallEndY
+
+                if distanceFallen > 3.5 then -- Only calculate if falling more than 1 meter (3.5 studs)
+                    PlayerManager.ApplyFallDamage(player, distanceFallen)
+                end
+            end
+        end)
     end)
 end)
 

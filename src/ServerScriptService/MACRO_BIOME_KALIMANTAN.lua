@@ -47,19 +47,50 @@ function MacroBiome.GenerateIsland()
                 local chunkX = (x - (#islandMask/2)) * CHUNK_SIZE
                 local chunkZ = (z - (#islandMask[1]/2)) * CHUNK_SIZE
 
+                -- Create uneven terrain height
+                local elevation = math.random(10, 150)
+                local isMountain = math.random() > 0.8
+                if isMountain then elevation = math.random(200, 600) end
+
                 local chunk = Instance.new("Part")
                 chunk.Name = "Chunk_" .. x .. "_" .. z
-                chunk.Size = Vector3.new(CHUNK_SIZE, 50, CHUNK_SIZE)
-                chunk.Position = Vector3.new(chunkX, 0, chunkZ)
+                if isMountain then chunk.Shape = Enum.PartType.Wedge end
+                chunk.Size = Vector3.new(CHUNK_SIZE, elevation, CHUNK_SIZE)
+                chunk.Position = Vector3.new(chunkX, elevation/2, chunkZ)
                 chunk.Anchored = true
-                chunk.Color = Color3.fromRGB(34, 139, 34) -- Tropical Green
-                chunk.Material = Enum.Material.Grass
+                chunk.Color = isMountain and Color3.fromRGB(100, 100, 100) or Color3.fromRGB(34, 139, 34)
+                chunk.Material = isMountain and Enum.Material.Slate or Enum.Material.Grass
                 chunk.Parent = islandFolder
 
-                -- Seed Monsters
+                -- Seed Trees & Rocks (Harvestable Placeholders)
+                for t = 1, math.random(5, 15) do
+                    local isRock = math.random() > 0.7
+                    local resource = Instance.new("Part")
+                    resource.Name = isRock and "Harvestable_Rock" or "Harvestable_Tree"
+                    resource.Size = isRock and Vector3.new(10, 10, 10) or Vector3.new(4, 40, 4)
+                    resource.Position = Vector3.new(chunkX + math.random(-CHUNK_SIZE/2, CHUNK_SIZE/2), elevation + (resource.Size.Y/2), chunkZ + math.random(-CHUNK_SIZE/2, CHUNK_SIZE/2))
+                    resource.Anchored = true
+                    resource.Color = isRock and Color3.fromRGB(150, 150, 150) or Color3.fromRGB(139, 69, 19)
+                    resource.Material = isRock and Enum.Material.Slate or Enum.Material.Wood
+                    resource.Parent = islandFolder
+                end
+
+                -- Seed Buildings / Loot Houses
+                if not isMountain and math.random() > 0.7 then
+                    local house = Instance.new("Part")
+                    house.Name = "Abandoned_House"
+                    house.Size = Vector3.new(40, 30, 40)
+                    house.Position = Vector3.new(chunkX, elevation + 15, chunkZ)
+                    house.Anchored = true
+                    house.Color = Color3.fromRGB(100, 80, 60)
+                    house.Material = Enum.Material.Wood
+                    house.Parent = islandFolder
+                end
+
+                -- Seed Monsters (Spawned precisely on top of the chunk elevation)
                 if math.random() > 0.5 then
                     local randomMonsterId = math.random(1, 100)
-                    local spawnPos = Vector3.new(chunkX + math.random(-500, 500), 50, chunkZ + math.random(-500, 500))
+                    local spawnPos = Vector3.new(chunkX + math.random(-CHUNK_SIZE/2, CHUNK_SIZE/2), elevation + 5, chunkZ + math.random(-CHUNK_SIZE/2, CHUNK_SIZE/2))
                     MonsterManager.SpawnMonsterByData({
                         Name = "Island_Beast_"..randomMonsterId,
                         Health = 200, Damage = 25, Speed = 16, DropCoreLevel = math.random(1, 5),
@@ -68,9 +99,9 @@ function MacroBiome.GenerateIsland()
                 end
 
                 -- Seed Furniture (Ruins/Loot points)
-                if math.random() > 0.7 then
+                if not isMountain and math.random() > 0.7 then
                     local randomFurnitureId = math.random(1, 10)
-                    local spawnPos = Vector3.new(chunkX + math.random(-500, 500), 25, chunkZ + math.random(-500, 500))
+                    local spawnPos = Vector3.new(chunkX + math.random(-50, 50), elevation + 2, chunkZ + math.random(-50, 50))
                     FurnitureSystem.SpawnFurniture(randomFurnitureId, spawnPos, math.random(0, 360))
                 end
             end
@@ -122,8 +153,8 @@ function MacroBiome.StartMeteorLoop()
             task.wait(math.random(60, 180)) -- Random meteor every 1 to 3 minutes
 
             -- Pick a random chunk coordinate (rough estimation of island bounds)
-            local targetX = math.random(-GRID_WIDTH/2, GRID_WIDTH/2) * CHUNK_SIZE
-            local targetZ = math.random(-GRID_LENGTH/2, GRID_LENGTH/2) * CHUNK_SIZE
+            local targetX = math.floor(math.random(-GRID_WIDTH/2, GRID_WIDTH/2)) * CHUNK_SIZE
+            local targetZ = math.floor(math.random(-GRID_LENGTH/2, GRID_LENGTH/2)) * CHUNK_SIZE
             local strikeZone = Vector3.new(targetX, 0, targetZ)
 
             print("METEOR WARNING: Incoming strike at " .. tostring(strikeZone))
