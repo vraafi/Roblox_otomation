@@ -81,7 +81,19 @@ task.spawn(function()
     FurnitureSystem.SpawnFurniture(1, Vector3.new(10, 1002, 10), 0) -- Stash Box
     FurnitureSystem.SpawnFurniture(2, Vector3.new(20, 1002, 10), 90) -- Gun Rack
 
-    print("World Generation Complete.")
+    -- Generate O'Neill Cylinder Environmental Lighting
+    local StreetLightSystem = require(ServerScriptService:WaitForChild("STREET_LIGHTS_BATCH"))
+
+    -- Create a grand avenue of Zero-G Axis Beacons down the center
+    StreetLightSystem.GenerateStreetAvenue(2, Vector3.new(-500, 4000, 0), Vector3.new(1, 0, 0), 1000, 100)
+
+    -- Place some Maglev Track Illuminators near the lobby
+    StreetLightSystem.GenerateStreetAvenue(5, Vector3.new(0, 1005, 50), Vector3.new(1, 0, 0), 200, 20)
+
+    -- Place a Warning light near the supposed Sabatier reactors
+    StreetLightSystem.SpawnLight(7, Vector3.new(50, 1002, -50))
+
+    print("World Generation Complete (Included O'Neill Habitat Lighting).")
 end)
 
 -- 4. Game Loops (Heartbeat)
