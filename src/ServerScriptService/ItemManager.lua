@@ -92,4 +92,39 @@ function ItemManager.SpawnPhysicalItem(itemId, position)
     return part
 end
 
+-- Calculates a random item ID weighted strictly by its Value.
+-- Cheap items have a massively higher drop chance. Rare/Expensive items drop very rarely.
+-- This regulates supply on the Flea Market, creating an organic price ceiling.
+function ItemManager.GetRandomWeightedItem()
+    local totalWeight = 0
+    local weightTable = {}
+
+    for id, data in pairs(ItemDatabase.Items) do
+        if data.Type == "ValuableLoot" or data.Type == "Weapon" or data.Type == "Armor" then
+            local baseValue = data.Value or 100
+
+            -- The weight formula: Inversely proportional to value.
+            -- A $10 item has a weight of 1,000,000. A $50,000 item has a weight of 200.
+            local dropWeight = math.floor(10000000 / baseValue)
+
+            table.insert(weightTable, {Id = id, Weight = dropWeight})
+            totalWeight = totalWeight + dropWeight
+        end
+    end
+
+    if totalWeight == 0 then return nil end
+
+    local randomTarget = math.random(1, totalWeight)
+    local currentSum = 0
+
+    for _, entry in ipairs(weightTable) do
+        currentSum = currentSum + entry.Weight
+        if randomTarget <= currentSum then
+            return entry.Id
+        end
+    end
+
+    return nil
+end
+
 return ItemManager

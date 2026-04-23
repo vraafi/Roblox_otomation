@@ -41,6 +41,50 @@ function SpaceshipMarket.Initialize()
         npc.PrimaryPart = rootPart
         npc.Parent = workspace
     end
+
+    -- Setup the NPC Sell Price Floor logic
+    local events = ReplicatedStorage:FindFirstChild("Events")
+    if events then
+        local npcSellEvent = events:FindFirstChild("NPCSellRequest")
+        if not npcSellEvent then
+            npcSellEvent = Instance.new("RemoteFunction")
+            npcSellEvent.Name = "NPCSellRequest"
+            npcSellEvent.Parent = events
+        end
+        npcSellEvent.OnServerInvoke = SpaceshipMarket.HandleNPCSell
+    end
+end
+
+-- Economic Price Floor: Players can instantly sell to NPCs for 40% of base value.
+-- This ensures Flea Market prices never collapse below this hard floor.
+function SpaceshipMarket.HandleNPCSell(player, itemId)
+    local pData = _G.PlayerEconomies and _G.PlayerEconomies[player.UserId]
+    if not pData then return false, "Economy data missing" end
+
+    local PlayerManager = require(ServerScriptService:WaitForChild("PlayerManager"))
+    local playerData = PlayerManager.ActivePlayers[player.UserId]
+    if not playerData then return false, "Player data missing" end
+
+    local itemData = ItemDatabase.GetItem(itemId)
+    if not itemData then return false, "Invalid item" end
+
+    -- Verify ownership
+    local hasItem = false
+    for i, storedItemId in ipairs(playerData.Inventory.Items) do
+        if storedItemId == itemId then
+            hasItem = true
+            table.remove(playerData.Inventory.Items, i)
+            break
+        end
+    end
+
+    if not hasItem then return false, "You do not own this item." end
+
+    local floorPrice = math.floor(itemData.Value * 0.40)
+    pData.TotalDollars = pData.TotalDollars + floorPrice
+
+    print(player.Name .. " sold " .. itemData.Name .. " to NPC for $" .. floorPrice)
+    return true, "Sold to NPC for $" .. floorPrice
 end
 
 -- Simulates server verification of a purchase

@@ -114,33 +114,19 @@ function MacroBiome.GenerateIsland()
                     house.Material = Enum.Material.Wood
                     house.Parent = islandFolder
 
-                    -- FIX: Actually spawn loot items inside the house
+                    -- MACRO-ECONOMICS: Spawn strictly regulated, weighted physical loot inside the houses
                     local ItemManager = require(ServerScriptService:WaitForChild("ItemManager"))
+
                     for i = 1, math.random(1, 3) do
-                        -- Pick a random batch prefix for variety
-                        local prefixes = {"ITEMS_BATCH_", "ARMOR_BATCH_", "WEAPON_MODERN_BATCH_", "WEAPON_FANTASY_BATCH_"}
-                        local chosenPrefix = prefixes[math.random(1, #prefixes)]
+                        local spawnOffset = Vector3.new(math.random(-15, 15), 2, math.random(-15, 15))
+                        local itemSpawnPos = housePos + spawnOffset
 
-                        -- Since we don't have a reverse lookup by generic ID across batches right now,
-                        -- we will simulate the physical spawn of an item visually representing loot.
-                        -- In production, ItemManager would be rewritten to map generic random numbers to specific Item IDs.
-                        local lootVisual = Instance.new("Part")
-                        lootVisual.Name = "Loot_Crate"
-                        lootVisual.Size = Vector3.new(2, 2, 2)
-                        lootVisual.Position = housePos + Vector3.new(math.random(-10, 10), -10, math.random(-10, 10))
-                        lootVisual.Color = Color3.fromRGB(50, 150, 50)
-                        lootVisual.Anchored = true
-                        lootVisual.Parent = house
+                        -- Request an item ID based strictly on drop rate economics
+                        local selectedItemId = ItemManager.GetRandomWeightedItem()
 
-                        local prompt = Instance.new("ProximityPrompt")
-                        prompt.ActionText = "Search"
-                        prompt.ObjectText = "Abandoned Loot"
-                        prompt.Parent = lootVisual
-
-                        prompt.Triggered:Connect(function(player)
-                            print(player.Name .. " searched abandoned loot.")
-                            lootVisual:Destroy()
-                        end)
+                        if selectedItemId then
+                            ItemManager.SpawnPhysicalItem(selectedItemId, itemSpawnPos)
+                        end
                     end
                 end
 
