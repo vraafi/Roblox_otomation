@@ -10,7 +10,15 @@ local InventorySystem = require(script.Parent.Parent.ReplicatedStorage.Inventory
 PlayerManager.ActivePlayers = {}
 
 function PlayerManager.SpawnPlayer(playerId)
-    -- Create new inventory
+    -- Prevent wiping existing inventory if they already exist (e.g. respawning in lobby after extract)
+    if PlayerManager.ActivePlayers[playerId] then
+        local existingData = PlayerManager.ActivePlayers[playerId]
+        existingData.CurrentHealth = existingData.TotalStats.MaxHealth
+        existingData.Status = "Alive"
+        return existingData
+    end
+
+    -- Create new inventory for brand new players
     local inv = InventorySystem.NewInventory()
 
     -- Base naked stats initially

@@ -6,29 +6,35 @@ local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 
 local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:WaitForChild("Humanoid")
 
 -- Track if the player is currently opening a menu so we can disable combat
 local isMenuOpen = false
 
+-- Use dynamic referencing so it always points to the alive character
 local function handleJump(actionName, inputState, inputObject)
     if actionName == "JumpAction" and inputState == Enum.UserInputState.Begin then
-        if not isMenuOpen and humanoid:GetState() ~= Enum.HumanoidStateType.Dead then
-            humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+        local character = player.Character
+        if character and not isMenuOpen then
+            local humanoid = character:FindFirstChild("Humanoid")
+            if humanoid and humanoid:GetState() ~= Enum.HumanoidStateType.Dead then
+                humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+            end
         end
     end
 end
 
 local function handleShoot(actionName, inputState, inputObject)
     if actionName == "ShootAction" and inputState == Enum.UserInputState.Begin then
-        if not isMenuOpen and humanoid.Health > 0 then
-            -- In a full game, this fires a RemoteEvent to CombatManager.lua
-            print("Client requested FIRE weapon!")
-            -- Determine aim direction from camera
-            local cam = workspace.CurrentCamera
-            local ray = cam:ScreenPointToRay(cam.ViewportSize.X/2, cam.ViewportSize.Y/2)
-            -- FireServer(ray.Origin, ray.Direction)
+        local character = player.Character
+        if character and not isMenuOpen then
+            local humanoid = character:FindFirstChild("Humanoid")
+            if humanoid and humanoid.Health > 0 then
+                -- In a full game, this fires a RemoteEvent to CombatManager.lua
+                print("Client requested FIRE weapon!")
+                local cam = workspace.CurrentCamera
+                local ray = cam:ScreenPointToRay(cam.ViewportSize.X/2, cam.ViewportSize.Y/2)
+                -- FireServer(ray.Origin, ray.Direction)
+            end
         end
     end
 end

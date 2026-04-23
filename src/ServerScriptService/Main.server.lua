@@ -20,6 +20,20 @@ local SpaceshipLobby = require(ServerScriptService:WaitForChild("LOBBY_SPACESHIP
 local PortalDomain = require(ServerScriptService:WaitForChild("FANTASY_PORTAL_DOMAIN_1"))
 local FleaMarketSystem = require(ServerScriptService:WaitForChild("FleaMarketSystem"))
 
+-- Fix RemoteEvent Race Condition: Create RemoteEvents immediately
+local events = ReplicatedStorage:FindFirstChild("Events")
+if not events then
+    events = Instance.new("Folder")
+    events.Name = "Events"
+    events.Parent = ReplicatedStorage
+end
+local pickupEvent = events:FindFirstChild("ItemPickedUp")
+if not pickupEvent then
+    pickupEvent = Instance.new("RemoteEvent")
+    pickupEvent.Name = "ItemPickedUp"
+    pickupEvent.Parent = events
+end
+
 -- Initialize Core Systems
 CombatManager.Initialize()
 DailyLogSystem.Initialize()

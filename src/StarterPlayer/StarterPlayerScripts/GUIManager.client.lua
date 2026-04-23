@@ -19,18 +19,8 @@ function GUIManager.Initialize()
     GUIManager.CreateFleaMarketScreen(screenGui)
     GUIManager.CreateMapScreen(screenGui)
 
-    -- Bind keys (Inventory -> Tab/I, Map -> M)
-    local UserInputService = game:GetService("UserInputService")
-    UserInputService.InputBegan:Connect(function(input, isProcessed)
-        if isProcessed then return end
-        if input.KeyCode == Enum.KeyCode.Tab or input.KeyCode == Enum.KeyCode.I then
-            GUIManager.ToggleInventory()
-        elseif input.KeyCode == Enum.KeyCode.M then
-            GUIManager.ToggleMap()
-        end
-    end)
-
     -- Create on-screen buttons for Mobile users
+    local UserInputService = game:GetService("UserInputService")
     if UserInputService.TouchEnabled then
         local invBtn = Instance.new("TextButton")
         invBtn.Name = "MobileInvButton"
@@ -255,11 +245,40 @@ function GUIManager.CreateVitalsHUD(parentGui)
     local mpText = Instance.new("TextLabel")
     mpText.Size = UDim2.new(1, 0, 1, 0)
     mpText.BackgroundTransparency = 1
-    mpText.Text = "50 / 100"
+    mpText.Text = "0 / 0"
     mpText.TextColor3 = Color3.new(1,1,1)
     mpText.Font = Enum.Font.SourceSansBold
     mpText.TextStrokeTransparency = 0
     mpText.Parent = mpBG
+
+    -- Dynamically update Health and Mana bars
+    local char = player.Character or player.CharacterAdded:Wait()
+    local humanoid = char:WaitForChild("Humanoid")
+
+    local function updateBars()
+        local maxHp = humanoid.MaxHealth
+        local currentHp = humanoid.Health
+        hpText.Text = math.floor(currentHp) .. " / " .. math.floor(maxHp)
+        hpFill.Size = UDim2.new(currentHp / maxHp, 0, 1, 0)
+
+        -- In a real game, Mana is stored in an IntValue or PlayerManager
+        -- Here we simulate reading it from a hypothetical ManaValue object or default to 0
+        local manaVal = char:FindFirstChild("CurrentMana")
+        local maxManaVal = char:FindFirstChild("MaxMana")
+        local currentMana = manaVal and manaVal.Value or 0
+        local maxMana = maxManaVal and maxManaVal.Value or 100
+
+        if maxMana > 0 then
+            mpText.Text = math.floor(currentMana) .. " / " .. math.floor(maxMana)
+            mpFill.Size = UDim2.new(currentMana / maxMana, 0, 1, 0)
+        else
+            mpText.Text = "NO MANA CORE EQUIPPED"
+            mpFill.Size = UDim2.new(0, 0, 1, 0)
+        end
+    end
+
+    humanoid.HealthChanged:Connect(updateBars)
+    updateBars()
 end
 
 local inventoryScreen = nil
@@ -564,9 +583,27 @@ local function SetupNetworkListeners()
     end
 end
 
--- Wait a second to ensure player is loaded, then initialize
+-- Bind Keys ONCE outside the spawn loop to prevent memory leaks and duplicate toggles
+local UserInputService = game:GetService("UserInputService")
+UserInputService.InputBegan:Connect(function(input, isProcessed)
+    if isProcessed then return end
+    if input.KeyCode == Enum.KeyCode.Tab or input.KeyCode == Enum.KeyCode.I then
+        GUIManager.ToggleInventory()
+    elseif input.KeyCode == Enum.KeyCode.M then
+        GUIManager.ToggleMap()
+    end
+end)
+
+-- Re-initialize HUD when the player respawns so Health/Mana bars update correctly
+player.CharacterAdded:Connect(function(character)
+    local oldGui = player:WaitForChild("PlayerGui"):FindFirstChild("AbsoluteApexHUD")
+    if oldGui then oldGui:Destroy() end
+    GUIManager.Initialize()
+end)
+
+-- Initial load
 task.spawn(function()
-    task.wait(1)
+    if not player.Character then player.CharacterAdded:Wait() end
     GUIManager.Initialize()
     SetupNetworkListeners()
 end)
