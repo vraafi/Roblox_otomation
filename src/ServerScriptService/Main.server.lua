@@ -62,19 +62,12 @@ task.spawn(function()
     -- Wait a moment to ensure workspace is ready
     task.wait(2)
 
-    local BiomeSystem1 = require(ServerScriptService:WaitForChild("BIOME_SYSTEM_1_6"))
-    local BiomeSystem2 = require(ServerScriptService:WaitForChild("BIOME_SYSTEM_7_10"))
+    -- Generate the massive Tropical Kalimantan Island macro-biome
+    local MacroBiome = require(ServerScriptService:WaitForChild("MACRO_BIOME_KALIMANTAN"))
+    MacroBiome.GenerateIsland()
 
-    -- Generate Biome 6 (Overgrown Jungle) for the extraction zone test
-    local junglePos = Vector3.new(2000, 0, 2000)
-    BiomeSystem1.GenerateBiome(6, junglePos)
-
-    -- Register an extraction zone in the jungle
-    ExtractionManager.RegisterExtractionZone("Jungle_Extract_Alpha", junglePos, 50)
-
-    -- Spawn a Boss Monster in the Jungle (Task Monster #5 - Troll Brute)
-    local MonsterBatch1 = require(ServerScriptService:WaitForChild("MONSTERS_BATCH_1_6"))
-    MonsterBatch1.SpawnMonster(5, junglePos + Vector3.new(20, 10, 20))
+    -- Register an extraction zone in the center of the island
+    ExtractionManager.RegisterExtractionZone("Kalimantan_Extract_Alpha", Vector3.new(0, 0, 0), 50)
 
     -- Spawn some Furniture in the Spaceship Lobby
     local FurnitureSystem = require(ServerScriptService:WaitForChild("FURNITURE_BATCH_1_10"))
