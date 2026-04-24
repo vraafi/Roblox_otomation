@@ -19,6 +19,7 @@ local AudioSystem = require(ServerScriptService:WaitForChild("AUDIO_SYSTEM_1"))
 local SpaceshipLobby = require(ServerScriptService:WaitForChild("LOBBY_SPACESHIP_1"))
 local PortalDomain = require(ServerScriptService:WaitForChild("FANTASY_PORTAL_DOMAIN_1"))
 local FleaMarketSystem = require(ServerScriptService:WaitForChild("FleaMarketSystem"))
+local LobbyStashSystem = require(ServerScriptService:WaitForChild("LobbyStashSystem"))
 
 -- Fix RemoteEvent Race Condition: Create RemoteEvents immediately
 local events = ReplicatedStorage:FindFirstChild("Events")
@@ -41,6 +42,7 @@ AudioSystem.Initialize()
 SpaceshipLobby.Initialize()
 PortalDomain.Initialize()
 FleaMarketSystem.Initialize()
+LobbyStashSystem.Initialize()
 
 print("Core Systems Initialized.")
 
@@ -70,8 +72,9 @@ registerBatch("WEAPON_MODERN_BATCH_1_6")
 registerBatch("WEAPON_MODERN_BATCH_7_10")
 registerBatch("WEAPON_FANTASY_BATCH_1_6")
 registerBatch("WEAPON_FANTASY_BATCH_7_10")
+registerBatch("ITEMS_BATCH_BACKPACKS")
 
-print("ItemDatabase fully populated. Total defined: 126 objects.")
+print("ItemDatabase fully populated. Total defined: 132 objects.")
 
 -- 3. Procedural World Generation (Biomes & Initial Spawns)
 task.spawn(function()

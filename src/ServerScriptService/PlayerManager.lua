@@ -94,20 +94,28 @@ function PlayerManager.ApplyFallDamage(player, fallDistanceStuds)
 end
 
 -- Handles death (Arena Breakout logic: lose everything un-secured)
+-- Handles death (Arena Breakout logic: lose everything un-secured, keep Safe Case)
 function PlayerManager.HandlePlayerDeath(playerId)
     local playerData = PlayerManager.ActivePlayers[playerId]
     if not playerData then return end
 
     playerData.Status = "Dead"
 
-    -- Drop all items in inventory and equipped gear to a physical loot box in the world
+    -- Drop all regular items in inventory and equipped gear to a physical loot box in the world
     -- (In a real Roblox script, spawn a Model with a ProximityPrompt here)
+
+    -- Preserve Safe Case contents
+    local preservedSafeCase = playerData.Inventory.SafeCase
 
     -- Wipe inventory
     playerData.Inventory = InventorySystem.NewInventory()
+
+    -- Restore Safe Case contents
+    playerData.Inventory.SafeCase = preservedSafeCase
+
     PlayerManager.UpdatePlayerStats(playerId)
 
-    print("Player " .. playerId .. " died and lost all their gear.")
+    print("Player " .. playerId .. " died. Lost gear, but kept Safe Case items.")
 end
 
 return PlayerManager

@@ -53,8 +53,16 @@ function ExtractionManager.ExtractPlayer(playerId, playerData)
     -- Arena Breakout logic: Player successfully extracts with all their loot
     print("Player " .. playerId .. " has extracted successfully!")
 
-    -- Save their inventory to the database
-    -- Move player back to the lobby
+    -- Deposit un-secured loot into the Lobby Stash
+    local ServerScriptService = game:GetService("ServerScriptService")
+    local LobbyStashSystem = require(ServerScriptService:WaitForChild("LobbyStashSystem"))
+    local player = game.Players:GetPlayerByUserId(playerId)
+
+    if player then
+        LobbyStashSystem.DepositExtractedLoot(player, playerData.Inventory)
+    end
+
+    -- In a real game, teleport the player back to the Spaceship Lobby here
     playerData.Status = "Extracted"
 end
 
