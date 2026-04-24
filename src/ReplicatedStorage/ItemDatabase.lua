@@ -128,4 +128,71 @@ function ItemDatabase.GetItem(itemId)
     return ItemDatabase.Items[itemId]
 end
 
+
+-- Expand ItemDatabase with Advanced Medical Items
+ItemDatabase.Items["Surgical_Kit"] = {
+    Id = "Surgical_Kit",
+    Type = "Consumable",
+    SubType = "ModernMedical",
+    HealAmount = 0,
+    FixesLimb = true,
+    UseTime = 12.0,
+    Weight = 1.0,
+}
+ItemDatabase.Items["Military_Bandage"] = {
+    Id = "Military_Bandage",
+    Type = "Consumable",
+    SubType = "ModernMedical",
+    HealAmount = 10,
+    StopsBleeding = true,
+    UseTime = 2.0,
+    Weight = 0.1,
+}
+ItemDatabase.Items["Tourniquet"] = {
+    Id = "Tourniquet",
+    Type = "Consumable",
+    SubType = "ModernMedical",
+    HealAmount = 0,
+    StopsBleeding = true,
+    StopsPain = true,
+    UseTime = 3.5,
+    Weight = 0.2,
+}
+
+
+-- Expand ItemDatabase with hit zones
+ItemDatabase.Items["Tactical_Helmet"] = {
+    Id = "Tactical_Helmet",
+    Type = "Armor",
+    Slot = "Helmet",
+    HealthBonus = 20,
+    DefenseBonus = 30,
+    ManaBonus = 0,
+    CoreLevel = 0,
+    Weight = 2.0,
+    Protects = {"Head"}
+}
+
+ItemDatabase.Items["Tactical_Vest_Basic"].Protects = {"Thorax", "Stomach"}
+ItemDatabase.Items["Mage_Robe_T1"].Protects = {"Thorax", "Stomach", "LeftArm", "RightArm"}
+ItemDatabase.Items["Archmage_Robe_T9"].Protects = {"Thorax", "Stomach", "LeftArm", "RightArm", "LeftLeg", "RightLeg"}
+
+
+-- Expand ItemDatabase with active skills (Albion Online style)
+ItemDatabase.Items["Archmage_Robe_T9"].ActiveSkill = {
+    Name = "Mana Shield",
+    ManaCost = 100,
+    Cooldown = 30,
+    Duration = 5,
+    Effect = "Invulnerability"
+}
+
+ItemDatabase.Items["Elder_Wand"].ActiveSkill = {
+    Name = "Meteor Strike",
+    ManaCost = 150,
+    Cooldown = 45,
+    Damage = 300,
+    AoERadius = 15
+}
+
 return ItemDatabase

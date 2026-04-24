@@ -15,6 +15,7 @@ function GUIManager.Initialize()
     screenGui.Parent = player:WaitForChild("PlayerGui")
 
     GUIManager.CreateVitalsHUD(screenGui)
+    GUIManager.CreateLimbHUD(screenGui)
     GUIManager.CreateInventoryScreen(screenGui)
     GUIManager.CreateFleaMarketScreen(screenGui)
     GUIManager.CreateMapScreen(screenGui)
@@ -607,5 +608,67 @@ task.spawn(function()
     GUIManager.Initialize()
     SetupNetworkListeners()
 end)
+
+function GUIManager.CreateLimbHUD(parentGui)
+    local limbFrame = Instance.new("Frame")
+    limbFrame.Name = "LimbHUD"
+    limbFrame.Size = UDim2.new(0, 150, 0, 200)
+    limbFrame.Position = UDim2.new(0, 20, 0, 150)
+    limbFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    limbFrame.BackgroundTransparency = 0.5
+    limbFrame.Parent = parentGui
+
+    local title = Instance.new("TextLabel")
+    title.Size = UDim2.new(1, 0, 0, 20)
+    title.BackgroundTransparency = 1
+    title.Text = "LIMB STATUS"
+    title.TextColor3 = Color3.new(1,1,1)
+    title.Parent = limbFrame
+
+    local limbs = {
+        Head = { Pos = UDim2.new(0.4, 0, 0.1, 0), Size = UDim2.new(0.2, 0, 0.15, 0) },
+        Thorax = { Pos = UDim2.new(0.35, 0, 0.26, 0), Size = UDim2.new(0.3, 0, 0.2, 0) },
+        Stomach = { Pos = UDim2.new(0.35, 0, 0.47, 0), Size = UDim2.new(0.3, 0, 0.15, 0) },
+        LeftArm = { Pos = UDim2.new(0.1, 0, 0.26, 0), Size = UDim2.new(0.2, 0, 0.35, 0) },
+        RightArm = { Pos = UDim2.new(0.7, 0, 0.26, 0), Size = UDim2.new(0.2, 0, 0.35, 0) },
+        LeftLeg = { Pos = UDim2.new(0.35, 0, 0.63, 0), Size = UDim2.new(0.14, 0, 0.35, 0) },
+        RightLeg = { Pos = UDim2.new(0.51, 0, 0.63, 0), Size = UDim2.new(0.14, 0, 0.35, 0) }
+    }
+
+    GUIManager.LimbGuis = {}
+
+    for limbName, layout in pairs(limbs) do
+        local part = Instance.new("Frame")
+        part.Name = limbName
+        part.Size = layout.Size
+        part.Position = layout.Pos
+        part.BackgroundColor3 = Color3.fromRGB(50, 200, 50) -- Default green
+        part.Parent = limbFrame
+        GUIManager.LimbGuis[limbName] = part
+    end
+end
+
+-- Simulates updating the HUD via RemoteEvent
+function GUIManager.UpdateLimbHUD(limbData)
+    if not GUIManager.LimbGuis then return end
+
+    for limbName, data in pairs(limbData) do
+        local part = GUIManager.LimbGuis[limbName]
+        if part then
+            if data.Status == "Destroyed" then
+                part.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+            else
+                local ratio = data.CurrentHP / data.MaxHP
+                if ratio > 0.7 then
+                    part.BackgroundColor3 = Color3.fromRGB(50, 200, 50) -- Green
+                elseif ratio > 0.3 then
+                    part.BackgroundColor3 = Color3.fromRGB(200, 200, 50) -- Yellow
+                else
+                    part.BackgroundColor3 = Color3.fromRGB(200, 50, 50) -- Red
+                end
+            end
+        end
+    end
+end
 
 return GUIManager

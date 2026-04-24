@@ -118,4 +118,57 @@ function PlayerManager.HandlePlayerDeath(playerId)
     print("Player " .. playerId .. " died. Lost gear, but kept Safe Case items.")
 end
 
+
+function PlayerManager.UseMedicalItem(playerId, itemId, targetLimb)
+    local playerData = PlayerManager.ActivePlayers[playerId]
+    if not playerData then return false, "Player not found" end
+
+    local itemData = require(script.Parent.Parent.ReplicatedStorage.ItemDatabase).GetItem(itemId)
+    if not itemData or itemData.Type ~= "Consumable" then return false, "Invalid item" end
+
+    -- In a real game, remove from inventory here.
+
+    local ServerScriptService = game:GetService("ServerScriptService")
+    local SpaceshipLobby = require(ServerScriptService:WaitForChild("LOBBY_SPACESHIP_1"))
+
+    if SpaceshipLobby.PlayerHealthData and SpaceshipLobby.PlayerHealthData[playerId] then
+        local healthData = SpaceshipLobby.PlayerHealthData[playerId]
+
+        if itemData.StopsBleeding then
+            for i, ailment in ipairs(healthData.Ailments) do
+                if ailment == "Bleeding" then
+                    table.remove(healthData.Ailments, i)
+                    break
+                end
+            end
+        end
+
+        if itemData.FixesLimb and targetLimb and healthData[targetLimb] then
+            if healthData[targetLimb].Status == "Destroyed" then
+                healthData[targetLimb].Status = "Healthy"
+                healthData[targetLimb].CurrentHP = 1 -- Barely fixed
+
+                -- Remove broken bone ailments related to this limb
+                for i = #healthData.Ailments, 1, -1 do
+                    if healthData.Ailments[i] == "Broken" .. targetLimb then
+                        table.remove(healthData.Ailments, i)
+                    end
+                end
+
+                return true, "Fixed " .. targetLimb
+            end
+        end
+
+        if itemData.HealAmount > 0 and targetLimb and healthData[targetLimb] then
+             if healthData[targetLimb].Status ~= "Destroyed" then
+                 healthData[targetLimb].CurrentHP = math.min(healthData[targetLimb].MaxHP, healthData[targetLimb].CurrentHP + itemData.HealAmount)
+                 return true, "Healed " .. targetLimb
+             else
+                 return false, "Cannot heal a destroyed limb without surgery."
+             end
+        end
+    end
+
+    return true, "Item used"
+end
 return PlayerManager

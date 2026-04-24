@@ -5,7 +5,7 @@
 local SpaceshipLobby = {}
 
 -- Arena Breakout realistic medical tracking per limb
-local PlayerHealthData = {}
+SpaceshipLobby.PlayerHealthData = {}
 
 function SpaceshipLobby.Initialize()
     SpaceshipLobby.GenerateVisualSpaceship()
@@ -52,7 +52,7 @@ end
 
 function SpaceshipLobby.InitializePlayerLobby(player)
     -- Initialize Arena Breakout realistic health system
-    PlayerHealthData[player.UserId] = {
+    SpaceshipLobby.PlayerHealthData[player.UserId] = {
         Head = { Status = "Healthy", MaxHP = 35, CurrentHP = 35 },
         Thorax = { Status = "Healthy", MaxHP = 85, CurrentHP = 85 },
         Stomach = { Status = "Healthy", MaxHP = 70, CurrentHP = 70 },
@@ -82,7 +82,7 @@ function SpaceshipLobby.GenerateInvestorDomain(player)
 end
 
 function SpaceshipLobby.ApplyDamage(player, limb, amount)
-    local data = PlayerHealthData[player.UserId]
+    local data = SpaceshipLobby.PlayerHealthData[player.UserId]
     if not data or not data[limb] then return end
 
     data[limb].CurrentHP = data[limb].CurrentHP - amount
@@ -101,6 +101,15 @@ function SpaceshipLobby.ApplyDamage(player, limb, amount)
     elseif amount > 10 and math.random() > 0.5 then
         table.insert(data.Ailments, "Bleeding")
     end
+end
+
+
+-- Making sure SpaceshipLobby exports SpaceshipLobby.PlayerHealthData
+local originalSpaceshipLobbyInitPlayerLobby = SpaceshipLobby.InitializePlayerLobby
+function SpaceshipLobby.InitializePlayerLobby(player)
+    originalSpaceshipLobbyInitPlayerLobby(player)
+    -- Ensure it's globally accessible for the PlayerManager to use
+    SpaceshipLobby.PlayerHealthData = SpaceshipLobby.PlayerHealthData
 end
 
 return SpaceshipLobby
