@@ -195,4 +195,52 @@ ItemDatabase.Items["Elder_Wand"].ActiveSkill = {
     AoERadius = 15
 }
 
+
+-- Refactor Modern Firearms to utilize real magazines and chambers
+ItemDatabase.Items["M4A1_Assault_Rifle"].RequiresMagazine = true
+ItemDatabase.Items["M4A1_Assault_Rifle"].Caliber = "5.56x45mm"
+ItemDatabase.Items["M4A1_Assault_Rifle"].ChamberedRound = nil
+
+ItemDatabase.Items["Glock_19"].RequiresMagazine = true
+ItemDatabase.Items["Glock_19"].Caliber = "9x19mm"
+ItemDatabase.Items["Glock_19"].ChamberedRound = nil
+
+-- Define Ammo Types
+ItemDatabase.Items["Ammo_556x45_M855"] = {
+    Id = "Ammo_556x45_M855",
+    Type = "Ammo",
+    Caliber = "5.56x45mm",
+    Damage = 35,
+    ArmorPenetration = 30,
+    Weight = 0.01
+}
+
+ItemDatabase.Items["Ammo_9x19_PST"] = {
+    Id = "Ammo_9x19_PST",
+    Type = "Ammo",
+    Caliber = "9x19mm",
+    Damage = 20,
+    ArmorPenetration = 15,
+    Weight = 0.008
+}
+
+-- Define Magazines
+ItemDatabase.Items["Mag_STANAG_30"] = {
+    Id = "Mag_STANAG_30",
+    Type = "Magazine",
+    Caliber = "5.56x45mm",
+    Capacity = 30,
+    CurrentAmmo = {}, -- Array of ammo IDs loaded in mag
+    Weight = 0.2
+}
+
+ItemDatabase.Items["Mag_Glock_15"] = {
+    Id = "Mag_Glock_15",
+    Type = "Magazine",
+    Caliber = "9x19mm",
+    Capacity = 15,
+    CurrentAmmo = {},
+    Weight = 0.1
+}
+
 return ItemDatabase

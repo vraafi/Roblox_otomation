@@ -63,6 +63,8 @@ ContextActionService:BindAction("InteractAction", handleInteract, true, Enum.Key
 ContextActionService:SetTitle("InteractAction", "USE")
 ContextActionService:SetPosition("InteractAction", UDim2.new(1, -100, 1, -200))
 
+-- (Patch Placeholder)
+
 -- Visually customize the mobile buttons if the player is on mobile
 if UserInputService.TouchEnabled and not UserInputService.MouseEnabled then
     local jumpButton = ContextActionService:GetButton("JumpAction")
@@ -81,3 +83,148 @@ _G.SetMenuState = function(state)
 end
 
 print("InputManager initialized for Mobile & PC.")
+
+-- Tactical Movement Actions
+local function handleCrouch(actionName, inputState, inputObject)
+    if actionName == "CrouchAction" and inputState == Enum.UserInputState.Begin then
+        local character = player.Character
+        if character and not isMenuOpen then
+            local humanoid = character:FindFirstChild("Humanoid")
+            if humanoid then
+                if humanoid.WalkSpeed == 8 then
+                    humanoid.WalkSpeed = 16 -- Stand up
+                else
+                    humanoid.WalkSpeed = 8 -- Crouch
+                end
+            end
+        end
+    end
+end
+
+local function handleProne(actionName, inputState, inputObject)
+    if actionName == "ProneAction" and inputState == Enum.UserInputState.Begin then
+        local character = player.Character
+        if character and not isMenuOpen then
+            local humanoid = character:FindFirstChild("Humanoid")
+            if humanoid then
+                if humanoid.WalkSpeed == 4 then
+                    humanoid.WalkSpeed = 16 -- Stand up
+                else
+                    humanoid.WalkSpeed = 4 -- Prone
+                end
+            end
+        end
+    end
+end
+
+local function handleSprint(actionName, inputState, inputObject)
+    local character = player.Character
+    if character and not isMenuOpen then
+        local humanoid = character:FindFirstChild("Humanoid")
+        if humanoid then
+            if inputState == Enum.UserInputState.Begin then
+                humanoid.WalkSpeed = 24
+            elseif inputState == Enum.UserInputState.End then
+                humanoid.WalkSpeed = 16
+            end
+        end
+    end
+end
+
+local function handlePeekLeft(actionName, inputState, inputObject)
+    if actionName == "PeekLeftAction" then
+        if inputState == Enum.UserInputState.Begin then
+            print("Peeking Left...")
+        elseif inputState == Enum.UserInputState.End then
+            print("Stopped Peeking Left.")
+        end
+    end
+end
+
+local function handlePeekRight(actionName, inputState, inputObject)
+    if actionName == "PeekRightAction" then
+        if inputState == Enum.UserInputState.Begin then
+            print("Peeking Right...")
+        elseif inputState == Enum.UserInputState.End then
+            print("Stopped Peeking Right.")
+        end
+    end
+end
+
+ContextActionService:BindAction("CrouchAction", handleCrouch, true, Enum.KeyCode.C)
+ContextActionService:SetTitle("CrouchAction", "CRCH")
+ContextActionService:SetPosition("CrouchAction", UDim2.new(1, -100, 1, -300))
+
+ContextActionService:BindAction("ProneAction", handleProne, true, Enum.KeyCode.Z)
+ContextActionService:SetTitle("ProneAction", "PRON")
+ContextActionService:SetPosition("ProneAction", UDim2.new(1, -200, 1, -300))
+
+ContextActionService:BindAction("SprintAction", handleSprint, true, Enum.KeyCode.LeftShift)
+ContextActionService:SetTitle("SprintAction", "RUN")
+ContextActionService:SetPosition("SprintAction", UDim2.new(0, 50, 1, -200))
+
+ContextActionService:BindAction("PeekLeftAction", handlePeekLeft, true, Enum.KeyCode.Q)
+ContextActionService:SetTitle("PeekLeftAction", "PK-L")
+ContextActionService:SetPosition("PeekLeftAction", UDim2.new(1, -300, 1, -200))
+
+ContextActionService:BindAction("PeekRightAction", handlePeekRight, true, Enum.KeyCode.E)
+ContextActionService:SetTitle("PeekRightAction", "PK-R")
+ContextActionService:SetPosition("PeekRightAction", UDim2.new(1, -100, 1, -400))
+
+-- Tactical Weapon Actions
+local function handleADS(actionName, inputState, inputObject)
+    if actionName == "ADSAction" then
+        if inputState == Enum.UserInputState.Begin then
+            print("Aiming Down Sights (ADS)...")
+            -- Lower Field of View
+            workspace.CurrentCamera.FieldOfView = 40
+        elseif inputState == Enum.UserInputState.End then
+            print("Stopped ADS.")
+            workspace.CurrentCamera.FieldOfView = 70
+        end
+    end
+end
+
+local function handleReload(actionName, inputState, inputObject)
+    if actionName == "ReloadAction" and inputState == Enum.UserInputState.Begin then
+        print("Requested Weapon Reload (Swap Magazine).")
+    end
+end
+
+local function handleFireMode(actionName, inputState, inputObject)
+    if actionName == "FireModeAction" and inputState == Enum.UserInputState.Begin then
+        print("Toggling Fire Mode (Auto/Single).")
+    end
+end
+
+local function handleCheckWeapon(actionName, inputState, inputObject)
+    if actionName == "CheckWeaponAction" and inputState == Enum.UserInputState.Begin then
+        print("Checking Weapon Chamber / Malfunctions.")
+    end
+end
+
+local function handlePing(actionName, inputState, inputObject)
+    if actionName == "PingAction" and inputState == Enum.UserInputState.Begin then
+        print("Tactical Ping Placed!")
+    end
+end
+
+ContextActionService:BindAction("ADSAction", handleADS, true, Enum.UserInputType.MouseButton2)
+ContextActionService:SetTitle("ADSAction", "AIM")
+ContextActionService:SetPosition("ADSAction", UDim2.new(1, -300, 1, -100))
+
+ContextActionService:BindAction("ReloadAction", handleReload, true, Enum.KeyCode.R)
+ContextActionService:SetTitle("ReloadAction", "RLD")
+ContextActionService:SetPosition("ReloadAction", UDim2.new(1, -200, 1, -200))
+
+ContextActionService:BindAction("FireModeAction", handleFireMode, true, Enum.KeyCode.B)
+ContextActionService:SetTitle("FireModeAction", "MODE")
+ContextActionService:SetPosition("FireModeAction", UDim2.new(1, -100, 1, -500))
+
+ContextActionService:BindAction("CheckWeaponAction", handleCheckWeapon, true, Enum.KeyCode.X)
+ContextActionService:SetTitle("CheckWeaponAction", "CHK")
+ContextActionService:SetPosition("CheckWeaponAction", UDim2.new(1, -200, 1, -500))
+
+ContextActionService:BindAction("PingAction", handlePing, true, Enum.UserInputType.MouseButton3)
+ContextActionService:SetTitle("PingAction", "PING")
+ContextActionService:SetPosition("PingAction", UDim2.new(1, -300, 1, -500))

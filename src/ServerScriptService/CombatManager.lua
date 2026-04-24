@@ -12,47 +12,49 @@ end
 
 -- Simulates an attack. Player data would be fetched from PlayerManager in a real scenario
 function CombatManager.ProcessAttack(playerData, targetData)
-    local weaponId = playerData.Inventory.Equipped.Weapon
+    local weaponInstance = playerData.Inventory.Equipped.WeaponInstance
 
-    if not weaponId then
-        return false, "No weapon equipped"
+    -- Fallback for basic non-instanced weapons (wands, legacy gear)
+    if not weaponInstance then
+        local weaponId = playerData.Inventory.Equipped.Weapon
+        if not weaponId then return false, "No weapon equipped" end
+        local weaponInfo = ItemDatabase.GetItem(weaponId)
+        if not weaponInfo then return false, "Invalid weapon" end
+
+        if weaponInfo.SubType == "MagicWand" then
+            if playerData.CurrentMana < weaponInfo.ManaCost then
+                return false, "Not enough mana! Equip better armor with a higher core level."
+            end
+            playerData.CurrentMana = playerData.CurrentMana - weaponInfo.ManaCost
+            targetData.CurrentHealth = targetData.CurrentHealth - weaponInfo.BaseDamage
+            return true, "Cast magic successfully"
+        end
+        return false, "Unknown weapon type"
     end
 
-    local weaponInfo = ItemDatabase.GetItem(weaponId)
-
-    if not weaponInfo then
-        return false, "Invalid weapon"
-    end
-
-    -- Check if it's a magic wand
-    if weaponInfo.SubType == "MagicWand" then
-        -- You are what you wear: Check if player has enough mana (given by armor)
-        if playerData.CurrentMana < weaponInfo.ManaCost then
-            return false, "Not enough mana! Equip better armor with a higher core level."
+    -- Modern Hardcore Firearms Logic
+    local weaponInfo = ItemDatabase.GetItem(weaponInstance.BaseItemId)
+    if weaponInfo.RequiresMagazine then
+        if not weaponInstance.ChamberedRound then
+            return false, "Click! Weapon empty or not cocked."
         end
 
-        -- Deduct mana
-        playerData.CurrentMana = playerData.CurrentMana - weaponInfo.ManaCost
+        local ammoInfo = ItemDatabase.GetItem(weaponInstance.ChamberedRound)
+        weaponInstance.ChamberedRound = nil -- Consume round
 
-        -- Apply damage to target (simplified)
-        targetData.CurrentHealth = targetData.CurrentHealth - weaponInfo.BaseDamage
+        -- Cycle next round from mag into chamber
+        if weaponInstance.LoadedMagazine and #weaponInstance.LoadedMagazine.CurrentAmmo > 0 then
+            weaponInstance.ChamberedRound = table.remove(weaponInstance.LoadedMagazine.CurrentAmmo, 1)
+        end
 
-        return true, "Cast magic successfully"
-    end
-
-    -- Modern firearms
-    if weaponInfo.SubType == "ModernFirearm" then
-        -- In a full game, check ammo here
-        local damage = weaponInfo.Damage
-        -- Mitigate by defense (you are what you wear: defense from armor)
+        local damage = ammoInfo.Damage or 10
         local mitigatedDamage = math.max(1, damage - (targetData.TotalStats.Defense * 0.5))
-
         targetData.CurrentHealth = targetData.CurrentHealth - mitigatedDamage
 
-        return true, "Fired weapon successfully"
+        return true, "Fired " .. ammoInfo.Id
     end
 
-    return false, "Unknown weapon type"
+    return false, "Unknown instance"
 end
 
 function CombatManager.ProcessLimbAttack(attackerId, targetId, hitLimb)
@@ -143,4 +145,37 @@ function CombatManager.UseGearSkill(playerId, gearSlot)
 
     return true, "Cast " .. skill.Name
 end
+
+function CombatManager.LoadMagazine(weaponInstance, magazineInstance)
+    local weaponInfo = ItemDatabase.GetItem(weaponInstance.BaseItemId)
+    local magInfo = ItemDatabase.GetItem(magazineInstance.BaseItemId)
+
+    if not weaponInfo or not magInfo then return false, "Invalid items" end
+    if weaponInfo.Caliber ~= magInfo.Caliber then return false, "Caliber mismatch" end
+    if not weaponInfo.RequiresMagazine then return false, "Weapon does not use magazines" end
+
+    weaponInstance.LoadedMagazine = magazineInstance
+
+    -- Chamber a round immediately if weapon is cocked/empty
+    if not weaponInstance.ChamberedRound and #magazineInstance.CurrentAmmo > 0 then
+        weaponInstance.ChamberedRound = table.remove(magazineInstance.CurrentAmmo, 1)
+        return true, "Magazine loaded and weapon cocked"
+    end
+
+    return true, "Magazine loaded"
+end
+
+function CombatManager.PackAmmo(magazineInstance, ammoItemId)
+    local magInfo = ItemDatabase.GetItem(magazineInstance.BaseItemId)
+    local ammoInfo = ItemDatabase.GetItem(ammoItemId)
+
+    if not magInfo or not ammoInfo then return false, "Invalid items" end
+    if magInfo.Caliber ~= ammoInfo.Caliber then return false, "Caliber mismatch" end
+    if #magazineInstance.CurrentAmmo >= magInfo.Capacity then return false, "Magazine is full" end
+
+    table.insert(magazineInstance.CurrentAmmo, ammoItemId)
+    return true, "Ammo loaded into magazine"
+end
+
+-- Override ProcessAttack to strictly use ChamberedRounds
 return CombatManager
