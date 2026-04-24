@@ -23,6 +23,7 @@ local LobbyStashSystem = require(ServerScriptService:WaitForChild("LobbyStashSys
 local MailSystem = require(ServerScriptService:WaitForChild("MailSystem"))
 local LendingSystem = require(ServerScriptService:WaitForChild("LendingSystem"))
 local ExplosivesManager = require(ServerScriptService:WaitForChild("ExplosivesManager"))
+local GunsmithSystem = require(ServerScriptService:WaitForChild("GunsmithSystem"))
 
 -- Fix RemoteEvent Race Condition: Create RemoteEvents immediately
 local events = ReplicatedStorage:FindFirstChild("Events")

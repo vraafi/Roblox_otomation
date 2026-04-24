@@ -11,12 +11,16 @@ local WeaponData = {
         SubType = "ModernFirearm",
         GridWidth = 3,
         GridHeight = 2,
-        Damage = 20,
-        FireRate = 0.04, -- Extremely fast
+        Firepower = 20,
+        Accuracy = 65,
+        Range = 80,
+        Stability = 90,
+        Ergonomics = 85,
+        RateOfFire = 900,
         MagazineSize = 50,
-        Range = 200,
         Weight = 2.6,
         Value = 1800,
+        ModSlots = {"Optic", "Muzzle"},
         Color = Color3.fromRGB(20, 20, 20),
         MeshId = "rbxassetid://1060481268" -- Placeholder
     },
@@ -27,12 +31,16 @@ local WeaponData = {
         SubType = "ModernFirearm",
         GridWidth = 2,
         GridHeight = 1,
-        Damage = 85,
-        FireRate = 0.4,
+        Firepower = 85,
+        Accuracy = 55,
+        Range = 50,
+        Stability = 30, -- Huge recoil
+        Ergonomics = 60,
+        RateOfFire = 200,
         MagazineSize = 7,
-        Range = 150,
         Weight = 2.0,
         Value = 1500,
+        ModSlots = {"Optic", "Magazine"},
         Color = Color3.fromRGB(192, 192, 192),
         MeshId = "rbxassetid://1060481268"
     },
@@ -43,12 +51,16 @@ local WeaponData = {
         SubType = "ModernFirearm",
         GridWidth = 5,
         GridHeight = 2,
-        Damage = 35,
-        FireRate = 0.08,
+        Firepower = 35,
+        Accuracy = 60,
+        Range = 150,
+        Stability = 70,
+        Ergonomics = 15, -- Terrible handling speed
+        RateOfFire = 800,
         MagazineSize = 100,
-        Range = 600,
         Weight = 7.5, -- Very heavy
         Value = 3500,
+        ModSlots = {"Optic", "Muzzle", "Bipod"},
         Color = Color3.fromRGB(50, 55, 45),
         MeshId = "rbxassetid://1060481268"
     },
@@ -59,12 +71,16 @@ local WeaponData = {
         SubType = "ModernFirearm",
         GridWidth = 3,
         GridHeight = 2,
-        Damage = 28,
-        FireRate = 0.05,
+        Firepower = 28,
+        Accuracy = 65,
+        Range = 60,
+        Stability = 95, -- Almost no recoil
+        Ergonomics = 75,
+        RateOfFire = 1100,
         MagazineSize = 25,
-        Range = 180,
         Weight = 2.7,
         Value = 2200,
+        ModSlots = {"Optic", "Muzzle", "Foregrip", "Magazine"},
         Color = Color3.fromRGB(30, 30, 30),
         MeshId = "rbxassetid://1060481268"
     }
@@ -83,10 +99,14 @@ function ModernWeaponBatch24.RegisterItems()
                 SubType = data.SubType,
                 GridWidth = data.GridWidth,
                 GridHeight = data.GridHeight,
-                Damage = data.Damage,
-                FireRate = data.FireRate,
-                MagazineSize = data.MagazineSize,
+                Firepower = data.Firepower,
+                Accuracy = data.Accuracy,
                 Range = data.Range,
+                Stability = data.Stability,
+                Ergonomics = data.Ergonomics,
+                RateOfFire = data.RateOfFire,
+                MagazineSize = data.MagazineSize,
+                ModSlots = data.ModSlots,
                 Weight = data.Weight,
                 Value = data.Value
             }
@@ -117,8 +137,8 @@ function ModernWeaponBatch24.FireWeapon(player, weaponId, origin, direction)
         if model then
             local humanoid = model:FindFirstChild("Humanoid")
             if humanoid then
-                humanoid:TakeDamage(data.Damage)
-                return true, "Hit " .. model.Name .. " for " .. tostring(data.Damage)
+                humanoid:TakeDamage(data.Firepower)
+                return true, "Hit " .. model.Name .. " for " .. tostring(data.Firepower)
             end
         end
     end
@@ -151,7 +171,7 @@ function ModernWeaponBatch24.SpawnPhysicalItem(id, position)
 
     local prompt = Instance.new("ProximityPrompt")
     prompt.ActionText = "Equip/Loot"
-    prompt.ObjectText = data.Name .. " (Dmg: " .. data.Damage .. ")"
+    prompt.ObjectText = data.Name .. " (FP: " .. data.Firepower .. ")"
     prompt.Parent = part
 
     prompt.Triggered:Connect(function(player)
