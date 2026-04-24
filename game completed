@@ -5,3 +5,9 @@ Core elements implemented:
 - Albion Online "You Are What You Wear" mechanic
 - Modern and Fantasy gear, weapons, and medical items.
 - Stats logic derived strictly from equipment.
+- Hardcore 7-Limb Health System with specific surgery/bandage fixes.
+- First-Person locked viewmodel with dynamic tactical leaning, crouching, and ADS offsets.
+- Hardcore Magazine System: weapons require matching caliber magazines manually packed with bullets.
+- Fully integrated cross-platform UI and ContextActionService inputs.
+
+Status: Prototype Ready for Roblox Studio Rojo Sync.
