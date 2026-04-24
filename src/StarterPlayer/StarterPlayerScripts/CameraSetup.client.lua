@@ -58,18 +58,73 @@ local function setupViewmodel()
     viewmodel.Parent = camera
 end
 
-local function updateViewmodel()
+-- Add TweenService and variables for Camera & Viewmodel manipulation
+local TweenService = game:GetService("TweenService")
+
+-- Expose states globally so InputManager can tell CameraSetup what to do
+_G.TacticalStates = {
+    IsCrouching = false,
+    IsProning = false,
+    PeekState = "None", -- "Left", "Right", "None"
+    IsADS = false
+}
+
+local currentCameraOffset = Vector3.new(0, 0, 0)
+local currentCameraRoll = 0
+local targetAdsOffset = CFrame.new(0, 0, 0)
+
+-- Update function now interpolates properties
+local function updateViewmodel(dt)
     if not viewmodel then return end
-    -- Align viewmodel to camera
-    viewmodel:SetPrimaryPartCFrame(camera.CFrame)
+
+    local char = player.Character
+    local humanoid = char and char:FindFirstChild("Humanoid")
+
+    -- 1. Handle Camera Height (Stance)
+    local targetHeightOffset = 0
+    if _G.TacticalStates.IsProning then
+        targetHeightOffset = -3.5
+    elseif _G.TacticalStates.IsCrouching then
+        targetHeightOffset = -1.5
+    end
+
+    -- 2. Handle Camera Peek (Leaning)
+    local targetPeekOffset = 0
+    local targetRoll = 0
+
+    if _G.TacticalStates.PeekState == "Left" then
+        targetPeekOffset = -1.5
+        targetRoll = math.rad(15)
+    elseif _G.TacticalStates.PeekState == "Right" then
+        targetPeekOffset = 1.5
+        targetRoll = math.rad(-15)
+    end
+
+    -- Smoothly interpolate camera offset
+    local targetOffsetVector = Vector3.new(targetPeekOffset, targetHeightOffset, 0)
+    currentCameraOffset = currentCameraOffset:Lerp(targetOffsetVector, dt * 10)
+
+    if humanoid then
+        humanoid.CameraOffset = currentCameraOffset
+    end
+
+    -- Smoothly interpolate camera roll (Z-axis rotation)
+    currentCameraRoll = currentCameraRoll + (targetRoll - currentCameraRoll) * dt * 10
+    camera.CFrame = camera.CFrame * CFrame.Angles(0, 0, currentCameraRoll)
+
+    -- 3. Handle Viewmodel ADS
+    local targetAdsCFrame = CFrame.new(0, 0, 0)
+    if _G.TacticalStates.IsADS then
+        -- Bring the gun to the center of the screen
+        targetAdsCFrame = CFrame.new(-1.0, 0.5, 1) -- Estimated offset to center the right arm
+    end
+
+    targetAdsOffset = targetAdsOffset:Lerp(targetAdsCFrame, dt * 15)
+
+    -- Align viewmodel to camera, applying ADS offset
+    viewmodel:SetPrimaryPartCFrame(camera.CFrame * targetAdsOffset)
 end
 
-player.CharacterAdded:Connect(function(char)
-    setupViewmodel()
-end)
-
-if player.Character then
-    setupViewmodel()
-end
-
+player.CharacterAdded:Connect(setupViewmodel)
+if player.Character then setupViewmodel() end
 RunService.RenderStepped:Connect(updateViewmodel)

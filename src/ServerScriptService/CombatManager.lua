@@ -178,4 +178,41 @@ function CombatManager.PackAmmo(magazineInstance, ammoItemId)
 end
 
 -- Override ProcessAttack to strictly use ChamberedRounds
+local function hookEvents()
+    local events = game:GetService("ReplicatedStorage"):WaitForChild("Events")
+
+    local fireEvent = events:WaitForChild("FireWeapon")
+    fireEvent.OnServerEvent:Connect(function(player, targetPlayerId)
+        -- In a fully physical game, this uses raycasts. For this prototype, we simulate target data.
+        local PlayerManager = require(script.Parent.PlayerManager)
+        local attackerData = PlayerManager.ActivePlayers[player.UserId]
+        local targetData = PlayerManager.ActivePlayers[targetPlayerId]
+
+        if attackerData and targetData then
+            CombatManager.ProcessAttack(attackerData, targetData)
+        end
+    end)
+
+    local reloadFunc = events:WaitForChild("ReloadWeapon")
+    reloadFunc.OnServerInvoke = function(player, magInstanceId)
+        local PlayerManager = require(script.Parent.PlayerManager)
+        local playerData = PlayerManager.ActivePlayers[player.UserId]
+        if not playerData then return false, "Player not found" end
+
+        local weaponInstance = playerData.Inventory.Equipped.WeaponInstance
+        if not weaponInstance then return false, "No weapon equipped" end
+
+        -- Simplified search for mag in inventory
+        -- In full game, would find magInstanceId in backpack
+        local magInstance = { BaseItemId = "Mag_STANAG_30", CurrentAmmo = {} }
+        return CombatManager.LoadMagazine(weaponInstance, magInstance)
+    end
+end
+
+-- Override Initialize
+local oldInit = CombatManager.Initialize
+function CombatManager.Initialize()
+    oldInit()
+    task.spawn(hookEvents)
+end
 return CombatManager

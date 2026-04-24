@@ -33,7 +33,8 @@ local function handleShoot(actionName, inputState, inputObject)
                 print("Client requested FIRE weapon!")
                 local cam = workspace.CurrentCamera
                 local ray = cam:ScreenPointToRay(cam.ViewportSize.X/2, cam.ViewportSize.Y/2)
-                -- FireServer(ray.Origin, ray.Direction)
+                local events = game:GetService("ReplicatedStorage"):WaitForChild("Events")
+                events.FireWeapon:FireServer(123) -- Target ID placeholder
             end
         end
     end
@@ -84,17 +85,30 @@ end
 
 print("InputManager initialized for Mobile & PC.")
 
--- Tactical Movement Actions
+-- Tactical Weapon Actions
+local function handlePing(actionName, inputState, inputObject)
+    if actionName == "PingAction" and inputState == Enum.UserInputState.Begin then
+        print("Tactical Ping Placed!")
+    end
+end
+
+
+
 local function handleCrouch(actionName, inputState, inputObject)
     if actionName == "CrouchAction" and inputState == Enum.UserInputState.Begin then
         local character = player.Character
         if character and not isMenuOpen then
             local humanoid = character:FindFirstChild("Humanoid")
             if humanoid then
-                if humanoid.WalkSpeed == 8 then
+                if _G.TacticalStates.IsCrouching then
                     humanoid.WalkSpeed = 16 -- Stand up
+                    _G.TacticalStates.IsCrouching = false
+                    if _G.UpdateTacticalHUD then _G.UpdateTacticalHUD("Stance", "STANDING") end
                 else
                     humanoid.WalkSpeed = 8 -- Crouch
+                    _G.TacticalStates.IsCrouching = true
+                    _G.TacticalStates.IsProning = false
+                    if _G.UpdateTacticalHUD then _G.UpdateTacticalHUD("Stance", "CROUCHING") end
                 end
             end
         end
@@ -107,12 +121,53 @@ local function handleProne(actionName, inputState, inputObject)
         if character and not isMenuOpen then
             local humanoid = character:FindFirstChild("Humanoid")
             if humanoid then
-                if humanoid.WalkSpeed == 4 then
+                if _G.TacticalStates.IsProning then
                     humanoid.WalkSpeed = 16 -- Stand up
+                    _G.TacticalStates.IsProning = false
+                    if _G.UpdateTacticalHUD then _G.UpdateTacticalHUD("Stance", "STANDING") end
                 else
                     humanoid.WalkSpeed = 4 -- Prone
+                    _G.TacticalStates.IsProning = true
+                    _G.TacticalStates.IsCrouching = false
+                    if _G.UpdateTacticalHUD then _G.UpdateTacticalHUD("Stance", "PRONING") end
                 end
             end
+        end
+    end
+end
+
+local function handlePeekLeft(actionName, inputState, inputObject)
+    if actionName == "PeekLeftAction" then
+        if inputState == Enum.UserInputState.Begin then
+            _G.TacticalStates.PeekState = "Left"
+        elseif inputState == Enum.UserInputState.End then
+            if _G.TacticalStates.PeekState == "Left" then
+                _G.TacticalStates.PeekState = "None"
+            end
+        end
+    end
+end
+
+local function handlePeekRight(actionName, inputState, inputObject)
+    if actionName == "PeekRightAction" then
+        if inputState == Enum.UserInputState.Begin then
+            _G.TacticalStates.PeekState = "Right"
+        elseif inputState == Enum.UserInputState.End then
+            if _G.TacticalStates.PeekState == "Right" then
+                _G.TacticalStates.PeekState = "None"
+            end
+        end
+    end
+end
+
+local function handleADS(actionName, inputState, inputObject)
+    if actionName == "ADSAction" then
+        if inputState == Enum.UserInputState.Begin then
+            _G.TacticalStates.IsADS = true
+            workspace.CurrentCamera.FieldOfView = 40
+        elseif inputState == Enum.UserInputState.End then
+            _G.TacticalStates.IsADS = false
+            workspace.CurrentCamera.FieldOfView = 70
         end
     end
 end
@@ -124,6 +179,8 @@ local function handleSprint(actionName, inputState, inputObject)
         if humanoid then
             if inputState == Enum.UserInputState.Begin then
                 humanoid.WalkSpeed = 24
+                _G.TacticalStates.IsCrouching = false
+                _G.TacticalStates.IsProning = false
             elseif inputState == Enum.UserInputState.End then
                 humanoid.WalkSpeed = 16
             end
@@ -131,26 +188,51 @@ local function handleSprint(actionName, inputState, inputObject)
     end
 end
 
-local function handlePeekLeft(actionName, inputState, inputObject)
-    if actionName == "PeekLeftAction" then
-        if inputState == Enum.UserInputState.Begin then
-            print("Peeking Left...")
-        elseif inputState == Enum.UserInputState.End then
-            print("Stopped Peeking Left.")
-        end
+local function handleReload(actionName, inputState, inputObject)
+    if actionName == "ReloadAction" and inputState == Enum.UserInputState.Begin then
+        print("Requested Weapon Reload (Swap Magazine).")
+        local events = game:GetService("ReplicatedStorage"):WaitForChild("Events")
+        local ok, msg = events.ReloadWeapon:InvokeServer("Mag_Instance_Id")
+        print("Reload:", msg)
     end
 end
 
-local function handlePeekRight(actionName, inputState, inputObject)
-    if actionName == "PeekRightAction" then
-        if inputState == Enum.UserInputState.Begin then
-            print("Peeking Right...")
-        elseif inputState == Enum.UserInputState.End then
-            print("Stopped Peeking Right.")
-        end
+local function handleFireMode(actionName, inputState, inputObject)
+    if actionName == "FireModeAction" and inputState == Enum.UserInputState.Begin then
+        print("Toggling Fire Mode (Auto/Single).")
     end
 end
 
+local function handleGrenade(actionName, inputState, inputObject)
+    if actionName == "ThrowGrenadeAction" and inputState == Enum.UserInputState.Begin then
+        local events = game:GetService("ReplicatedStorage"):WaitForChild("Events")
+        events.ThrowGrenade:FireServer("Frag_Grenade")
+        print("Throwing Grenade...")
+    end
+end
+ContextActionService:BindAction("ThrowGrenadeAction", handleGrenade, true, Enum.KeyCode.G)
+ContextActionService:SetTitle("ThrowGrenadeAction", "NADE")
+ContextActionService:SetPosition("ThrowGrenadeAction", UDim2.new(1, -200, 1, -400))
+
+local function handleMedical(actionName, inputState, inputObject)
+    if actionName == "UseMedicalAction" and inputState == Enum.UserInputState.Begin then
+        local events = game:GetService("ReplicatedStorage"):WaitForChild("Events")
+        events.UseMedicalItem:InvokeServer("IFAK_Medkit", "Thorax")
+        print("Using Medical Item...")
+    end
+end
+ContextActionService:BindAction("UseMedicalAction", handleMedical, true, Enum.KeyCode.H)
+ContextActionService:SetTitle("UseMedicalAction", "HEAL")
+ContextActionService:SetPosition("UseMedicalAction", UDim2.new(1, -300, 1, -400))
+
+local function handleCheckWeapon(actionName, inputState, inputObject)
+    if actionName == "CheckWeaponAction" and inputState == Enum.UserInputState.Begin then
+        print("Checking Weapon Chamber / Malfunctions.")
+        if _G.UpdateTacticalHUD then _G.UpdateTacticalHUD("Ammo", "MAG: [ 30 ] | CHMBR: [ 1 ]") end
+    end
+end
+
+-- Tactical Movement Actions
 ContextActionService:BindAction("CrouchAction", handleCrouch, true, Enum.KeyCode.C)
 ContextActionService:SetTitle("CrouchAction", "CRCH")
 ContextActionService:SetPosition("CrouchAction", UDim2.new(1, -100, 1, -300))
@@ -172,43 +254,6 @@ ContextActionService:SetTitle("PeekRightAction", "PK-R")
 ContextActionService:SetPosition("PeekRightAction", UDim2.new(1, -100, 1, -400))
 
 -- Tactical Weapon Actions
-local function handleADS(actionName, inputState, inputObject)
-    if actionName == "ADSAction" then
-        if inputState == Enum.UserInputState.Begin then
-            print("Aiming Down Sights (ADS)...")
-            -- Lower Field of View
-            workspace.CurrentCamera.FieldOfView = 40
-        elseif inputState == Enum.UserInputState.End then
-            print("Stopped ADS.")
-            workspace.CurrentCamera.FieldOfView = 70
-        end
-    end
-end
-
-local function handleReload(actionName, inputState, inputObject)
-    if actionName == "ReloadAction" and inputState == Enum.UserInputState.Begin then
-        print("Requested Weapon Reload (Swap Magazine).")
-    end
-end
-
-local function handleFireMode(actionName, inputState, inputObject)
-    if actionName == "FireModeAction" and inputState == Enum.UserInputState.Begin then
-        print("Toggling Fire Mode (Auto/Single).")
-    end
-end
-
-local function handleCheckWeapon(actionName, inputState, inputObject)
-    if actionName == "CheckWeaponAction" and inputState == Enum.UserInputState.Begin then
-        print("Checking Weapon Chamber / Malfunctions.")
-    end
-end
-
-local function handlePing(actionName, inputState, inputObject)
-    if actionName == "PingAction" and inputState == Enum.UserInputState.Begin then
-        print("Tactical Ping Placed!")
-    end
-end
-
 ContextActionService:BindAction("ADSAction", handleADS, true, Enum.UserInputType.MouseButton2)
 ContextActionService:SetTitle("ADSAction", "AIM")
 ContextActionService:SetPosition("ADSAction", UDim2.new(1, -300, 1, -100))

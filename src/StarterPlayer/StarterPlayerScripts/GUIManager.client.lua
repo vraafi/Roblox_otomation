@@ -16,6 +16,7 @@ function GUIManager.Initialize()
 
     GUIManager.CreateVitalsHUD(screenGui)
     GUIManager.CreateLimbHUD(screenGui)
+    GUIManager.CreateTacticalHUD(screenGui)
     GUIManager.CreateInventoryScreen(screenGui)
     GUIManager.CreateFleaMarketScreen(screenGui)
     GUIManager.CreateMapScreen(screenGui)
@@ -671,4 +672,61 @@ function GUIManager.UpdateLimbHUD(limbData)
     end
 end
 
+function GUIManager.CreateTacticalHUD(parentGui)
+    local tacticalFrame = Instance.new("Frame")
+    tacticalFrame.Name = "TacticalHUD"
+    tacticalFrame.Size = UDim2.new(0, 200, 0, 100)
+    tacticalFrame.Position = UDim2.new(1, -220, 1, -120)
+    tacticalFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    tacticalFrame.BackgroundTransparency = 0.3
+    tacticalFrame.Parent = parentGui
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0.1, 0)
+    corner.Parent = tacticalFrame
+
+    local stanceLabel = Instance.new("TextLabel")
+    stanceLabel.Name = "StanceLabel"
+    stanceLabel.Size = UDim2.new(1, -10, 0, 30)
+    stanceLabel.Position = UDim2.new(0, 10, 0, 5)
+    stanceLabel.BackgroundTransparency = 1
+    stanceLabel.Text = "STANCE: STANDING"
+    stanceLabel.TextColor3 = Color3.new(1,1,1)
+    stanceLabel.TextXAlignment = Enum.TextXAlignment.Left
+    stanceLabel.Font = Enum.Font.Code
+    stanceLabel.Parent = tacticalFrame
+
+    local fireModeLabel = Instance.new("TextLabel")
+    fireModeLabel.Name = "FireModeLabel"
+    fireModeLabel.Size = UDim2.new(1, -10, 0, 30)
+    fireModeLabel.Position = UDim2.new(0, 10, 0, 35)
+    fireModeLabel.BackgroundTransparency = 1
+    fireModeLabel.Text = "MODE: AUTO"
+    fireModeLabel.TextColor3 = Color3.new(1,1,1)
+    fireModeLabel.TextXAlignment = Enum.TextXAlignment.Left
+    fireModeLabel.Font = Enum.Font.Code
+    fireModeLabel.Parent = tacticalFrame
+
+    local ammoLabel = Instance.new("TextLabel")
+    ammoLabel.Name = "AmmoLabel"
+    ammoLabel.Size = UDim2.new(1, -10, 0, 30)
+    ammoLabel.Position = UDim2.new(0, 10, 0, 65)
+    ammoLabel.BackgroundTransparency = 1
+    ammoLabel.Text = "MAG: [ ?? ] | CHMBR: [ X ]"
+    ammoLabel.TextColor3 = Color3.new(1,0.8,0.2)
+    ammoLabel.TextXAlignment = Enum.TextXAlignment.Left
+    ammoLabel.Font = Enum.Font.Code
+    ammoLabel.Parent = tacticalFrame
+
+    -- Provide global hook for input manager to update this UI
+    _G.UpdateTacticalHUD = function(stateName, value)
+        if stateName == "Stance" then
+            stanceLabel.Text = "STANCE: " .. string.upper(value)
+        elseif stateName == "FireMode" then
+            fireModeLabel.Text = "MODE: " .. string.upper(value)
+        elseif stateName == "Ammo" then
+            ammoLabel.Text = value
+        end
+    end
+end
 return GUIManager

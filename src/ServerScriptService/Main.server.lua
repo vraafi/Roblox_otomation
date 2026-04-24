@@ -180,3 +180,24 @@ game.Players.PlayerAdded:Connect(function(player)
 end)
 
 print("--- ABSOLUTE APEX SERVER RUNNING ---")
+local events = game:GetService("ReplicatedStorage"):FindFirstChild("Events")
+if not events then
+    events = Instance.new("Folder")
+    events.Name = "Events"
+    events.Parent = game:GetService("ReplicatedStorage")
+end
+
+local function ensureEvent(name, isFunction)
+    if not events:FindFirstChild(name) then
+        local ev = isFunction and Instance.new("RemoteFunction") or Instance.new("RemoteEvent")
+        ev.Name = name
+        ev.Parent = events
+    end
+end
+
+ensureEvent("FireWeapon", false)
+ensureEvent("ReloadWeapon", true)
+ensureEvent("PackAmmo", true)
+ensureEvent("UseMedicalItem", true)
+ensureEvent("ThrowGrenade", false)
+ensureEvent("UseGearSkill", true)
