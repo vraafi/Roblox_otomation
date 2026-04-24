@@ -133,20 +133,12 @@ function SpaceshipMarket.AttemptPurchase(player, itemId)
         -- Deduct money
         pData.TotalDollars = pData.TotalDollars - itemData.Value
 
-        -- In a real scenario, this would add the item to their InventorySystem
-        -- For the simulation, we notify the client to update their UI
-        local events = ReplicatedStorage:FindFirstChild("Events")
-        if events and events:FindFirstChild("ItemPickedUp") then
-            events.ItemPickedUp:FireClient(player, {
-                Name = itemData.Name,
-                GridWidth = itemData.GridWidth,
-                GridHeight = itemData.GridHeight,
-                Color = itemData.Color
-            })
-        end
+        -- Arena Breakout Mechanics: Purchased items go to Mail Inbox
+        local MailSystem = require(ServerScriptService:WaitForChild("MailSystem"))
+        MailSystem.DeliverItem(player.UserId, "Quartermaster Riggs", itemData.Id, "Thank you for your purchase.")
 
         print(player.Name .. " purchased " .. itemData.Name .. " for $" .. itemData.Value)
-        return true, "Purchase successful!"
+        return true, "Purchase sent to Inbox!"
     else
         return false, "Not enough Dollars. Need $" .. itemData.Value
     end

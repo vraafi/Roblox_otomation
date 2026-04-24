@@ -39,7 +39,9 @@ function FleaMarketSystem.Initialize()
             local currentTime = os.time()
             for id, listing in pairs(FleaMarketSystem.ActiveListings) do
                 if currentTime > listing.ExpirationTime then
-                    -- Expired: In a full game, mail the item back to the seller here.
+                    -- Expired: Mail the item back to the seller.
+                    local MailSystem = require(game:GetService("ServerScriptService"):WaitForChild("MailSystem"))
+                    MailSystem.DeliverItem(listing.SellerId, "Flea Market Return", listing.ItemId, "Your listing expired.")
                     FleaMarketSystem.ActiveListings[id] = nil
                 end
             end
@@ -166,22 +168,9 @@ function FleaMarketSystem.PurchaseListing(player, listingId)
         sellerData.TotalDollars = sellerData.TotalDollars + listing.Price
     end
 
-    -- Give buyer the item
-    table.insert(buyerData.Inventory.Items, listing.ItemId)
-
-    -- Alert the buyer's GUI to update
-    local events = ReplicatedStorage:FindFirstChild("Events")
-    if events and events:FindFirstChild("ItemPickedUp") then
-        local itemData = ItemDatabase.GetItem(listing.ItemId)
-        if itemData then
-            events.ItemPickedUp:FireClient(player, {
-                Name = itemData.Name,
-                GridWidth = itemData.GridWidth,
-                GridHeight = itemData.GridHeight,
-                Color = itemData.Color
-            })
-        end
-    end
+    -- Mail buyer the item (Arena Breakout mechanics)
+    local MailSystem = require(game:GetService("ServerScriptService"):WaitForChild("MailSystem"))
+    MailSystem.DeliverItem(player.UserId, "Flea Market Purchase", listing.ItemId, "You purchased an item.")
 
     -- Remove listing
     FleaMarketSystem.ActiveListings[listingId] = nil

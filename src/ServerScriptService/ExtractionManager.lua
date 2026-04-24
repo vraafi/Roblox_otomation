@@ -53,8 +53,13 @@ function ExtractionManager.ExtractPlayer(playerId, playerData)
     -- Arena Breakout logic: Player successfully extracts with all their loot
     print("Player " .. playerId .. " has extracted successfully!")
 
-    -- Deposit un-secured loot into the Lobby Stash
     local ServerScriptService = game:GetService("ServerScriptService")
+
+    -- Return any borrowed gear to teammates via Mail
+    local LendingSystem = require(ServerScriptService:WaitForChild("LendingSystem"))
+    LendingSystem.ReturnBorrowedGear(playerId)
+
+    -- Deposit remaining un-secured loot into the Lobby Stash
     local LobbyStashSystem = require(ServerScriptService:WaitForChild("LobbyStashSystem"))
     local player = game.Players:GetPlayerByUserId(playerId)
 

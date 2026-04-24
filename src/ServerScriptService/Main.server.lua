@@ -20,6 +20,9 @@ local SpaceshipLobby = require(ServerScriptService:WaitForChild("LOBBY_SPACESHIP
 local PortalDomain = require(ServerScriptService:WaitForChild("FANTASY_PORTAL_DOMAIN_1"))
 local FleaMarketSystem = require(ServerScriptService:WaitForChild("FleaMarketSystem"))
 local LobbyStashSystem = require(ServerScriptService:WaitForChild("LobbyStashSystem"))
+local MailSystem = require(ServerScriptService:WaitForChild("MailSystem"))
+local LendingSystem = require(ServerScriptService:WaitForChild("LendingSystem"))
+local ExplosivesManager = require(ServerScriptService:WaitForChild("ExplosivesManager"))
 
 -- Fix RemoteEvent Race Condition: Create RemoteEvents immediately
 local events = ReplicatedStorage:FindFirstChild("Events")
@@ -43,6 +46,9 @@ SpaceshipLobby.Initialize()
 PortalDomain.Initialize()
 FleaMarketSystem.Initialize()
 LobbyStashSystem.Initialize()
+MailSystem.Initialize()
+LendingSystem.Initialize()
+ExplosivesManager.Initialize()
 
 print("Core Systems Initialized.")
 
