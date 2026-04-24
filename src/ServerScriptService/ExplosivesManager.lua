@@ -15,7 +15,7 @@ function ExplosivesManager.Initialize()
     if not events then return end
 
     local throwEvent = Instance.new("RemoteEvent")
-    throwEvent.Name = "ThrowExplosive"
+    throwEvent.Name = "ThrowGrenade"
     throwEvent.Parent = events
 
     throwEvent.OnServerEvent:Connect(ExplosivesManager.HandleThrow)

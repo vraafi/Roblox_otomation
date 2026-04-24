@@ -216,3 +216,29 @@ function CombatManager.Initialize()
     task.spawn(hookEvents)
 end
 return CombatManager
+
+local function ensureEvents()
+    local events = game:GetService("ReplicatedStorage"):FindFirstChild("Events")
+    if events then
+        local medItem = events:FindFirstChild("UseMedicalItem")
+        if medItem and medItem:IsA("RemoteFunction") then
+            medItem.OnServerInvoke = function(player, itemName, targetLimb)
+                print(player.Name .. " used medical item: " .. tostring(itemName) .. " on " .. tostring(targetLimb))
+                -- Implement medical logic here
+                return true, "Healed"
+            end
+        end
+        local gearSkill = events:FindFirstChild("UseGearSkill")
+        if gearSkill and gearSkill:IsA("RemoteFunction") then
+            gearSkill.OnServerInvoke = function(player, skillName)
+                print(player.Name .. " used gear skill: " .. tostring(skillName))
+                -- Implement skill logic here
+                return true, "Skill activated"
+            end
+        end
+    end
+end
+task.spawn(function()
+    task.wait(1)
+    ensureEvents()
+end)
