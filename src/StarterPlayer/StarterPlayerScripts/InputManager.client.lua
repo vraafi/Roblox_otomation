@@ -32,6 +32,7 @@ local function handleShoot(actionName, inputState, inputObject)
                 -- In a full game, this fires a RemoteEvent to CombatManager.lua
                 print("Client requested FIRE weapon!")
                 local cam = workspace.CurrentCamera
+<<<<<<< HEAD
                 local rayOrigin = cam.CFrame.Position
                 local rayDirection = cam.CFrame.LookVector * 1000
                 local raycastParams = RaycastParams.new()
@@ -49,6 +50,11 @@ local function handleShoot(actionName, inputState, inputObject)
 
                 local events = game:GetService("ReplicatedStorage"):WaitForChild("Events")
                 events.FireWeapon:FireServer(targetId)
+=======
+                local ray = cam:ScreenPointToRay(cam.ViewportSize.X/2, cam.ViewportSize.Y/2)
+                local events = game:GetService("ReplicatedStorage"):WaitForChild("Events")
+                events.FireWeapon:FireServer(123) -- Target ID placeholder
+>>>>>>> origin/feature/extraction-game-core-5458142577196936881
             end
         end
     end
