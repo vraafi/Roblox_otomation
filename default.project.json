@@ -1,5 +1,5 @@
 {
-  "name": "AlbionRoblox",
+  "name": "HardcoreExtractionFantasy",
   "tree": {
     "$className": "DataModel",
     "ReplicatedStorage": {
@@ -9,6 +9,7 @@
       "$path": "src/ServerScriptService"
     },
     "StarterPlayer": {
+      "$className": "StarterPlayer",
       "StarterPlayerScripts": {
         "$path": "src/StarterPlayer/StarterPlayerScripts"
       }

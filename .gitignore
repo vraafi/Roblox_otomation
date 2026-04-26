@@ -12,3 +12,5 @@ temp_io_matrix/
 nexus_healer.log
 nexus_*.backup
 nexus_*.temp
+telemetry_logs.txt
+telemetry_server.pid
