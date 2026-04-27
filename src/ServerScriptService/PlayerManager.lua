@@ -6,6 +6,7 @@ local PlayerManager = {}
 -- Fallbacks for non-Roblox env testing
 local StatSystem = require(script.Parent.Parent.ReplicatedStorage.StatSystem)
 local InventorySystem = require(script.Parent.Parent.ReplicatedStorage.InventorySystem)
+local HealthSystem = require(script.Parent.Parent.ReplicatedStorage.HealthSystem)
 
 PlayerManager.ActivePlayers = {}
 
