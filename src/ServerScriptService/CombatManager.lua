@@ -205,10 +205,6 @@ local function hookEvents()
         -- Simplified search for mag in inventory
         -- In full game, would find magInstanceId in backpack
         local magInstance = { BaseItemId = "Mag_STANAG_30", CurrentAmmo = {} }
-<<<<<<< HEAD
-=======
-        return CombatManager.LoadMagazine(weaponInstance, magInstance)
->>>>>>> origin/feature/extraction-game-core-5458142577196936881
     end
 end
 
@@ -218,10 +214,6 @@ function CombatManager.Initialize()
     oldInit()
     task.spawn(hookEvents)
 end
-<<<<<<< HEAD
-=======
-return CombatManager
->>>>>>> origin/feature/extraction-game-core-5458142577196936881
 
 local function ensureEvents()
     local events = game:GetService("ReplicatedStorage"):FindFirstChild("Events")
@@ -248,8 +240,5 @@ task.spawn(function()
     task.wait(1)
     ensureEvents()
 end)
-<<<<<<< HEAD
 
 return CombatManager
-=======
->>>>>>> origin/feature/extraction-game-core-5458142577196936881
