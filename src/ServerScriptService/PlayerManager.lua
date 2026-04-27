@@ -14,7 +14,7 @@ function PlayerManager.SpawnPlayer(playerId)
     -- Prevent wiping existing inventory if they already exist (e.g. respawning in lobby after extract)
     if PlayerManager.ActivePlayers[playerId] then
         local existingData = PlayerManager.ActivePlayers[playerId]
-        existingData.CurrentHealth = existingData.TotalStats.MaxHealth
+        existingData.HealthProfile = existingData.HealthProfile or HealthSystem.CreateHealthProfile()
         existingData.Status = "Alive"
         return existingData
     end
@@ -29,7 +29,7 @@ function PlayerManager.SpawnPlayer(playerId)
         Id = playerId,
         Inventory = inv,
         TotalStats = stats,
-        CurrentHealth = stats.MaxHealth,
+        HealthProfile = HealthSystem.CreateHealthProfile(),
         CurrentMana = stats.MaxMana,
         Status = "Alive"
     }
@@ -47,7 +47,7 @@ function PlayerManager.UpdatePlayerStats(playerId)
     local newStats = StatSystem.CalculateTotalStats(playerData.Inventory.Equipped)
 
     -- Adjust current health/mana to not exceed new maximums
-    playerData.CurrentHealth = math.min(playerData.CurrentHealth, newStats.MaxHealth)
+    -- playerData.CurrentHealth = math.min(playerData.CurrentHealth, newStats.MaxHealth)
     playerData.CurrentMana = math.min(playerData.CurrentMana, newStats.MaxMana)
 
     -- If they had 0 mana and equipped a mage robe, they don't get free mana, it must regenerate or use potion
@@ -77,9 +77,14 @@ function PlayerManager.ApplyFallDamage(player, fallDistanceStuds)
             print(player.Name .. " took " .. fallResult.LegDamage .. " damage to " .. hitLeg .. " from falling " .. string.format("%.1f", fallDistanceMeters) .. "m.")
         else
             -- Fallback if Lobby system isn't loaded
-            playerData.CurrentHealth = math.max(0, playerData.CurrentHealth - fallResult.LegDamage)
-            if player.Character and player.Character:FindFirstChild("Humanoid") then
-                player.Character.Humanoid.Health = playerData.CurrentHealth
+            HealthSystem.ApplyDamage(playerData.HealthProfile, "LeftLeg", fallResult.LegDamage / 2)
+            HealthSystem.ApplyDamage(playerData.HealthProfile, "RightLeg", fallResult.LegDamage / 2)
+            if fallResult.BrokenLeg then
+                playerData.HealthProfile.StatusEffects.Broken["LeftLeg"] = true
+                playerData.HealthProfile.StatusEffects.Broken["RightLeg"] = true
+            end
+            if playerData.HealthProfile.IsDead and player.Character and player.Character:FindFirstChild("Humanoid") then
+                player.Character.Humanoid.Health = 0
             end
         end
 
