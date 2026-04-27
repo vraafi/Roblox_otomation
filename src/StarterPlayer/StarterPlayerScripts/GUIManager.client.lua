@@ -575,158 +575,21 @@ local function SetupNetworkListeners()
         local pickupEvent = events:WaitForChild("ItemPickedUp", 5)
         if pickupEvent then
             pickupEvent.OnClientEvent:Connect(function(itemData)
-                -- Receive data from server and visually place it in the Tetris UI
                 local success = GUIManager.AddItemToGrid(itemData.Name, itemData.GridWidth, itemData.GridHeight, itemData.Color)
                 if not success then
                     warn("Inventory Full! Could not fit " .. itemData.Name)
                 end
             end)
         end
-    end
-end
 
--- Bind Keys ONCE outside the spawn loop to prevent memory leaks and duplicate toggles
-local UserInputService = game:GetService("UserInputService")
-UserInputService.InputBegan:Connect(function(input, isProcessed)
-    if isProcessed then return end
-    if input.KeyCode == Enum.KeyCode.Tab or input.KeyCode == Enum.KeyCode.I then
-        GUIManager.ToggleInventory()
-    elseif input.KeyCode == Enum.KeyCode.M then
-        GUIManager.ToggleMap()
-    end
-end)
-
--- Re-initialize HUD when the player respawns so Health/Mana bars update correctly
-player.CharacterAdded:Connect(function(character)
-    local oldGui = player:WaitForChild("PlayerGui"):FindFirstChild("AbsoluteApexHUD")
-    if oldGui then oldGui:Destroy() end
-    GUIManager.Initialize()
-end)
-
--- Initial load
-task.spawn(function()
-    if not player.Character then player.CharacterAdded:Wait() end
-    GUIManager.Initialize()
-    SetupNetworkListeners()
-end)
-
-function GUIManager.CreateLimbHUD(parentGui)
-    local limbFrame = Instance.new("Frame")
-    limbFrame.Name = "LimbHUD"
-    limbFrame.Size = UDim2.new(0, 150, 0, 200)
-    limbFrame.Position = UDim2.new(0, 20, 0, 150)
-    limbFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    limbFrame.BackgroundTransparency = 0.5
-    limbFrame.Parent = parentGui
-
-    local title = Instance.new("TextLabel")
-    title.Size = UDim2.new(1, 0, 0, 20)
-    title.BackgroundTransparency = 1
-    title.Text = "LIMB STATUS"
-    title.TextColor3 = Color3.new(1,1,1)
-    title.Parent = limbFrame
-
-    local limbs = {
-        Head = { Pos = UDim2.new(0.4, 0, 0.1, 0), Size = UDim2.new(0.2, 0, 0.15, 0) },
-        Thorax = { Pos = UDim2.new(0.35, 0, 0.26, 0), Size = UDim2.new(0.3, 0, 0.2, 0) },
-        Stomach = { Pos = UDim2.new(0.35, 0, 0.47, 0), Size = UDim2.new(0.3, 0, 0.15, 0) },
-        LeftArm = { Pos = UDim2.new(0.1, 0, 0.26, 0), Size = UDim2.new(0.2, 0, 0.35, 0) },
-        RightArm = { Pos = UDim2.new(0.7, 0, 0.26, 0), Size = UDim2.new(0.2, 0, 0.35, 0) },
-        LeftLeg = { Pos = UDim2.new(0.35, 0, 0.63, 0), Size = UDim2.new(0.14, 0, 0.35, 0) },
-        RightLeg = { Pos = UDim2.new(0.51, 0, 0.63, 0), Size = UDim2.new(0.14, 0, 0.35, 0) }
-    }
-
-    GUIManager.LimbGuis = {}
-
-    for limbName, layout in pairs(limbs) do
-        local part = Instance.new("Frame")
-        part.Name = limbName
-        part.Size = layout.Size
-        part.Position = layout.Pos
-        part.BackgroundColor3 = Color3.fromRGB(50, 200, 50) -- Default green
-        part.Parent = limbFrame
-        GUIManager.LimbGuis[limbName] = part
-    end
-end
-
--- Simulates updating the HUD via RemoteEvent
-function GUIManager.UpdateLimbHUD(limbData)
-    if not GUIManager.LimbGuis then return end
-
-    for limbName, data in pairs(limbData) do
-        local part = GUIManager.LimbGuis[limbName]
-        if part then
-            if data.Status == "Destroyed" then
-                part.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-            else
-                local ratio = data.CurrentHP / data.MaxHP
-                if ratio > 0.7 then
-                    part.BackgroundColor3 = Color3.fromRGB(50, 200, 50) -- Green
-                elseif ratio > 0.3 then
-                    part.BackgroundColor3 = Color3.fromRGB(200, 200, 50) -- Yellow
-                else
-                    part.BackgroundColor3 = Color3.fromRGB(200, 50, 50) -- Red
-                end
-            end
+        local updateLimb = events:FindFirstChild("UpdateLimbHUD")
+        if not updateLimb then
+            updateLimb = Instance.new("RemoteEvent")
+            updateLimb.Name = "UpdateLimbHUD"
+            updateLimb.Parent = events
         end
+        updateLimb.OnClientEvent:Connect(function(limbData)
+            GUIManager.UpdateLimbHUD(limbData)
+        end)
     end
 end
-
-function GUIManager.CreateTacticalHUD(parentGui)
-    local tacticalFrame = Instance.new("Frame")
-    tacticalFrame.Name = "TacticalHUD"
-    tacticalFrame.Size = UDim2.new(0, 200, 0, 100)
-    tacticalFrame.Position = UDim2.new(1, -220, 1, -120)
-    tacticalFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-    tacticalFrame.BackgroundTransparency = 0.3
-    tacticalFrame.Parent = parentGui
-
-    local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0.1, 0)
-    corner.Parent = tacticalFrame
-
-    local stanceLabel = Instance.new("TextLabel")
-    stanceLabel.Name = "StanceLabel"
-    stanceLabel.Size = UDim2.new(1, -10, 0, 30)
-    stanceLabel.Position = UDim2.new(0, 10, 0, 5)
-    stanceLabel.BackgroundTransparency = 1
-    stanceLabel.Text = "STANCE: STANDING"
-    stanceLabel.TextColor3 = Color3.new(1,1,1)
-    stanceLabel.TextXAlignment = Enum.TextXAlignment.Left
-    stanceLabel.Font = Enum.Font.Code
-    stanceLabel.Parent = tacticalFrame
-
-    local fireModeLabel = Instance.new("TextLabel")
-    fireModeLabel.Name = "FireModeLabel"
-    fireModeLabel.Size = UDim2.new(1, -10, 0, 30)
-    fireModeLabel.Position = UDim2.new(0, 10, 0, 35)
-    fireModeLabel.BackgroundTransparency = 1
-    fireModeLabel.Text = "MODE: AUTO"
-    fireModeLabel.TextColor3 = Color3.new(1,1,1)
-    fireModeLabel.TextXAlignment = Enum.TextXAlignment.Left
-    fireModeLabel.Font = Enum.Font.Code
-    fireModeLabel.Parent = tacticalFrame
-
-    local ammoLabel = Instance.new("TextLabel")
-    ammoLabel.Name = "AmmoLabel"
-    ammoLabel.Size = UDim2.new(1, -10, 0, 30)
-    ammoLabel.Position = UDim2.new(0, 10, 0, 65)
-    ammoLabel.BackgroundTransparency = 1
-    ammoLabel.Text = "MAG: [ ?? ] | CHMBR: [ X ]"
-    ammoLabel.TextColor3 = Color3.new(1,0.8,0.2)
-    ammoLabel.TextXAlignment = Enum.TextXAlignment.Left
-    ammoLabel.Font = Enum.Font.Code
-    ammoLabel.Parent = tacticalFrame
-
-    -- Provide global hook for input manager to update this UI
-    _G.UpdateTacticalHUD = function(stateName, value)
-        if stateName == "Stance" then
-            stanceLabel.Text = "STANCE: " .. string.upper(value)
-        elseif stateName == "FireMode" then
-            fireModeLabel.Text = "MODE: " .. string.upper(value)
-        elseif stateName == "Ammo" then
-            ammoLabel.Text = value
-        end
-    end
-end
-return GUIManager

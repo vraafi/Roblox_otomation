@@ -5,6 +5,8 @@ local CombatManager = {}
 
 -- Fallbacks for non-Roblox env testing
 local ItemDatabase = require(script.Parent.Parent.ReplicatedStorage.ItemDatabase)
+local HealthSystem = require(script.Parent.Parent.ReplicatedStorage.HealthSystem)
+local ArmorSystem = require(script.Parent.Parent.ReplicatedStorage.ArmorSystem)
 
 function CombatManager.Initialize()
     -- Normally we'd hook up to RemoteEvents here
