@@ -31,6 +31,7 @@ function PlayerManager.SpawnPlayer(playerId)
         TotalStats = stats,
         HealthProfile = HealthSystem.CreateHealthProfile(),
         CurrentMana = stats.MaxMana,
+        TotalDollars = 5000, -- Initialize economy
         Status = "Alive"
     }
 
