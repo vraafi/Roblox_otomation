@@ -82,7 +82,8 @@ function PortalDomain.StartDomain()
 
     -- Teleport players to the Macro-Biome (Kalimantan)
     -- Drop them from the sky (Y=1000) so they don't clip inside the procedurally generated mountains (which can reach Y=600)
-    local domainSpawn = Vector3.new(0, 1000, 0)
+    -- Isolate instances by spreading them thousands of studs apart
+    local domainSpawn = Vector3.new(math.random(-50000, 50000), 1000, math.random(-50000, 50000))
 
     for _, player in ipairs(playersInMatch) do
         if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then

@@ -86,7 +86,8 @@ function FleaMarketSystem.CreateListing(player, itemId, price, durationHours)
         return false, "Invalid price."
     end
 
-    local pData = _G.PlayerEconomies and _G.PlayerEconomies[player.UserId]
+    local PlayerManager = require(game:GetService("ServerScriptService"):WaitForChild("PlayerManager"))
+    local pData = PlayerManager.ActivePlayers[player.UserId]
     if not pData then return false, "Economy data missing" end
 
     local itemData = ItemDatabase.GetItem(itemId)
@@ -142,7 +143,8 @@ function FleaMarketSystem.PurchaseListing(player, listingId)
         return false, "You cannot buy your own listing."
     end
 
-    local pData = _G.PlayerEconomies and _G.PlayerEconomies[player.UserId]
+    local PlayerManager = require(game:GetService("ServerScriptService"):WaitForChild("PlayerManager"))
+    local pData = PlayerManager.ActivePlayers[player.UserId]
     if not pData then return false, "Economy data missing" end
 
     if pData.TotalDollars < listing.Price then
@@ -163,7 +165,7 @@ function FleaMarketSystem.PurchaseListing(player, listingId)
     pData.TotalDollars = pData.TotalDollars - listing.Price
 
     -- Give seller money (In a full game, this would be sent via an Inbox/Mail system)
-    local sellerData = _G.PlayerEconomies[listing.SellerId]
+    local sellerData = PlayerManager.ActivePlayers[listing.SellerId]
     if sellerData then
         sellerData.TotalDollars = sellerData.TotalDollars + listing.Price
     end
