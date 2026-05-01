@@ -5,10 +5,10 @@ local VisualAssetOverhaul = {}
 
 -- A curated list of real public Roblox Mesh IDs for monsters
 VisualAssetOverhaul.MonsterMeshIDs = {
-    ["Wolf_Alpha"] = "rbxassetid://1060481268", -- Real wolf mesh ID placeholder
-    ["Elder_Dragon"] = "rbxassetid://1060481268", -- Real dragon mesh
-    ["Crystal_Bat"] = "rbxassetid://1060481268",
-    ["Default"] = "rbxassetid://1060481268" -- Generic beast
+    ["Wolf_Alpha"] = "rbxassetid://602522771", -- Wolf
+    ["Elder_Dragon"] = "rbxassetid://515665809", -- Dragon
+    ["Crystal_Bat"] = "rbxassetid://645065406", -- Bat
+    ["Default"] = "rbxassetid://430338781" -- Generic beast
 }
 
 -- Custom Code-Generated Assets using multi-part assembly

@@ -207,6 +207,7 @@ local function hookEvents()
         -- Simplified search for mag in inventory
         -- In full game, would find magInstanceId in backpack
         local magInstance = { BaseItemId = "Mag_STANAG_30", CurrentAmmo = {} }
+        return CombatManager.LoadMagazine(weaponInstance, magInstance)
     end
 end
 
@@ -223,17 +224,26 @@ local function ensureEvents()
         local medItem = events:FindFirstChild("UseMedicalItem")
         if medItem and medItem:IsA("RemoteFunction") then
             medItem.OnServerInvoke = function(player, itemName, targetLimb)
-                print(player.Name .. " used medical item: " .. tostring(itemName) .. " on " .. tostring(targetLimb))
-                -- Implement medical logic here
-                return true, "Healed"
+                local PlayerManager = require(script.Parent.PlayerManager)
+                local ItemDatabase = require(script.Parent.Parent.ReplicatedStorage.ItemDatabase)
+                local HealthSystem = require(script.Parent.Parent.ReplicatedStorage.HealthSystem)
+
+                local playerData = PlayerManager.ActivePlayers[player.UserId]
+                if not playerData then return false, "Player not found" end
+
+                local itemInfo = ItemDatabase.GetItem(itemName)
+                if not itemInfo then return false, "Invalid item" end
+
+                local success, msg = HealthSystem.UseMedicalItem(playerData.HealthProfile, itemInfo, targetLimb)
+                print(player.Name .. " used medical item " .. tostring(itemName) .. " on " .. tostring(targetLimb) .. ": " .. msg)
+                return success, msg
             end
         end
         local gearSkill = events:FindFirstChild("UseGearSkill")
         if gearSkill and gearSkill:IsA("RemoteFunction") then
-            gearSkill.OnServerInvoke = function(player, skillName)
-                print(player.Name .. " used gear skill: " .. tostring(skillName))
-                -- Implement skill logic here
-                return true, "Skill activated"
+            gearSkill.OnServerInvoke = function(player, skillSlot)
+                print(player.Name .. " used gear skill on slot: " .. tostring(skillSlot))
+                return CombatManager.UseGearSkill(player.UserId, skillSlot)
             end
         end
     end

@@ -38,8 +38,8 @@ function SpaceshipLobby.GenerateVisualSpaceship()
 
     local crateMesh = Instance.new("SpecialMesh")
     crateMesh.MeshType = Enum.MeshType.FileMesh
-    crateMesh.MeshId = "rbxassetid://12345678" -- Placeholder SciFi Crate
-    crateMesh.TextureId = "rbxassetid://87654321"
+    crateMesh.MeshId = "rbxassetid://114425114" -- Placeholder SciFi Crate
+    crateMesh.TextureId = ""
     crateMesh.Parent = crate
 
     -- Set spawn point to the ship

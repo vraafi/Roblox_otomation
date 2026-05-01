@@ -582,14 +582,11 @@ local function SetupNetworkListeners()
             end)
         end
 
-        local updateLimb = events:FindFirstChild("UpdateLimbHUD")
-        if not updateLimb then
-            updateLimb = Instance.new("RemoteEvent")
-            updateLimb.Name = "UpdateLimbHUD"
-            updateLimb.Parent = events
+        local updateLimb = events:WaitForChild("UpdateLimbHUD", 5)
+        if updateLimb then
+            updateLimb.OnClientEvent:Connect(function(limbData)
+                GUIManager.UpdateLimbHUD(limbData)
+            end)
         end
-        updateLimb.OnClientEvent:Connect(function(limbData)
-            GUIManager.UpdateLimbHUD(limbData)
-        end)
     end
 end
