@@ -12,9 +12,9 @@ local ExtremeWeatherSystem = require(ServerScriptService:WaitForChild("WEATHER_D
 -- Roblox max part size is 2048 studs. 1 stud ~ 0.28 meters.
 -- 1330km is astronomically large for a single Roblox instance (floating point breakdown occurs past 100,000 studs).
 -- We will simulate the "Kalimantan" proportion using a massive chunk grid of 2000x2000 parts.
-local CHUNK_SIZE = 2000
-local GRID_WIDTH = 13 -- Represents the 1330 width proportion
-local GRID_LENGTH = 10 -- Represents the 960 length proportion
+local CHUNK_SIZE = 500
+local GRID_WIDTH = 6 -- Scaled down for stable prototype performance
+local GRID_LENGTH = 5 -- Scaled down for stable prototype performance
 
 local Seasons = {"Spring", "Dry", "Rain", "Winter"}
 local CurrentSeasonIndex = 1

@@ -220,7 +220,8 @@ end
 local function handleGrenade(actionName, inputState, inputObject)
     if actionName == "ThrowGrenadeAction" and inputState == Enum.UserInputState.Begin then
         local events = game:GetService("ReplicatedStorage"):WaitForChild("Events")
-        events.ThrowGrenade:FireServer("Frag_Grenade")
+        local targetPos = workspace.CurrentCamera.CFrame.Position + (workspace.CurrentCamera.CFrame.LookVector * 50)
+        events.ThrowGrenade:FireServer("Tear_Gas_Grenade", targetPos)
         print("Throwing Grenade...")
     end
 end
@@ -231,7 +232,7 @@ ContextActionService:SetPosition("ThrowGrenadeAction", UDim2.new(1, -200, 1, -40
 local function handleMedical(actionName, inputState, inputObject)
     if actionName == "UseMedicalAction" and inputState == Enum.UserInputState.Begin then
         local events = game:GetService("ReplicatedStorage"):WaitForChild("Events")
-        events.UseMedicalItem:InvokeServer("IFAK_Medkit", "Thorax")
+        events.UseMedicalItem:InvokeServer("Surgical_Kit", "LeftLeg")
         print("Using Medical Item...")
     end
 end
