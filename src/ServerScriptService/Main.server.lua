@@ -155,8 +155,15 @@ game.Players.PlayerAdded:Connect(function(player)
 
         -- Override Roblox's default health logic to use our You Are What You Wear system
         local playerData = PlayerManager.SpawnPlayer(player.UserId)
-        humanoid.MaxHealth = playerData.TotalStats.MaxHealth
-        humanoid.Health = playerData.CurrentHealth
+        -- Sum up health from the limbs for the Roblox humanoid display
+        local totalMax = 0
+        local totalCurrent = 0
+        for _, limb in pairs(playerData.HealthProfile.Limbs) do
+            totalMax = totalMax + 100 -- approximate or read from HealthSystem
+            totalCurrent = totalCurrent + limb.Current
+        end
+        humanoid.MaxHealth = totalMax
+        humanoid.Health = totalCurrent
 
         humanoid.Died:Connect(function()
             PlayerManager.HandlePlayerDeath(player.UserId)

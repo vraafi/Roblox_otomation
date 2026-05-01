@@ -5,7 +5,8 @@
 local SpaceshipLobby = {}
 
 -- Arena Breakout realistic medical tracking per limb
-SpaceshipLobby.PlayerHealthData = {}
+SpaceshipLobby.PlayerHealthData = {} -- Deprecated, use HealthSystem
+local HealthSystem = require(game:GetService("ReplicatedStorage"):WaitForChild("HealthSystem"))
 
 function SpaceshipLobby.Initialize()
     SpaceshipLobby.GenerateVisualSpaceship()
