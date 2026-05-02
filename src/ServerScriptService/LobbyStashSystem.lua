@@ -66,7 +66,8 @@ function LobbyStashSystem.HandleUpgradeRequest(player)
         return false, "Stash is already at maximum level."
     end
 
-    local pData = _G.PlayerEconomies and _G.PlayerEconomies[player.UserId]
+    local PlayerManager = require(game:GetService("ServerScriptService"):WaitForChild("PlayerManager"))
+    local pData = PlayerManager.ActivePlayers[player.UserId]
     if not pData then return false, "Economy data missing." end
 
     if pData.TotalDollars >= upgradeData.Cost then

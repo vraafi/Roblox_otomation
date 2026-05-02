@@ -20,48 +20,49 @@ function DailyLogSystem.OnPlayerAdded(player)
 
     if success then
         if not data then
-            -- First time playing or no data
             data = {
                 LastLogDay = os.date("!%Y-%j"),
                 DailyDollarsEarned = 0,
-                TotalDollars = 0
             }
         else
-            -- Check if it's a new day (using day of the year)
             local currentDay = os.date("!%Y-%j")
             if data.LastLogDay ~= currentDay then
                 data.LastLogDay = currentDay
-                data.DailyDollarsEarned = 0 -- Reset daily limit
+                data.DailyDollarsEarned = 0
             end
         end
 
-        -- Store temporary data on server
-        _G.PlayerEconomies = _G.PlayerEconomies or {}
-        _G.PlayerEconomies[player.UserId] = data
+        local PlayerManager = require(game:GetService("ServerScriptService"):WaitForChild("PlayerManager"))
+        local pData = PlayerManager.ActivePlayers[player.UserId]
+        if pData then
+            pData.DailyLog = data
+        end
     else
         warn("Failed to load daily log for player " .. player.Name)
     end
 end
 
 function DailyLogSystem.OnPlayerRemoving(player)
-    if _G.PlayerEconomies and _G.PlayerEconomies[player.UserId] then
+    local PlayerManager = require(game:GetService("ServerScriptService"):WaitForChild("PlayerManager"))
+    local pData = PlayerManager.ActivePlayers[player.UserId]
+    if pData and pData.DailyLog then
         local success, err = pcall(function()
-            DailyLogStore:SetAsync(tostring(player.UserId), _G.PlayerEconomies[player.UserId])
+            DailyLogStore:SetAsync(tostring(player.UserId), pData.DailyLog)
         end)
         if not success then
             warn("Failed to save daily log for player " .. player.Name .. ": " .. tostring(err))
         end
-        _G.PlayerEconomies[player.UserId] = nil
     end
 end
 
--- Function to add money, respecting the $1,000 daily limit
 function DailyLogSystem.AddDollars(player, amount)
-    if not _G.PlayerEconomies or not _G.PlayerEconomies[player.UserId] then return false, "Economy data not loaded" end
+    local PlayerManager = require(game:GetService("ServerScriptService"):WaitForChild("PlayerManager"))
+    local pData = PlayerManager.ActivePlayers[player.UserId]
 
-    local data = _G.PlayerEconomies[player.UserId]
+    if not pData or not pData.DailyLog then return false, "Economy data not loaded" end
 
-    -- Check if it's a new day before adding
+    local data = pData.DailyLog
+
     local currentDay = os.date("!%Y-%j")
     if data.LastLogDay ~= currentDay then
         data.LastLogDay = currentDay
@@ -72,7 +73,7 @@ function DailyLogSystem.AddDollars(player, amount)
         local allowedAmount = DAILY_LIMIT - data.DailyDollarsEarned
         if allowedAmount > 0 then
             data.DailyDollarsEarned = DAILY_LIMIT
-            data.TotalDollars = data.TotalDollars + allowedAmount
+            pData.TotalDollars = pData.TotalDollars + allowedAmount
             return true, "Reached daily limit. Only added $" .. tostring(allowedAmount)
         else
             return false, "Daily limit of $" .. tostring(DAILY_LIMIT) .. " already reached."
@@ -80,7 +81,7 @@ function DailyLogSystem.AddDollars(player, amount)
     end
 
     data.DailyDollarsEarned = data.DailyDollarsEarned + amount
-    data.TotalDollars = data.TotalDollars + amount
+    pData.TotalDollars = pData.TotalDollars + amount
 
     return true, "Added $" .. tostring(amount)
 end

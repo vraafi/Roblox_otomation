@@ -265,10 +265,11 @@ function GUIManager.CreateVitalsHUD(parentGui)
 
         -- In a real game, Mana is stored in an IntValue or PlayerManager
         -- Here we simulate reading it from a hypothetical ManaValue object or default to 0
-        local manaVal = char:FindFirstChild("CurrentMana")
-        local maxManaVal = char:FindFirstChild("MaxMana")
-        local currentMana = manaVal and manaVal.Value or 0
-        local maxMana = maxManaVal and maxManaVal.Value or 100
+        -- Since the server tracks mana internally without ValueObjects in this architecture,
+        -- we would rely on the UpdateVitals RemoteEvent we created earlier.
+        -- But for the continuous loop fallback, we'll read humanoid health for HP, and assume mana is pushed via events.
+        local currentMana = GUIManager.CachedMana or 0
+        local maxMana = GUIManager.CachedMaxMana or 0
 
         if maxMana > 0 then
             mpText.Text = math.floor(currentMana) .. " / " .. math.floor(maxMana)
