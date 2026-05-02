@@ -13,7 +13,7 @@ local LootItemsData = {
         Value = 280,
         Color = Color3.fromRGB(40, 60, 40),
         Material = Enum.Material.Plastic,
-        MeshId = "rbxassetid://1060481268" -- Placeholder
+        MeshId = "rbxassetid://515665809" -- Placeholder
     },
     [48] = {
         Id = "Silver_Pocket_Watch",
@@ -24,7 +24,7 @@ local LootItemsData = {
         Value = 180,
         Color = Color3.fromRGB(192, 192, 192),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://430338781"
     },
     [49] = {
         Id = "Thermal_Camera",
@@ -35,7 +35,7 @@ local LootItemsData = {
         Value = 1200,
         Color = Color3.fromRGB(50, 50, 50),
         Material = Enum.Material.Plastic,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://602522771"
     },
     [50] = {
         Id = "Glow_Sticks",
@@ -46,7 +46,7 @@ local LootItemsData = {
         Value = 15,
         Color = Color3.fromRGB(150, 255, 50),
         Material = Enum.Material.Neon,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://515665809"
     },
     [51] = {
         Id = "Ancient_Coin",
@@ -57,7 +57,7 @@ local LootItemsData = {
         Value = 400,
         Color = Color3.fromRGB(200, 150, 50),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://123456789"
     },
     [52] = {
         Id = "Radioactive_Isotope",
@@ -68,7 +68,7 @@ local LootItemsData = {
         Value = 3500,
         Color = Color3.fromRGB(50, 255, 100),
         Material = Enum.Material.Neon,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://444453051"
     },
     [53] = {
         Id = "Welding_Torch",
@@ -79,7 +79,7 @@ local LootItemsData = {
         Value = 150,
         Color = Color3.fromRGB(180, 50, 50),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://602494917"
     },
     [54] = {
         Id = "Surgical_Kit",
@@ -90,7 +90,7 @@ local LootItemsData = {
         Value = 850,
         Color = Color3.fromRGB(220, 220, 220),
         Material = Enum.Material.Plastic,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://114425114"
     },
     [55] = {
         Id = "Bone_Fragment",
@@ -101,7 +101,7 @@ local LootItemsData = {
         Value = 30,
         Color = Color3.fromRGB(240, 240, 230),
         Material = Enum.Material.Marble,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://382103444"
     },
     [56] = {
         Id = "Encrypted_Radio",
@@ -112,7 +112,7 @@ local LootItemsData = {
         Value = 600,
         Color = Color3.fromRGB(30, 30, 40),
         Material = Enum.Material.Plastic,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://602494917"
     }
 }
 

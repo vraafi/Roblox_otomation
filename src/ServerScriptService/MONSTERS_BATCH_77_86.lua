@@ -12,7 +12,7 @@ local MonsterData = {
         DropCoreLevel = 3,
         Color = Color3.fromRGB(100, 100, 110),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268", -- Placeholder
+        MeshId = "rbxassetid://372630511", -- Placeholder
         Biome = "Ruins",
         SpecialAbility = "WebTrap"
     },
@@ -24,7 +24,7 @@ local MonsterData = {
         DropCoreLevel = 5,
         Color = Color3.fromRGB(255, 60, 0),
         Material = Enum.Material.Neon,
-        MeshId = "rbxassetid://1060481268",
+        MeshId = "rbxassetid://382103444",
         Biome = "Volcano",
         SpecialAbility = "Submerge"
     },
@@ -36,7 +36,7 @@ local MonsterData = {
         DropCoreLevel = 6,
         Color = Color3.fromRGB(200, 200, 255),
         Material = Enum.Material.Neon,
-        MeshId = "rbxassetid://1060481268",
+        MeshId = "rbxassetid://444453051",
         Biome = "WeatherDisaster",
         SpecialAbility = "LightningStrike"
     },
@@ -48,7 +48,7 @@ local MonsterData = {
         DropCoreLevel = 4,
         Color = Color3.fromRGB(10, 0, 30),
         Material = Enum.Material.Slate,
-        MeshId = "rbxassetid://1060481268",
+        MeshId = "rbxassetid://123456789",
         Biome = "PortalDomain"
     },
     [81] = {
@@ -59,7 +59,7 @@ local MonsterData = {
         DropCoreLevel = 3,
         Color = Color3.fromRGB(50, 150, 50),
         Material = Enum.Material.Grass,
-        MeshId = "rbxassetid://1060481268",
+        MeshId = "rbxassetid://164478144",
         Biome = "Swamp",
         SpecialAbility = "PoisonCloud"
     },
@@ -71,7 +71,7 @@ local MonsterData = {
         DropCoreLevel = 3,
         Color = Color3.fromRGB(200, 240, 255),
         Material = Enum.Material.Ice,
-        MeshId = "rbxassetid://1060481268",
+        MeshId = "rbxassetid://430338781",
         Biome = "Mountain"
     },
     [83] = {
@@ -82,7 +82,7 @@ local MonsterData = {
         DropCoreLevel = 4,
         Color = Color3.fromRGB(255, 200, 150),
         Material = Enum.Material.ForceField,
-        MeshId = "rbxassetid://1060481268",
+        MeshId = "rbxassetid://114425114",
         Biome = "Desert",
         SpecialAbility = "Intangible"
     },
@@ -94,7 +94,7 @@ local MonsterData = {
         DropCoreLevel = 8,
         Color = Color3.fromRGB(150, 100, 255),
         Material = Enum.Material.Glass,
-        MeshId = "rbxassetid://1060481268",
+        MeshId = "rbxassetid://114425114",
         Biome = "Cave",
         SpecialAbility = "ReflectMagic"
     },
@@ -106,7 +106,7 @@ local MonsterData = {
         DropCoreLevel = 2,
         Color = Color3.fromRGB(50, 80, 20),
         Material = Enum.Material.Neon,
-        MeshId = "rbxassetid://1060481268",
+        MeshId = "rbxassetid://634289194",
         Biome = "Forest",
         SpecialAbility = "Flight"
     },
@@ -118,7 +118,7 @@ local MonsterData = {
         DropCoreLevel = 9,
         Color = Color3.fromRGB(40, 0, 80),
         Material = Enum.Material.Neon,
-        MeshId = "rbxassetid://1060481268",
+        MeshId = "rbxassetid://602494917",
         Biome = "PortalDomain",
         SpecialAbility = "Teleport"
     }

@@ -22,7 +22,7 @@ local WeaponData = {
         Value = 1800,
         ModSlots = {"Optic", "Muzzle"},
         Color = Color3.fromRGB(20, 20, 20),
-        MeshId = "rbxassetid://1060481268" -- Placeholder
+        MeshId = "rbxassetid://123456789" -- Placeholder
     },
     [8] = {
         Id = "Desert_Eagle",
@@ -42,7 +42,7 @@ local WeaponData = {
         Value = 1500,
         ModSlots = {"Optic", "Magazine"},
         Color = Color3.fromRGB(192, 192, 192),
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://382103444"
     },
     [9] = {
         Id = "M249_SAW",
@@ -62,7 +62,7 @@ local WeaponData = {
         Value = 3500,
         ModSlots = {"Optic", "Muzzle", "Bipod"},
         Color = Color3.fromRGB(50, 55, 45),
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://602494917"
     },
     [10] = {
         Id = "Vector_45",
@@ -82,7 +82,7 @@ local WeaponData = {
         Value = 2200,
         ModSlots = {"Optic", "Muzzle", "Foregrip", "Magazine"},
         Color = Color3.fromRGB(30, 30, 30),
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://382103444"
     }
 }
 

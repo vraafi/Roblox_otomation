@@ -13,7 +13,7 @@ local LootItemsData = {
         Value = 55,
         Color = Color3.fromRGB(80, 80, 80),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268" -- Placeholder
+        MeshId = "rbxassetid://430338781" -- Placeholder
     },
     [28] = {
         Id = "Spark_Plug",
@@ -24,7 +24,7 @@ local LootItemsData = {
         Value = 15,
         Color = Color3.fromRGB(200, 200, 200),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://382103444"
     },
     [29] = {
         Id = "Encrypted_HDD",
@@ -35,7 +35,7 @@ local LootItemsData = {
         Value = 2500,
         Color = Color3.fromRGB(30, 30, 30),
         Material = Enum.Material.Plastic,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://602494917"
     },
     [30] = {
         Id = "Platinum_Ring",
@@ -46,7 +46,7 @@ local LootItemsData = {
         Value = 850,
         Color = Color3.fromRGB(229, 228, 226),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://602522771"
     },
     [31] = {
         Id = "Kevlar_Scrap",
@@ -57,7 +57,7 @@ local LootItemsData = {
         Value = 120,
         Color = Color3.fromRGB(50, 50, 40),
         Material = Enum.Material.Fabric,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://372630511"
     },
     [32] = {
         Id = "Healing_Herb",
@@ -68,7 +68,7 @@ local LootItemsData = {
         Value = 60,
         Color = Color3.fromRGB(50, 200, 50),
         Material = Enum.Material.Grass,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://114425114"
     },
     [33] = {
         Id = "Telescope_Lens",
@@ -79,7 +79,7 @@ local LootItemsData = {
         Value = 320,
         Color = Color3.fromRGB(200, 255, 255),
         Material = Enum.Material.Glass,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://123456789"
     },
     [34] = {
         Id = "Dragon_Scale",
@@ -90,7 +90,7 @@ local LootItemsData = {
         Value = 1500,
         Color = Color3.fromRGB(200, 20, 20),
         Material = Enum.Material.Neon,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://164478144"
     },
     [35] = {
         Id = "Military_Radio",
@@ -101,7 +101,7 @@ local LootItemsData = {
         Value = 450,
         Color = Color3.fromRGB(40, 60, 40),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://602494917"
     },
     [36] = {
         Id = "Gold_Bar",
@@ -112,7 +112,7 @@ local LootItemsData = {
         Value = 5000,
         Color = Color3.fromRGB(255, 215, 0),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://372630511"
     }
 }
 

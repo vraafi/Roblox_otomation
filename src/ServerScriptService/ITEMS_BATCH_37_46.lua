@@ -13,7 +13,7 @@ local LootItemsData = {
         Value = 180,
         Color = Color3.fromRGB(200, 200, 190),
         Material = Enum.Material.Marble,
-        MeshId = "rbxassetid://1060481268" -- Placeholder
+        MeshId = "rbxassetid://114425114" -- Placeholder
     },
     [38] = {
         Id = "Magic_Scroll",
@@ -24,7 +24,7 @@ local LootItemsData = {
         Value = 400,
         Color = Color3.fromRGB(220, 200, 150),
         Material = Enum.Material.Fabric,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://645065406"
     },
     [39] = {
         Id = "Titanium_Ingot",
@@ -35,7 +35,7 @@ local LootItemsData = {
         Value = 1200,
         Color = Color3.fromRGB(190, 190, 200),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://645065406"
     },
     [40] = {
         Id = "Screwdriver",
@@ -46,7 +46,7 @@ local LootItemsData = {
         Value = 20,
         Color = Color3.fromRGB(200, 50, 50),
         Material = Enum.Material.Plastic,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://602522771"
     },
     [41] = {
         Id = "Alien_Artifact",
@@ -57,7 +57,7 @@ local LootItemsData = {
         Value = 3500,
         Color = Color3.fromRGB(50, 255, 100),
         Material = Enum.Material.Neon,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://602494917"
     },
     [42] = {
         Id = "Painkillers",
@@ -68,7 +68,7 @@ local LootItemsData = {
         Value = 150,
         Color = Color3.fromRGB(255, 255, 255),
         Material = Enum.Material.Plastic,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://382103444"
     },
     [43] = {
         Id = "Car_Alternator",
@@ -79,7 +79,7 @@ local LootItemsData = {
         Value = 220,
         Color = Color3.fromRGB(80, 80, 80),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://602522771"
     },
     [44] = {
         Id = "Demon_Blood",
@@ -90,7 +90,7 @@ local LootItemsData = {
         Value = 850,
         Color = Color3.fromRGB(150, 0, 0),
         Material = Enum.Material.Glass,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://634289194"
     },
     [45] = {
         Id = "CPU_Processor",
@@ -101,7 +101,7 @@ local LootItemsData = {
         Value = 400,
         Color = Color3.fromRGB(50, 150, 50),
         Material = Enum.Material.Plastic,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://602522771"
     },
     [46] = {
         Id = "Encrypted_Tablet",
@@ -112,7 +112,7 @@ local LootItemsData = {
         Value = 2800,
         Color = Color3.fromRGB(30, 30, 30),
         Material = Enum.Material.Plastic,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://634289194"
     }
 }
 

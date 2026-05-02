@@ -19,7 +19,7 @@ local WeaponData = {
         Value = 5500,
         Color = Color3.fromRGB(255, 255, 200),
         Material = Enum.Material.Neon,
-        MeshId = "rbxassetid://1060481268" -- Placeholder
+        MeshId = "rbxassetid://164478144" -- Placeholder
     },
     [8] = {
         Id = "Glaive_T4",
@@ -36,7 +36,7 @@ local WeaponData = {
         Value = 1200,
         Color = Color3.fromRGB(150, 150, 160),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://634289194"
     },
     [9] = {
         Id = "Nature_Staff_T7",
@@ -53,7 +53,7 @@ local WeaponData = {
         Value = 7500,
         Color = Color3.fromRGB(50, 180, 50),
         Material = Enum.Material.Wood,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://602522771"
     },
     [10] = {
         Id = "Apex_Scythe_T9",
@@ -70,7 +70,7 @@ local WeaponData = {
         Value = 35000,
         Color = Color3.fromRGB(20, 0, 40),
         Material = Enum.Material.Neon,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://114425114"
     }
 }
 

@@ -11,7 +11,7 @@ local MonsterData = {
         Speed = 18,
         DropCoreLevel = 1,
         Color = Color3.fromRGB(50, 150, 50),
-        MeshId = "rbxassetid://1060481268", -- Placeholder Goblin Mesh
+        MeshId = "rbxassetid://634289194", -- Placeholder Goblin Mesh
     },
     [2] = {
         Name = "Wolf_Alpha",
@@ -20,7 +20,7 @@ local MonsterData = {
         Speed = 22,
         DropCoreLevel = 2,
         Color = Color3.fromRGB(100, 100, 100),
-        MeshId = "rbxassetid://1060481268", -- Placeholder Wolf Mesh
+        MeshId = "rbxassetid://114425114", -- Placeholder Wolf Mesh
     },
     [3] = {
         Name = "Rock_Golem",
@@ -29,7 +29,7 @@ local MonsterData = {
         Speed = 10,
         DropCoreLevel = 4,
         Color = Color3.fromRGB(130, 130, 130),
-        MeshId = "rbxassetid://1060481268", -- Placeholder Golem Mesh
+        MeshId = "rbxassetid://515665809", -- Placeholder Golem Mesh
     },
     [4] = {
         Name = "Flame_Sprite",
@@ -39,7 +39,7 @@ local MonsterData = {
         DropCoreLevel = 3,
         Color = Color3.fromRGB(255, 100, 0),
         Material = Enum.Material.Neon,
-        MeshId = "rbxassetid://1060481268",
+        MeshId = "rbxassetid://602494917",
     },
     [5] = {
         Name = "Troll_Brute",
@@ -48,7 +48,7 @@ local MonsterData = {
         Speed = 14,
         DropCoreLevel = 5,
         Color = Color3.fromRGB(40, 100, 40),
-        MeshId = "rbxassetid://1060481268",
+        MeshId = "rbxassetid://444453051",
     },
     [6] = {
         Name = "Elder_Dragon",
@@ -57,7 +57,7 @@ local MonsterData = {
         Speed = 30,
         DropCoreLevel = 9,
         Color = Color3.fromRGB(200, 0, 0),
-        MeshId = "rbxassetid://1060481268",
+        MeshId = "rbxassetid://515665809",
     }
 }
 

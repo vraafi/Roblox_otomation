@@ -13,7 +13,7 @@ local LootItemsData = {
         Value = 5,
         Color = Color3.fromRGB(200, 200, 200),
         Material = Enum.Material.Glass,
-        MeshId = "rbxassetid://1060481268" -- Placeholder
+        MeshId = "rbxassetid://372630511" -- Placeholder
     },
     [58] = {
         Id = "Gas_Mask_Filter",
@@ -24,7 +24,7 @@ local LootItemsData = {
         Value = 150,
         Color = Color3.fromRGB(60, 60, 60),
         Material = Enum.Material.Plastic,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://164478144"
     },
     [59] = {
         Id = "Military_Flashlight",
@@ -35,7 +35,7 @@ local LootItemsData = {
         Value = 85,
         Color = Color3.fromRGB(40, 50, 40),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://164478144"
     },
     [60] = {
         Id = "Cursed_Amulet",
@@ -46,7 +46,7 @@ local LootItemsData = {
         Value = 2000,
         Color = Color3.fromRGB(100, 0, 150),
         Material = Enum.Material.Neon,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://515665809"
     },
     [61] = {
         Id = "Car_Jack",
@@ -57,7 +57,7 @@ local LootItemsData = {
         Value = 300,
         Color = Color3.fromRGB(200, 50, 50),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://123456789"
     },
     [62] = {
         Id = "Purified_Water",
@@ -68,7 +68,7 @@ local LootItemsData = {
         Value = 40,
         Color = Color3.fromRGB(150, 200, 255),
         Material = Enum.Material.Glass,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://444453051"
     },
     [63] = {
         Id = "Drone_Camera",
@@ -79,7 +79,7 @@ local LootItemsData = {
         Value = 550,
         Color = Color3.fromRGB(30, 30, 30),
         Material = Enum.Material.Plastic,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://382103444"
     },
     [64] = {
         Id = "Gold_Tooth",
@@ -90,7 +90,7 @@ local LootItemsData = {
         Value = 250,
         Color = Color3.fromRGB(255, 215, 0),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://372630511"
     },
     [65] = {
         Id = "Tear_Gas_Grenade",
@@ -101,7 +101,7 @@ local LootItemsData = {
         Value = 180,
         Color = Color3.fromRGB(150, 150, 150),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://114425114"
     },
     [66] = {
         Id = "Server_Rack",
@@ -112,7 +112,7 @@ local LootItemsData = {
         Value = 1800,
         Color = Color3.fromRGB(50, 50, 60),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://164478144"
     }
 }
 

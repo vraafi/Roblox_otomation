@@ -15,7 +15,7 @@ local BackpackData = {
         Weight = 0.6,
         Value = 500,
         Color = Color3.fromRGB(100, 100, 100),
-        MeshId = "rbxassetid://1060481268" -- Placeholder
+        MeshId = "rbxassetid://444453051" -- Placeholder
     },
     [2] = {
         Id = "Simple_Backpack",
@@ -28,7 +28,7 @@ local BackpackData = {
         Weight = 0.8,
         Value = 1200,
         Color = Color3.fromRGB(50, 80, 50),
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://123456789"
     },
     [3] = {
         Id = "Canvas_Backpack",
@@ -41,7 +41,7 @@ local BackpackData = {
         Weight = 1.2,
         Value = 2500,
         Color = Color3.fromRGB(200, 180, 140),
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://645065406"
     },
     [4] = {
         Id = "Camping_Backpack",
@@ -54,7 +54,7 @@ local BackpackData = {
         Weight = 3.5,
         Value = 8000,
         Color = Color3.fromRGB(40, 60, 40),
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://430338781"
     },
     [5] = {
         Id = "Rush_Tactical_Bag",
@@ -67,7 +67,7 @@ local BackpackData = {
         Weight = 2.8,
         Value = 12000,
         Color = Color3.fromRGB(20, 20, 20),
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://602494917"
     },
     [6] = {
         Id = "Cowhide_Backpack",
@@ -80,7 +80,7 @@ local BackpackData = {
         Weight = 4.0,
         Value = 25000,
         Color = Color3.fromRGB(120, 70, 30),
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://602522771"
     }
 }
 
