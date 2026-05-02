@@ -62,12 +62,7 @@ end
 local TweenService = game:GetService("TweenService")
 
 -- Expose states globally so InputManager can tell CameraSetup what to do
-_G.TacticalStates = {
-    IsCrouching = false,
-    IsProning = false,
-    PeekState = "None", -- "Left", "Right", "None"
-    IsADS = false
-}
+local ClientState = require(game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("ClientState"))
 
 local currentCameraOffset = Vector3.new(0, 0, 0)
 local currentCameraRoll = 0
@@ -82,9 +77,9 @@ local function updateViewmodel(dt)
 
     -- 1. Handle Camera Height (Stance)
     local targetHeightOffset = 0
-    if _G.TacticalStates.IsProning then
+    if ClientState.TacticalStates.IsProning then
         targetHeightOffset = -3.5
-    elseif _G.TacticalStates.IsCrouching then
+    elseif ClientState.TacticalStates.IsCrouching then
         targetHeightOffset = -1.5
     end
 
@@ -92,10 +87,10 @@ local function updateViewmodel(dt)
     local targetPeekOffset = 0
     local targetRoll = 0
 
-    if _G.TacticalStates.PeekState == "Left" then
+    if ClientState.TacticalStates.PeekState == "Left" then
         targetPeekOffset = -1.5
         targetRoll = math.rad(15)
-    elseif _G.TacticalStates.PeekState == "Right" then
+    elseif ClientState.TacticalStates.PeekState == "Right" then
         targetPeekOffset = 1.5
         targetRoll = math.rad(-15)
     end
@@ -114,7 +109,7 @@ local function updateViewmodel(dt)
 
     -- 3. Handle Viewmodel ADS
     local targetAdsCFrame = CFrame.new(0, 0, 0)
-    if _G.TacticalStates.IsADS then
+    if ClientState.TacticalStates.IsADS then
         -- Bring the gun to the center of the screen
         targetAdsCFrame = CFrame.new(-1.0, 0.5, 1) -- Estimated offset to center the right arm
     end

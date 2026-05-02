@@ -5,6 +5,7 @@
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
+local ClientState = require(game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("ClientState"))
 local GUIManager = {}
 
 function GUIManager.Initialize()
@@ -158,7 +159,7 @@ function GUIManager.ToggleMap(forceState)
         mapScreen.Visible = not mapScreen.Visible
     end
 
-    if _G.SetMenuState then _G.SetMenuState(mapScreen.Visible) end
+    if ClientState.SetMenuState then ClientState.SetMenuState(mapScreen.Visible) end
 
     if mapScreen.Visible then
         local player = game.Players.LocalPlayer
@@ -378,7 +379,7 @@ function GUIManager.ToggleFleaMarket(forceState)
         marketScreen.Visible = not marketScreen.Visible
     end
 
-    if _G.SetMenuState then _G.SetMenuState(marketScreen.Visible) end
+    if ClientState.SetMenuState then ClientState.SetMenuState(marketScreen.Visible) end
 
     local UserInputService = game:GetService("UserInputService")
     if marketScreen.Visible then
@@ -552,8 +553,8 @@ function GUIManager.ToggleInventory(forceState)
     end
 
     -- Tell InputManager to freeze character jumping/shooting when menu is open
-    if _G.SetMenuState then
-        _G.SetMenuState(inventoryScreen.Visible)
+    if ClientState.SetMenuState then
+        ClientState.SetMenuState(inventoryScreen.Visible)
     end
 
     -- Optional: Unlock mouse pointer when UI is open

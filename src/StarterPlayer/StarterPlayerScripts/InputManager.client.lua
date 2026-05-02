@@ -3,6 +3,7 @@
 
 local ContextActionService = game:GetService("ContextActionService")
 local Players = game:GetService("Players")
+local ClientState = require(game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("ClientState"))
 local UserInputService = game:GetService("UserInputService")
 
 local player = Players.LocalPlayer
@@ -93,8 +94,10 @@ if UserInputService.TouchEnabled and not UserInputService.MouseEnabled then
 end
 
 -- Expose to global/other client scripts to freeze controls when UI is open
-_G.SetMenuState = function(state)
+local isMenuOpen = false
+ClientState.SetMenuState = function(state)
     isMenuOpen = state
+    ClientState.MenuOpen = state
 end
 
 print("InputManager initialized for Mobile & PC.")
@@ -114,15 +117,15 @@ local function handleCrouch(actionName, inputState, inputObject)
         if character and not isMenuOpen then
             local humanoid = character:FindFirstChild("Humanoid")
             if humanoid then
-                if _G.TacticalStates.IsCrouching then
+                if ClientState.TacticalStates.IsCrouching then
                     humanoid.WalkSpeed = 16 -- Stand up
-                    _G.TacticalStates.IsCrouching = false
-                    if _G.UpdateTacticalHUD then _G.UpdateTacticalHUD("Stance", "STANDING") end
+                    ClientState.TacticalStates.IsCrouching = false
+                    if ClientState.UpdateTacticalHUD then ClientState.UpdateTacticalHUD("Stance", "STANDING") end
                 else
                     humanoid.WalkSpeed = 8 -- Crouch
-                    _G.TacticalStates.IsCrouching = true
-                    _G.TacticalStates.IsProning = false
-                    if _G.UpdateTacticalHUD then _G.UpdateTacticalHUD("Stance", "CROUCHING") end
+                    ClientState.TacticalStates.IsCrouching = true
+                    ClientState.TacticalStates.IsProning = false
+                    if ClientState.UpdateTacticalHUD then ClientState.UpdateTacticalHUD("Stance", "CROUCHING") end
                 end
             end
         end
@@ -135,15 +138,15 @@ local function handleProne(actionName, inputState, inputObject)
         if character and not isMenuOpen then
             local humanoid = character:FindFirstChild("Humanoid")
             if humanoid then
-                if _G.TacticalStates.IsProning then
+                if ClientState.TacticalStates.IsProning then
                     humanoid.WalkSpeed = 16 -- Stand up
-                    _G.TacticalStates.IsProning = false
-                    if _G.UpdateTacticalHUD then _G.UpdateTacticalHUD("Stance", "STANDING") end
+                    ClientState.TacticalStates.IsProning = false
+                    if ClientState.UpdateTacticalHUD then ClientState.UpdateTacticalHUD("Stance", "STANDING") end
                 else
                     humanoid.WalkSpeed = 4 -- Prone
-                    _G.TacticalStates.IsProning = true
-                    _G.TacticalStates.IsCrouching = false
-                    if _G.UpdateTacticalHUD then _G.UpdateTacticalHUD("Stance", "PRONING") end
+                    ClientState.TacticalStates.IsProning = true
+                    ClientState.TacticalStates.IsCrouching = false
+                    if ClientState.UpdateTacticalHUD then ClientState.UpdateTacticalHUD("Stance", "PRONING") end
                 end
             end
         end
@@ -153,10 +156,10 @@ end
 local function handlePeekLeft(actionName, inputState, inputObject)
     if actionName == "PeekLeftAction" then
         if inputState == Enum.UserInputState.Begin then
-            _G.TacticalStates.PeekState = "Left"
+            ClientState.TacticalStates.PeekState = "Left"
         elseif inputState == Enum.UserInputState.End then
-            if _G.TacticalStates.PeekState == "Left" then
-                _G.TacticalStates.PeekState = "None"
+            if ClientState.TacticalStates.PeekState == "Left" then
+                ClientState.TacticalStates.PeekState = "None"
             end
         end
     end
@@ -165,10 +168,10 @@ end
 local function handlePeekRight(actionName, inputState, inputObject)
     if actionName == "PeekRightAction" then
         if inputState == Enum.UserInputState.Begin then
-            _G.TacticalStates.PeekState = "Right"
+            ClientState.TacticalStates.PeekState = "Right"
         elseif inputState == Enum.UserInputState.End then
-            if _G.TacticalStates.PeekState == "Right" then
-                _G.TacticalStates.PeekState = "None"
+            if ClientState.TacticalStates.PeekState == "Right" then
+                ClientState.TacticalStates.PeekState = "None"
             end
         end
     end
@@ -177,10 +180,10 @@ end
 local function handleADS(actionName, inputState, inputObject)
     if actionName == "ADSAction" then
         if inputState == Enum.UserInputState.Begin then
-            _G.TacticalStates.IsADS = true
+            ClientState.TacticalStates.IsADS = true
             workspace.CurrentCamera.FieldOfView = 40
         elseif inputState == Enum.UserInputState.End then
-            _G.TacticalStates.IsADS = false
+            ClientState.TacticalStates.IsADS = false
             workspace.CurrentCamera.FieldOfView = 70
         end
     end
@@ -193,8 +196,8 @@ local function handleSprint(actionName, inputState, inputObject)
         if humanoid then
             if inputState == Enum.UserInputState.Begin then
                 humanoid.WalkSpeed = 24
-                _G.TacticalStates.IsCrouching = false
-                _G.TacticalStates.IsProning = false
+                ClientState.TacticalStates.IsCrouching = false
+                ClientState.TacticalStates.IsProning = false
             elseif inputState == Enum.UserInputState.End then
                 humanoid.WalkSpeed = 16
             end
@@ -243,7 +246,7 @@ ContextActionService:SetPosition("UseMedicalAction", UDim2.new(1, -300, 1, -400)
 local function handleCheckWeapon(actionName, inputState, inputObject)
     if actionName == "CheckWeaponAction" and inputState == Enum.UserInputState.Begin then
         print("Checking Weapon Chamber / Malfunctions.")
-        if _G.UpdateTacticalHUD then _G.UpdateTacticalHUD("Ammo", "MAG: [ 30 ] | CHMBR: [ 1 ]") end
+        if ClientState.UpdateTacticalHUD then ClientState.UpdateTacticalHUD("Ammo", "MAG: [ 30 ] | CHMBR: [ 1 ]") end
     end
 end
 
