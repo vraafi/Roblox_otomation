@@ -11,12 +11,14 @@ MailSystem.PlayerInboxes = {}
 function MailSystem.Initialize()
     game.Players.PlayerAdded:Connect(function(player)
         -- In production, load from DataStore
-        MailSystem.PlayerInboxes[player.UserId] = {}
+        if not MailSystem.PlayerInboxes[player.UserId] then
+            MailSystem.PlayerInboxes[player.UserId] = {}
+        end
     end)
 
     game.Players.PlayerRemoving:Connect(function(player)
-        -- In production, save to DataStore
-        MailSystem.PlayerInboxes[player.UserId] = nil
+        -- In production, save to DataStore. For prototype, we just leave it in memory to simulate persistence.
+        -- MailSystem.PlayerInboxes[player.UserId] = nil
     end)
 
     -- Expiration Cleanup Loop
@@ -40,9 +42,8 @@ end
 
 function MailSystem.DeliverItem(userId, senderName, itemId, message)
     if not MailSystem.PlayerInboxes[userId] then
-        -- If player is offline, we would save directly to their DataStore here
-        warn("User " .. userId .. " is offline. Mail queued for DataStore save.")
-        return
+        -- Simulating DataStore creation for offline player
+        MailSystem.PlayerInboxes[userId] = {}
     end
 
     local mailItem = {

@@ -184,8 +184,12 @@ local function hookEvents()
     local events = game:GetService("ReplicatedStorage"):WaitForChild("Events")
 
     local fireEvent = events:WaitForChild("FireWeapon")
-    fireEvent.OnServerEvent:Connect(function(player, targetPlayerId)
-        -- In a fully physical game, this uses raycasts. For this prototype, we simulate target data.
+    fireEvent.OnServerEvent:Connect(function(player, targetPlayerName)
+        -- The client sends the Model.Name, which is the Player.Name. We need to find their UserId
+        local targetPlayer = game.Players:FindFirstChild(targetPlayerName)
+        if not targetPlayer then return end
+        local targetPlayerId = targetPlayer.UserId
+
         local PlayerManager = require(script.Parent.PlayerManager)
         local attackerData = PlayerManager.ActivePlayers[player.UserId]
         local targetData = PlayerManager.ActivePlayers[targetPlayerId]
