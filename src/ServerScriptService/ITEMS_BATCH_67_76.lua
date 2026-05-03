@@ -13,7 +13,7 @@ local LootItemsData = {
         Value = 22,
         Color = Color3.fromRGB(80, 80, 90),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://602522771" -- Placeholder
+        MeshId = "rbxassetid://602522771"
     },
     [68] = {
         Id = "Crystal_Skull",

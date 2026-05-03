@@ -12,7 +12,7 @@ local MonsterData = {
         DropCoreLevel = 1,
         Color = Color3.fromRGB(80, 70, 60),
         Material = Enum.Material.Plastic,
-        MeshId = "rbxassetid://645065406", -- Placeholder
+        MeshId = "rbxassetid://645065406",
         Biome = "CityRuins",
         SpecialAbility = "DiseaseBite"
     },

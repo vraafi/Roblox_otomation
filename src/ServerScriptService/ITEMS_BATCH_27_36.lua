@@ -13,7 +13,7 @@ local LootItemsData = {
         Value = 55,
         Color = Color3.fromRGB(80, 80, 80),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://430338781" -- Placeholder
+        MeshId = "rbxassetid://430338781"
     },
     [28] = {
         Id = "Spark_Plug",

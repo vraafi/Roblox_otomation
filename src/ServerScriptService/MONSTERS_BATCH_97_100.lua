@@ -12,7 +12,7 @@ local MonsterData = {
         DropCoreLevel = 5,
         Color = Color3.fromRGB(80, 120, 80),
         Material = Enum.Material.CorrodedMetal,
-        MeshId = "rbxassetid://114425114", -- Placeholder
+        MeshId = "rbxassetid://114425114",
         Biome = "CityRuins",
         SpecialAbility = "PoisonCloud"
     },

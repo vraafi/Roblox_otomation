@@ -11,7 +11,7 @@ local MonsterData = {
         Speed = 14,
         DropCoreLevel = 1,
         Color = Color3.fromRGB(30, 80, 30),
-        MeshId = "rbxassetid://430338781", -- Placeholder Creature Mesh
+        MeshId = "rbxassetid://430338781",
         Biome = "Flood",
         SpecialAbility = "PoisonStrike"
     },

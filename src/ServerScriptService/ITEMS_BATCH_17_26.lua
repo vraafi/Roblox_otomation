@@ -13,7 +13,7 @@ local LootItemsData = {
         Value = 18,
         Color = Color3.fromRGB(184, 115, 51),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://515665809" -- Placeholder
+        MeshId = "rbxassetid://515665809"
     },
     [18] = {
         Id = "Duct_Tape",

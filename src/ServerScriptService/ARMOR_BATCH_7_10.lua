@@ -17,7 +17,7 @@ local ArmorData = {
         CoreLevel = 7,
         Weight = 1.5,
         Color = Color3.fromRGB(30, 0, 50),
-        MeshId = "rbxassetid://164478144" -- Placeholder
+        MeshId = "rbxassetid://164478144"
     },
     [8] = {
         Id = "Altyn_Helmet_T0",

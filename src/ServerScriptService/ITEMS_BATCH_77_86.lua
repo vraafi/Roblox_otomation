@@ -13,7 +13,7 @@ local LootItemsData = {
         Value = 85,
         Color = Color3.fromRGB(60, 80, 50),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://123456789" -- Placeholder
+        MeshId = "rbxassetid://123456789"
     },
     [78] = {
         Id = "Biohazard_Suit_Filter",

@@ -13,7 +13,7 @@ local LootItemsData = {
         Value = 280,
         Color = Color3.fromRGB(40, 60, 40),
         Material = Enum.Material.Plastic,
-        MeshId = "rbxassetid://515665809" -- Placeholder
+        MeshId = "rbxassetid://515665809"
     },
     [48] = {
         Id = "Silver_Pocket_Watch",

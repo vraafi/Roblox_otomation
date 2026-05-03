@@ -19,7 +19,7 @@ local WeaponData = {
         Value = 5500,
         Color = Color3.fromRGB(255, 255, 200),
         Material = Enum.Material.Neon,
-        MeshId = "rbxassetid://164478144" -- Placeholder
+        MeshId = "rbxassetid://164478144"
     },
     [8] = {
         Id = "Glaive_T4",

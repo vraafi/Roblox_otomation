@@ -12,7 +12,7 @@ local MonsterData = {
         DropCoreLevel = 2,
         Color = Color3.fromRGB(50, 100, 50),
         Material = Enum.Material.Pebble,
-        MeshId = "rbxassetid://372630511", -- Placeholder
+        MeshId = "rbxassetid://372630511",
         Biome = "Swamp",
         SpecialAbility = "PoisonCloud"
     },

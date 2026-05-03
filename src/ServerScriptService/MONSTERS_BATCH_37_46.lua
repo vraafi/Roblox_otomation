@@ -12,7 +12,7 @@ local MonsterData = {
         DropCoreLevel = 6,
         Color = Color3.fromRGB(150, 100, 255),
         Material = Enum.Material.Glass,
-        MeshId = "rbxassetid://164478144", -- Placeholder
+        MeshId = "rbxassetid://164478144",
         Biome = "Cave",
         SpecialAbility = "ReflectMagic"
     },

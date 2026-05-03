@@ -486,7 +486,7 @@ function GUIManager.CreateInventoryScreen(parentGui)
         GUIManager.ToggleInventory(false)
     end)
 
-    -- Placeholder Grid Frame
+
     local gridFrame = Instance.new("Frame")
     gridFrame.Size = UDim2.new(0.95, 0, 0.8, 0)
     gridFrame.Position = UDim2.new(0.025, 0, 0.15, 0)

@@ -22,7 +22,7 @@ local WeaponData = {
         Value = 1800,
         ModSlots = {"Optic", "Muzzle"},
         Color = Color3.fromRGB(20, 20, 20),
-        MeshId = "rbxassetid://123456789" -- Placeholder
+        MeshId = "rbxassetid://123456789"
     },
     [8] = {
         Id = "Desert_Eagle",

@@ -19,7 +19,7 @@ local WeaponData = {
         Value = 500,
         Color = Color3.fromRGB(200, 50, 0),
         Material = Enum.Material.Wood,
-        MeshId = "rbxassetid://444453051" -- Placeholder
+        MeshId = "rbxassetid://444453051"
     },
     [2] = {
         Id = "Adept_Frost_Staff",

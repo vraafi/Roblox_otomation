@@ -12,7 +12,7 @@ local MonsterData = {
         DropCoreLevel = 4,
         Color = Color3.fromRGB(20, 10, 40),
         Material = Enum.Material.Mud,
-        MeshId = "rbxassetid://114425114", -- Placeholder
+        MeshId = "rbxassetid://114425114",
         Biome = "Flood",
         SpecialAbility = "LifeSteal"
     },

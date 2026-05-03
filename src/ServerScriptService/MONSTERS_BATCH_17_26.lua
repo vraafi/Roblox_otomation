@@ -12,7 +12,7 @@ local MonsterData = {
         DropCoreLevel = 3,
         Color = Color3.fromRGB(194, 178, 128), -- Sand color
         Material = Enum.Material.Sand,
-        MeshId = "rbxassetid://114425114", -- Placeholder
+        MeshId = "rbxassetid://114425114",
         Biome = "Desert",
         SpecialAbility = "Burrow"
     },

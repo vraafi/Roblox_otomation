@@ -23,7 +23,7 @@ local WeaponData = {
         Value = 1200,
         ModSlots = {"Muzzle", "Optic", "Foregrip", "Stock", "Magazine"},
         Color = Color3.fromRGB(30, 30, 30),
-        MeshId = "rbxassetid://602494917" -- Placeholder
+        MeshId = "rbxassetid://602494917"
     },
     [2] = {
         Id = "AK74N_Standard",

@@ -13,7 +13,7 @@ local LootItemsData = {
         Value = 250,
         Color = Color3.fromRGB(150, 150, 150),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://515665809" -- Placeholder
+        MeshId = "rbxassetid://515665809"
     },
     [88] = {
         Id = "Empty_Mana_Flask",

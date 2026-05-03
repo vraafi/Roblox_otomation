@@ -13,7 +13,7 @@ local LootItemsData = {
         Value = 180,
         Color = Color3.fromRGB(200, 200, 190),
         Material = Enum.Material.Marble,
-        MeshId = "rbxassetid://114425114" -- Placeholder
+        MeshId = "rbxassetid://114425114"
     },
     [38] = {
         Id = "Magic_Scroll",

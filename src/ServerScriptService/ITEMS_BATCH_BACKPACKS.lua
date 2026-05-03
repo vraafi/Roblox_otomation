@@ -15,7 +15,7 @@ local BackpackData = {
         Weight = 0.6,
         Value = 500,
         Color = Color3.fromRGB(100, 100, 100),
-        MeshId = "rbxassetid://444453051" -- Placeholder
+        MeshId = "rbxassetid://444453051"
     },
     [2] = {
         Id = "Simple_Backpack",

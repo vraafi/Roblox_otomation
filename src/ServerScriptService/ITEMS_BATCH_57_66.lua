@@ -13,7 +13,7 @@ local LootItemsData = {
         Value = 5,
         Color = Color3.fromRGB(200, 200, 200),
         Material = Enum.Material.Glass,
-        MeshId = "rbxassetid://372630511" -- Placeholder
+        MeshId = "rbxassetid://372630511"
     },
     [58] = {
         Id = "Gas_Mask_Filter",

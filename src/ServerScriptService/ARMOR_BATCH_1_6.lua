@@ -18,7 +18,7 @@ local ArmorData = {
         CoreLevel = 0, -- Modern armor, no magic
         Weight = 6.0,
         Color = Color3.fromRGB(40, 45, 40),
-        MeshId = "rbxassetid://444453051" -- Placeholder
+        MeshId = "rbxassetid://444453051"
     },
     [2] = {
         Id = "Scout_Helmet_T1",

@@ -12,7 +12,7 @@ local MonsterData = {
         DropCoreLevel = 4,
         Color = Color3.fromRGB(40, 20, 60),
         Material = Enum.Material.Plastic,
-        MeshId = "rbxassetid://430338781", -- Placeholder
+        MeshId = "rbxassetid://430338781",
         Biome = "Forest",
         SpecialAbility = "WebTrap"
     },
