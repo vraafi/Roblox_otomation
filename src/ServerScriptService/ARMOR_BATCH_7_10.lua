@@ -17,7 +17,7 @@ local ArmorData = {
         CoreLevel = 7,
         Weight = 1.5,
         Color = Color3.fromRGB(30, 0, 50),
-        MeshId = "rbxassetid://1060481268" -- Placeholder
+        MeshId = "rbxassetid://164478144"
     },
     [8] = {
         Id = "Altyn_Helmet_T0",
@@ -32,7 +32,7 @@ local ArmorData = {
         CoreLevel = 0,
         Weight = 4.0,
         Color = Color3.fromRGB(80, 90, 80),
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://645065406"
     },
     [9] = {
         Id = "Apex_Sorcerer_Robes_T9",
@@ -47,7 +47,7 @@ local ArmorData = {
         CoreLevel = 9,
         Weight = 1.0,
         Color = Color3.fromRGB(150, 0, 0),
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://430338781"
     },
     [10] = {
         Id = "Apex_Warlord_Armor_T9",
@@ -62,7 +62,7 @@ local ArmorData = {
         CoreLevel = 9,
         Weight = 35.0,
         Color = Color3.fromRGB(10, 10, 10),
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://515665809"
     }
 }
 

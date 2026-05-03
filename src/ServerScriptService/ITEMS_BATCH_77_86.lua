@@ -13,7 +13,7 @@ local LootItemsData = {
         Value = 85,
         Color = Color3.fromRGB(60, 80, 50),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268" -- Placeholder
+        MeshId = "rbxassetid://123456789"
     },
     [78] = {
         Id = "Biohazard_Suit_Filter",
@@ -24,7 +24,7 @@ local LootItemsData = {
         Value = 350,
         Color = Color3.fromRGB(200, 200, 50),
         Material = Enum.Material.Plastic,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://602494917"
     },
     [79] = {
         Id = "Cursed_Dagger",
@@ -35,7 +35,7 @@ local LootItemsData = {
         Value = 1800,
         Color = Color3.fromRGB(150, 0, 0),
         Material = Enum.Material.Neon,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://430338781"
     },
     [80] = {
         Id = "Gold_Tooth_Extract",
@@ -46,7 +46,7 @@ local LootItemsData = {
         Value = 200,
         Color = Color3.fromRGB(255, 215, 0),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://444453051"
     },
     [81] = {
         Id = "Ancient_Parchment",
@@ -57,7 +57,7 @@ local LootItemsData = {
         Value = 500,
         Color = Color3.fromRGB(220, 200, 150),
         Material = Enum.Material.Fabric,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://123456789"
     },
     [82] = {
         Id = "Signal_Jammer",
@@ -68,7 +68,7 @@ local LootItemsData = {
         Value = 1200,
         Color = Color3.fromRGB(40, 40, 40),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://430338781"
     },
     [83] = {
         Id = "Tear_Gas_Canister",
@@ -79,7 +79,7 @@ local LootItemsData = {
         Value = 25,
         Color = Color3.fromRGB(180, 180, 180),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://114425114"
     },
     [84] = {
         Id = "Enchanted_Rune",
@@ -90,7 +90,7 @@ local LootItemsData = {
         Value = 2500,
         Color = Color3.fromRGB(100, 50, 255),
         Material = Enum.Material.Neon,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://602522771"
     },
     [85] = {
         Id = "Rusty_Lockpick",
@@ -101,7 +101,7 @@ local LootItemsData = {
         Value = 45,
         Color = Color3.fromRGB(120, 100, 80),
         Material = Enum.Material.CorrodedMetal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://372630511"
     },
     [86] = {
         Id = "Void_Essence",
@@ -112,7 +112,7 @@ local LootItemsData = {
         Value = 4500,
         Color = Color3.fromRGB(50, 0, 100),
         Material = Enum.Material.Glass,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://602494917"
     }
 }
 

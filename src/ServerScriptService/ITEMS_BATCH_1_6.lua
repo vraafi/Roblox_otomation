@@ -13,7 +13,7 @@ local LootItemsData = {
         Value = 5,
         Color = Color3.fromRGB(150, 150, 150),
         Material = Enum.Material.CorrodedMetal,
-        MeshId = "rbxassetid://1060481268" -- Placeholder
+        MeshId = "rbxassetid://114425114"
     },
     [2] = {
         Id = "Gold_Watch",
@@ -24,7 +24,7 @@ local LootItemsData = {
         Value = 150,
         Color = Color3.fromRGB(255, 215, 0),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://164478144"
     },
     [3] = {
         Id = "Car_Battery",
@@ -35,7 +35,7 @@ local LootItemsData = {
         Value = 300,
         Color = Color3.fromRGB(20, 20, 20),
         Material = Enum.Material.Plastic,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://444453051"
     },
     [4] = {
         Id = "Fuel_Canister",
@@ -46,7 +46,7 @@ local LootItemsData = {
         Value = 80,
         Color = Color3.fromRGB(200, 50, 50),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://444453051"
     },
     [5] = {
         Id = "GPU_Card",
@@ -57,7 +57,7 @@ local LootItemsData = {
         Value = 800,
         Color = Color3.fromRGB(50, 50, 50),
         Material = Enum.Material.Slate,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://602494917"
     },
     [6] = {
         Id = "Encrypted_FlashDrive",
@@ -68,7 +68,7 @@ local LootItemsData = {
         Value = 1500,
         Color = Color3.fromRGB(20, 150, 255),
         Material = Enum.Material.Neon,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://634289194"
     }
 }
 

@@ -13,7 +13,7 @@ local LootItemsData = {
         Value = 250,
         Color = Color3.fromRGB(150, 150, 150),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268" -- Placeholder
+        MeshId = "rbxassetid://515665809"
     },
     [88] = {
         Id = "Empty_Mana_Flask",
@@ -24,7 +24,7 @@ local LootItemsData = {
         Value = 10,
         Color = Color3.fromRGB(180, 200, 255),
         Material = Enum.Material.Glass,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://444453051"
     },
     [89] = {
         Id = "Heavy_Duty_Jack",
@@ -35,7 +35,7 @@ local LootItemsData = {
         Value = 420,
         Color = Color3.fromRGB(200, 50, 50),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://123456789"
     },
     [90] = {
         Id = "Geiger_Counter",
@@ -46,7 +46,7 @@ local LootItemsData = {
         Value = 850,
         Color = Color3.fromRGB(220, 220, 50),
         Material = Enum.Material.Plastic,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://372630511"
     },
     [91] = {
         Id = "Demon_Horn",
@@ -57,7 +57,7 @@ local LootItemsData = {
         Value = 1500,
         Color = Color3.fromRGB(150, 0, 0),
         Material = Enum.Material.Neon,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://602522771"
     },
     [92] = {
         Id = "Cigarette_Pack",
@@ -68,7 +68,7 @@ local LootItemsData = {
         Value = 45,
         Color = Color3.fromRGB(200, 200, 200),
         Material = Enum.Material.Plastic,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://164478144"
     },
     [93] = {
         Id = "Industrial_Bleach",
@@ -79,7 +79,7 @@ local LootItemsData = {
         Value = 110,
         Color = Color3.fromRGB(220, 220, 220),
         Material = Enum.Material.Plastic,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://382103444"
     },
     [94] = {
         Id = "Diamond_Necklace",
@@ -90,7 +90,7 @@ local LootItemsData = {
         Value = 2800,
         Color = Color3.fromRGB(200, 255, 255),
         Material = Enum.Material.Glass,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://164478144"
     },
     [95] = {
         Id = "Gun_Powder",
@@ -101,7 +101,7 @@ local LootItemsData = {
         Value = 60,
         Color = Color3.fromRGB(30, 30, 30),
         Material = Enum.Material.Sand,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://602494917"
     },
     [96] = {
         Id = "Encrypted_Drive",
@@ -112,7 +112,7 @@ local LootItemsData = {
         Value = 3500,
         Color = Color3.fromRGB(20, 20, 30),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://123456789"
     }
 }
 

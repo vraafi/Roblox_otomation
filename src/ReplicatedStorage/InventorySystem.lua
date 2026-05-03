@@ -63,6 +63,8 @@ function InventorySystem.EquipItem(inventory, itemId)
     elseif itemData.Type == "Weapon" then
         local oldItem = inventory.Equipped.Weapon
         inventory.Equipped.Weapon = itemId
+        -- We instantiate the weapon metadata here to allow chambering and magazines
+        inventory.Equipped.WeaponInstance = { BaseItemId = itemId, LoadedMagazine = nil, ChamberedRound = nil }
         return true, oldItem
     end
 
@@ -73,6 +75,9 @@ function InventorySystem.UnequipItem(inventory, slot)
     if inventory.Equipped[slot] then
         local unequippedId = inventory.Equipped[slot]
         inventory.Equipped[slot] = nil
+        if slot == "Weapon" then
+            inventory.Equipped.WeaponInstance = nil
+        end
         InventorySystem.UpdateCapacity(inventory)
         return true, unequippedId
     end

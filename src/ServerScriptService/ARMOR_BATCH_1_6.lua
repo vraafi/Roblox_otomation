@@ -18,7 +18,7 @@ local ArmorData = {
         CoreLevel = 0, -- Modern armor, no magic
         Weight = 6.0,
         Color = Color3.fromRGB(40, 45, 40),
-        MeshId = "rbxassetid://1060481268" -- Placeholder
+        MeshId = "rbxassetid://444453051"
     },
     [2] = {
         Id = "Scout_Helmet_T1",
@@ -33,7 +33,7 @@ local ArmorData = {
         CoreLevel = 0,
         Weight = 2.5,
         Color = Color3.fromRGB(60, 60, 60),
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://382103444"
     },
     [3] = {
         Id = "Novice_Mage_Robe_T2",
@@ -48,7 +48,7 @@ local ArmorData = {
         CoreLevel = 2, -- Powered by Level 2 Core
         Weight = 2.0,
         Color = Color3.fromRGB(50, 100, 255),
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://164478144"
     },
     [4] = {
         Id = "Spellweaver_Hat_T3",
@@ -63,7 +63,7 @@ local ArmorData = {
         CoreLevel = 3,
         Weight = 1.0,
         Color = Color3.fromRGB(150, 50, 255),
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://645065406"
     },
     [5] = {
         Id = "Heavy_Juggernaut_T4",
@@ -78,7 +78,7 @@ local ArmorData = {
         CoreLevel = 0,
         Weight = 25.0, -- Extremely heavy, will slow player down based on StatSystem
         Color = Color3.fromRGB(30, 30, 30),
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://372630511"
     },
     [6] = {
         Id = "Paladin_Cuirass_T5",
@@ -93,7 +93,7 @@ local ArmorData = {
         CoreLevel = 5, -- Hybrid modern/fantasy
         Weight = 18.0,
         Color = Color3.fromRGB(200, 200, 200),
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://123456789"
     }
 }
 

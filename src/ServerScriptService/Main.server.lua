@@ -118,7 +118,7 @@ end)
 -- 4. Game Loops (Heartbeat)
 local RunService = game:GetService("RunService")
 RunService.Heartbeat:Connect(function(dt)
-    -- Calculate actual distance for Extraction instead of placeholder
+    -- Update Extraction Manager looping logic
     for zoneId, zone in pairs(ExtractionManager.ActiveZones) do
         for playerId, playerData in pairs(PlayerManager.ActivePlayers) do
             local player = game.Players:GetPlayerByUserId(playerId)
@@ -209,3 +209,54 @@ ensureEvent("UseMedicalItem", true)
 ensureEvent("ThrowGrenade", false)
 ensureEvent("UseGearSkill", true)
 ensureEvent("NewMailAlert", false)
+ensureEvent("UpdateVitals", false)
+ensureEvent("UpdateLimbHUD", false)
+ensureEvent("UpdateStatusEffects", false)
+
+
+-- Status synchronization loop
+task.spawn(function()
+    while task.wait(0.5) do
+        for _, player in pairs(game.Players:GetPlayers()) do
+            local PlayerManager = require(game:GetService("ServerScriptService"):WaitForChild("PlayerManager"))
+            local playerData = PlayerManager.ActivePlayers[player.UserId]
+            if playerData and playerData.HealthProfile then
+                local events = game:GetService("ReplicatedStorage"):FindFirstChild("Events")
+                if events then
+                    local updateLimb = events:FindFirstChild("UpdateLimbHUD")
+                    if updateLimb then
+                        local uiData = {}
+                        for limbName, data in pairs(playerData.HealthProfile.Limbs) do
+                            uiData[limbName] = {
+                                CurrentHP = data.Current,
+                                MaxHP = require(game.ReplicatedStorage.HealthSystem).Limbs[limbName].Max,
+                                Status = data.IsBlackedOut and "Destroyed" or "Healthy"
+                            }
+                        end
+                        updateLimb:FireClient(player, uiData)
+                    end
+
+                    local updateStatus = events:FindFirstChild("UpdateStatusEffects")
+                    if updateStatus then
+                        updateStatus:FireClient(player, playerData.HealthProfile.StatusEffects)
+                    end
+
+                    local updateVitals = events:FindFirstChild("UpdateVitals")
+                    if updateVitals then
+                        -- Send (health, maxHealth, mana, maxMana)
+                        -- Health is summed up from limbs
+                        local currentHP = 0
+                        local maxHP = 0
+                        for _, data in pairs(playerData.HealthProfile.Limbs) do
+                            currentHP = currentHP + data.Current
+                        end
+                        for _, data in pairs(require(game.ReplicatedStorage.HealthSystem).Limbs) do
+                            maxHP = maxHP + data.Max
+                        end
+                        updateVitals:FireClient(player, currentHP, maxHP, playerData.CurrentMana, playerData.TotalStats.MaxMana)
+                    end
+                end
+            end
+        end
+    end
+end)

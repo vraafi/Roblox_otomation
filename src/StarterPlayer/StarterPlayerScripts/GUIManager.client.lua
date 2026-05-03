@@ -5,6 +5,7 @@
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
+local ClientState = require(game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("ClientState"))
 local GUIManager = {}
 
 function GUIManager.Initialize()
@@ -158,7 +159,7 @@ function GUIManager.ToggleMap(forceState)
         mapScreen.Visible = not mapScreen.Visible
     end
 
-    if _G.SetMenuState then _G.SetMenuState(mapScreen.Visible) end
+    if ClientState.SetMenuState then ClientState.SetMenuState(mapScreen.Visible) end
 
     if mapScreen.Visible then
         local player = game.Players.LocalPlayer
@@ -265,10 +266,11 @@ function GUIManager.CreateVitalsHUD(parentGui)
 
         -- In a real game, Mana is stored in an IntValue or PlayerManager
         -- Here we simulate reading it from a hypothetical ManaValue object or default to 0
-        local manaVal = char:FindFirstChild("CurrentMana")
-        local maxManaVal = char:FindFirstChild("MaxMana")
-        local currentMana = manaVal and manaVal.Value or 0
-        local maxMana = maxManaVal and maxManaVal.Value or 100
+        -- Since the server tracks mana internally without ValueObjects in this architecture,
+        -- we would rely on the UpdateVitals RemoteEvent we created earlier.
+        -- But for the continuous loop fallback, we'll read humanoid health for HP, and assume mana is pushed via events.
+        local currentMana = GUIManager.CachedMana or 0
+        local maxMana = GUIManager.CachedMaxMana or 0
 
         if maxMana > 0 then
             mpText.Text = math.floor(currentMana) .. " / " .. math.floor(maxMana)
@@ -377,7 +379,7 @@ function GUIManager.ToggleFleaMarket(forceState)
         marketScreen.Visible = not marketScreen.Visible
     end
 
-    if _G.SetMenuState then _G.SetMenuState(marketScreen.Visible) end
+    if ClientState.SetMenuState then ClientState.SetMenuState(marketScreen.Visible) end
 
     local UserInputService = game:GetService("UserInputService")
     if marketScreen.Visible then
@@ -484,7 +486,7 @@ function GUIManager.CreateInventoryScreen(parentGui)
         GUIManager.ToggleInventory(false)
     end)
 
-    -- Placeholder Grid Frame
+
     local gridFrame = Instance.new("Frame")
     gridFrame.Size = UDim2.new(0.95, 0, 0.8, 0)
     gridFrame.Position = UDim2.new(0.025, 0, 0.15, 0)
@@ -551,8 +553,8 @@ function GUIManager.ToggleInventory(forceState)
     end
 
     -- Tell InputManager to freeze character jumping/shooting when menu is open
-    if _G.SetMenuState then
-        _G.SetMenuState(inventoryScreen.Visible)
+    if ClientState.SetMenuState then
+        ClientState.SetMenuState(inventoryScreen.Visible)
     end
 
     -- Optional: Unlock mouse pointer when UI is open

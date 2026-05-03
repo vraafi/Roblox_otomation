@@ -38,7 +38,7 @@ function SpaceshipLobby.GenerateVisualSpaceship()
 
     local crateMesh = Instance.new("SpecialMesh")
     crateMesh.MeshType = Enum.MeshType.FileMesh
-    crateMesh.MeshId = "rbxassetid://114425114" -- Placeholder SciFi Crate
+    crateMesh.MeshId = "rbxassetid://114425114"
     crateMesh.TextureId = ""
     crateMesh.Parent = crate
 

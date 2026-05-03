@@ -13,7 +13,7 @@ local LootItemsData = {
         Value = 1100,
         Color = Color3.fromRGB(150, 150, 150),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268" -- Placeholder
+        MeshId = "rbxassetid://372630511"
     },
     [98] = {
         Id = "Blood_Diamond",
@@ -24,7 +24,7 @@ local LootItemsData = {
         Value = 6000,
         Color = Color3.fromRGB(120, 0, 0),
         Material = Enum.Material.Neon,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://114425114"
     },
     [99] = {
         Id = "Quantum_Processor",
@@ -35,7 +35,7 @@ local LootItemsData = {
         Value = 8500,
         Color = Color3.fromRGB(200, 255, 255),
         Material = Enum.Material.Glass,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://114425114"
     },
     [100] = {
         Id = "Apex_Relic",
@@ -46,7 +46,7 @@ local LootItemsData = {
         Value = 50000, -- The most valuable single slot item
         Color = Color3.fromRGB(0, 0, 0),
         Material = Enum.Material.ForceField,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://645065406"
     }
 }
 

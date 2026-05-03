@@ -19,7 +19,7 @@ local WeaponData = {
         Value = 500,
         Color = Color3.fromRGB(200, 50, 0),
         Material = Enum.Material.Wood,
-        MeshId = "rbxassetid://1060481268" -- Placeholder
+        MeshId = "rbxassetid://444453051"
     },
     [2] = {
         Id = "Adept_Frost_Staff",
@@ -36,7 +36,7 @@ local WeaponData = {
         Value = 1200,
         Color = Color3.fromRGB(150, 200, 255),
         Material = Enum.Material.Ice,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://164478144"
     },
     [3] = {
         Id = "Master_Cursed_Staff",
@@ -53,7 +53,7 @@ local WeaponData = {
         Value = 4500,
         Color = Color3.fromRGB(50, 0, 100),
         Material = Enum.Material.Neon,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://164478144"
     },
     [4] = {
         Id = "Broadsword_T1",
@@ -70,7 +70,7 @@ local WeaponData = {
         Value = 200,
         Color = Color3.fromRGB(150, 150, 150),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://645065406"
     },
     [5] = {
         Id = "Bloodletter_T5",
@@ -87,7 +87,7 @@ local WeaponData = {
         Value = 2800,
         Color = Color3.fromRGB(180, 20, 20),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://372630511"
     },
     [6] = {
         Id = "Grandmaster_Arcane_Staff",
@@ -104,7 +104,7 @@ local WeaponData = {
         Value = 15000,
         Color = Color3.fromRGB(255, 100, 255),
         Material = Enum.Material.Neon,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://382103444"
     }
 }
 

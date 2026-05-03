@@ -23,7 +23,7 @@ local WeaponData = {
         Value = 1200,
         ModSlots = {"Muzzle", "Optic", "Foregrip", "Stock", "Magazine"},
         Color = Color3.fromRGB(30, 30, 30),
-        MeshId = "rbxassetid://1060481268" -- Placeholder
+        MeshId = "rbxassetid://602494917"
     },
     [2] = {
         Id = "AK74N_Standard",
@@ -43,7 +43,7 @@ local WeaponData = {
         Value = 900,
         ModSlots = {"Muzzle", "Optic", "Handguard", "Stock", "Magazine"},
         Color = Color3.fromRGB(50, 40, 30),
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://114425114"
     },
     [3] = {
         Id = "Glock17_Standard",
@@ -63,7 +63,7 @@ local WeaponData = {
         Value = 350,
         ModSlots = {"Muzzle", "Optic", "Magazine"},
         Color = Color3.fromRGB(20, 20, 20),
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://602494917"
     },
     [4] = {
         Id = "Remington_870",
@@ -83,7 +83,7 @@ local WeaponData = {
         Value = 600,
         ModSlots = {"Muzzle", "Optic", "Pump"},
         Color = Color3.fromRGB(40, 40, 40),
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://602494917"
     },
     [5] = {
         Id = "AWM_Sniper",
@@ -103,7 +103,7 @@ local WeaponData = {
         Value = 4500,
         ModSlots = {"Muzzle", "Optic", "Stock"},
         Color = Color3.fromRGB(50, 60, 50),
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://382103444"
     },
     [6] = {
         Id = "MP5_Standard",
@@ -123,7 +123,7 @@ local WeaponData = {
         Value = 850,
         ModSlots = {"Muzzle", "Optic", "Foregrip", "Magazine"},
         Color = Color3.fromRGB(20, 20, 20),
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://444453051"
     }
 }
 

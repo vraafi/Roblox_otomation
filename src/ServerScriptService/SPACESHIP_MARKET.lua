@@ -90,7 +90,8 @@ end
 -- Economic Price Floor: Players can instantly sell to NPCs for 40% of base value.
 -- This ensures Flea Market prices never collapse below this hard floor.
 function SpaceshipMarket.HandleNPCSell(player, itemId)
-    local pData = _G.PlayerEconomies and _G.PlayerEconomies[player.UserId]
+    local PlayerManager = require(game:GetService("ServerScriptService"):WaitForChild("PlayerManager"))
+    local pData = PlayerManager.ActivePlayers[player.UserId]
     if not pData then return false, "Economy data missing" end
 
     local PlayerManager = require(ServerScriptService:WaitForChild("PlayerManager"))
@@ -126,7 +127,8 @@ function SpaceshipMarket.AttemptPurchase(player, itemId)
     if not itemData.Value then return false, "Item is not for sale" end
 
     -- Check player's wallet
-    local pData = _G.PlayerEconomies and _G.PlayerEconomies[player.UserId]
+    local PlayerManager = require(game:GetService("ServerScriptService"):WaitForChild("PlayerManager"))
+    local pData = PlayerManager.ActivePlayers[player.UserId]
     if not pData then return false, "Economy data missing" end
 
     if pData.TotalDollars >= itemData.Value then

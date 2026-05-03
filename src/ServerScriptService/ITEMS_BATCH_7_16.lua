@@ -13,7 +13,7 @@ local LootItemsData = {
         Value = 45,
         Color = Color3.fromRGB(200, 200, 255),
         Material = Enum.Material.Glass,
-        MeshId = "rbxassetid://1060481268" -- Placeholder
+        MeshId = "rbxassetid://123456789"
     },
     [8] = {
         Id = "Rusty_Gears",
@@ -24,7 +24,7 @@ local LootItemsData = {
         Value = 12,
         Color = Color3.fromRGB(130, 80, 50),
         Material = Enum.Material.CorrodedMetal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://382103444"
     },
     [9] = {
         Id = "Electric_Motor",
@@ -35,7 +35,7 @@ local LootItemsData = {
         Value = 180,
         Color = Color3.fromRGB(100, 100, 100),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://645065406"
     },
     [10] = {
         Id = "Silver_Chain",
@@ -46,7 +46,7 @@ local LootItemsData = {
         Value = 200,
         Color = Color3.fromRGB(220, 220, 220),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://382103444"
     },
     [11] = {
         Id = "Ancient_Tome",
@@ -57,7 +57,7 @@ local LootItemsData = {
         Value = 500,
         Color = Color3.fromRGB(80, 40, 20),
         Material = Enum.Material.Wood,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://123456789"
     },
     [12] = {
         Id = "Mana_Crystal_Shard",
@@ -68,7 +68,7 @@ local LootItemsData = {
         Value = 350,
         Color = Color3.fromRGB(50, 150, 255),
         Material = Enum.Material.Neon,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://515665809"
     },
     [13] = {
         Id = "Military_Rations",
@@ -79,7 +79,7 @@ local LootItemsData = {
         Value = 25,
         Color = Color3.fromRGB(60, 80, 40),
         Material = Enum.Material.Plastic,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://515665809"
     },
     [14] = {
         Id = "Weapon_Parts",
@@ -90,7 +90,7 @@ local LootItemsData = {
         Value = 110,
         Color = Color3.fromRGB(50, 50, 50),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://114425114"
     },
     [15] = {
         Id = "Golden_Chalice",
@@ -101,7 +101,7 @@ local LootItemsData = {
         Value = 1200,
         Color = Color3.fromRGB(255, 200, 50),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://634289194"
     },
     [16] = {
         Id = "Intelligence_Folder",
@@ -112,7 +112,7 @@ local LootItemsData = {
         Value = 850,
         Color = Color3.fromRGB(200, 180, 150),
         Material = Enum.Material.Plastic,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://634289194"
     }
 }
 

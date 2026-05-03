@@ -54,9 +54,9 @@ function AudioSystem.ChangeBiomeMusic(biomeType)
     newBGM.Name = "BiomeBGM"
 
     if biomeType == "Forest" then
-        newBGM.SoundId = "rbxassetid://1843404009" -- Placeholder forest ambient
+        newBGM.SoundId = "rbxassetid://1843404009"
     elseif biomeType == "Desert" then
-        newBGM.SoundId = "rbxassetid://1843404009" -- Placeholder desert wind
+        newBGM.SoundId = "rbxassetid://1843404009"
     end
 
     newBGM.Looped = true

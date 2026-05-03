@@ -13,7 +13,7 @@ local LootItemsData = {
         Value = 18,
         Color = Color3.fromRGB(184, 115, 51),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268" -- Placeholder
+        MeshId = "rbxassetid://515665809"
     },
     [18] = {
         Id = "Duct_Tape",
@@ -24,7 +24,7 @@ local LootItemsData = {
         Value = 25,
         Color = Color3.fromRGB(160, 160, 160),
         Material = Enum.Material.Plastic,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://430338781"
     },
     [19] = {
         Id = "Tool_Kit",
@@ -35,7 +35,7 @@ local LootItemsData = {
         Value = 350,
         Color = Color3.fromRGB(200, 50, 50),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://164478144"
     },
     [20] = {
         Id = "Antique_Vase",
@@ -46,7 +46,7 @@ local LootItemsData = {
         Value = 1500,
         Color = Color3.fromRGB(150, 200, 255),
         Material = Enum.Material.Glass,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://123456789"
     },
     [21] = {
         Id = "Broken_LCD",
@@ -57,7 +57,7 @@ local LootItemsData = {
         Value = 40,
         Color = Color3.fromRGB(20, 20, 20),
         Material = Enum.Material.Glass,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://114425114"
     },
     [22] = {
         Id = "Morphine_Injector",
@@ -68,7 +68,7 @@ local LootItemsData = {
         Value = 250,
         Color = Color3.fromRGB(255, 255, 255),
         Material = Enum.Material.Plastic,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://430338781"
     },
     [23] = {
         Id = "Water_Filter",
@@ -79,7 +79,7 @@ local LootItemsData = {
         Value = 180,
         Color = Color3.fromRGB(200, 200, 200),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://123456789"
     },
     [24] = {
         Id = "Ruby_Gemstone",
@@ -90,7 +90,7 @@ local LootItemsData = {
         Value = 2000,
         Color = Color3.fromRGB(255, 20, 20),
         Material = Enum.Material.Neon,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://123456789"
     },
     [25] = {
         Id = "Canned_Meat",
@@ -101,7 +101,7 @@ local LootItemsData = {
         Value = 35,
         Color = Color3.fromRGB(180, 180, 150),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://164478144"
     },
     [26] = {
         Id = "Drone_Battery",
@@ -112,7 +112,7 @@ local LootItemsData = {
         Value = 950,
         Color = Color3.fromRGB(80, 80, 80),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://372630511"
     }
 }
 

@@ -12,7 +12,7 @@ local MonsterData = {
         DropCoreLevel = 5,
         Color = Color3.fromRGB(80, 120, 80),
         Material = Enum.Material.CorrodedMetal,
-        MeshId = "rbxassetid://1060481268", -- Placeholder
+        MeshId = "rbxassetid://114425114",
         Biome = "CityRuins",
         SpecialAbility = "PoisonCloud"
     },
@@ -24,7 +24,7 @@ local MonsterData = {
         DropCoreLevel = 8,
         Color = Color3.fromRGB(200, 150, 255),
         Material = Enum.Material.Glass,
-        MeshId = "rbxassetid://1060481268",
+        MeshId = "rbxassetid://382103444",
         Biome = "Cave",
         SpecialAbility = "Flight"
     },
@@ -36,7 +36,7 @@ local MonsterData = {
         DropCoreLevel = 9,
         Color = Color3.fromRGB(255, 80, 0),
         Material = Enum.Material.Neon,
-        MeshId = "rbxassetid://1060481268",
+        MeshId = "rbxassetid://114425114",
         Biome = "Volcano",
         SpecialAbility = "Quake"
     },
@@ -48,7 +48,7 @@ local MonsterData = {
         DropCoreLevel = 9,
         Color = Color3.fromRGB(0, 0, 0),
         Material = Enum.Material.ForceField,
-        MeshId = "rbxassetid://1060481268",
+        MeshId = "rbxassetid://444453051",
         Biome = "PortalDomain",
         SpecialAbility = "Teleport" -- The final boss monster
     }

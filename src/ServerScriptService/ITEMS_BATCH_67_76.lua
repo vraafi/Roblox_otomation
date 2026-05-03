@@ -13,7 +13,7 @@ local LootItemsData = {
         Value = 22,
         Color = Color3.fromRGB(80, 80, 90),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268" -- Placeholder
+        MeshId = "rbxassetid://602522771"
     },
     [68] = {
         Id = "Crystal_Skull",
@@ -24,7 +24,7 @@ local LootItemsData = {
         Value = 3500,
         Color = Color3.fromRGB(200, 200, 255),
         Material = Enum.Material.Glass,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://430338781"
     },
     [69] = {
         Id = "Welding_Goggles",
@@ -35,7 +35,7 @@ local LootItemsData = {
         Value = 75,
         Color = Color3.fromRGB(30, 30, 30),
         Material = Enum.Material.Plastic,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://382103444"
     },
     [70] = {
         Id = "Blood_Pack",
@@ -46,7 +46,7 @@ local LootItemsData = {
         Value = 120,
         Color = Color3.fromRGB(150, 0, 0),
         Material = Enum.Material.Plastic,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://634289194"
     },
     [71] = {
         Id = "Ancient_Compass",
@@ -57,7 +57,7 @@ local LootItemsData = {
         Value = 500,
         Color = Color3.fromRGB(184, 134, 11),
         Material = Enum.Material.Metal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://382103444"
     },
     [72] = {
         Id = "Gun_Cleaning_Kit",
@@ -68,7 +68,7 @@ local LootItemsData = {
         Value = 180,
         Color = Color3.fromRGB(60, 60, 60),
         Material = Enum.Material.Plastic,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://645065406"
     },
     [73] = {
         Id = "Exotic_Spice",
@@ -79,7 +79,7 @@ local LootItemsData = {
         Value = 850,
         Color = Color3.fromRGB(255, 100, 50),
         Material = Enum.Material.Glass,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://444453051"
     },
     [74] = {
         Id = "Rusted_Keys",
@@ -90,7 +90,7 @@ local LootItemsData = {
         Value = 15,
         Color = Color3.fromRGB(120, 80, 40),
         Material = Enum.Material.CorrodedMetal,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://634289194"
     },
     [75] = {
         Id = "Drone_Propeller",
@@ -101,7 +101,7 @@ local LootItemsData = {
         Value = 90,
         Color = Color3.fromRGB(200, 200, 200),
         Material = Enum.Material.Plastic,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://164478144"
     },
     [76] = {
         Id = "Void_Core_Fragment",
@@ -112,7 +112,7 @@ local LootItemsData = {
         Value = 5000,
         Color = Color3.fromRGB(50, 0, 100),
         Material = Enum.Material.Neon,
-        MeshId = "rbxassetid://1060481268"
+        MeshId = "rbxassetid://515665809"
     }
 }
 
