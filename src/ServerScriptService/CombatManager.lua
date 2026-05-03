@@ -208,9 +208,17 @@ local function hookEvents()
         local weaponInstance = playerData.Inventory.Equipped.WeaponInstance
         if not weaponInstance then return false, "No weapon equipped" end
 
-        -- Simplified search for mag in inventory
-        -- In full game, would find magInstanceId in backpack
-        local magInstance = { BaseItemId = "Mag_STANAG_30", CurrentAmmo = {} }
+        -- Try to find a magazine matching the caliber in the inventory
+        local weaponInfo = ItemDatabase.GetItem(weaponInstance.BaseItemId)
+        local magInstance = nil
+        for _, itemId in ipairs(playerData.Inventory.Items) do
+            local itemInfo = ItemDatabase.GetItem(itemId)
+            if itemInfo and itemInfo.Type == "Magazine" and itemInfo.Caliber == weaponInfo.Caliber then
+                magInstance = { BaseItemId = itemId, CurrentAmmo = {} }
+                break
+            end
+        end
+        if not magInstance then return false, "No matching magazine in inventory" end
         return CombatManager.LoadMagazine(weaponInstance, magInstance)
     end
 end
