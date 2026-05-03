@@ -42,17 +42,19 @@ end
 
 function LobbyStashSystem.LoadStash(player)
     -- In a real game, this uses DataStoreService to load persistent data
-    LobbyStashSystem.PlayerStashes[player.UserId] = {
-        Level = 0,
-        Rows = 10,
-        Cols = 10,
-        Items = {}
-    }
+    if not LobbyStashSystem.PlayerStashes[player.UserId] then
+        LobbyStashSystem.PlayerStashes[player.UserId] = {
+            Level = 0,
+            Rows = 10,
+            Cols = 10,
+            Items = {}
+        }
+    end
 end
 
 function LobbyStashSystem.SaveStash(player)
-    -- Use DataStoreService here to save
-    LobbyStashSystem.PlayerStashes[player.UserId] = nil
+    -- Use DataStoreService here to save. For prototype, we keep it in memory so they don't lose items when rejoining.
+    -- LobbyStashSystem.PlayerStashes[player.UserId] = nil
 end
 
 function LobbyStashSystem.HandleUpgradeRequest(player)

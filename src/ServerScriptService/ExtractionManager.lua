@@ -23,12 +23,12 @@ function ExtractionManager.UpdateExtractions(dt, activePlayers)
     for zoneId, zone in pairs(ExtractionManager.ActiveZones) do
         -- Iterate over all alive players (activePlayers is passed from PlayerManager)
         for playerId, playerData in pairs(activePlayers) do
-            -- In Roblox, check distance from character to zone.Position
-            -- For this logic template, we assume we calculate distance somehow:
-            local dist = 0 -- placeholder for (playerData.Position - zone.Position).Magnitude
-
-            -- Simplified distance check
-            local isInZone = dist <= zone.Radius
+            local isInZone = false
+            local player = game.Players:GetPlayerByUserId(playerId)
+            if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                local dist = (player.Character.HumanoidRootPart.Position - zone.Position).Magnitude
+                isInZone = dist <= zone.Radius
+            end
 
             if isInZone then
                 if not zone.PlayersExtracting[playerId] then
@@ -67,7 +67,16 @@ function ExtractionManager.ExtractPlayer(playerId, playerData)
         LobbyStashSystem.DepositExtractedLoot(player, playerData.Inventory)
     end
 
-    -- In a real game, teleport the player back to the Spaceship Lobby here
+
+    local player = game.Players:GetPlayerByUserId(playerId)
+    if player and player.Character then
+        local ServerScriptService = game:GetService("ServerScriptService")
+        local SpaceshipLobby = require(ServerScriptService:WaitForChild("LOBBY_SPACESHIP_1"))
+
+        -- Teleport them to the spaceship
+        player.Character:PivotTo(CFrame.new(0, 1005, 0))
+    end
+
     playerData.Status = "Extracted"
 end
 
