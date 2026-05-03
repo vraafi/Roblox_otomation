@@ -118,7 +118,7 @@ end)
 -- 4. Game Loops (Heartbeat)
 local RunService = game:GetService("RunService")
 RunService.Heartbeat:Connect(function(dt)
-    -- Calculate actual distance for Extraction instead of placeholder
+    -- Update Extraction Manager looping logic
     for zoneId, zone in pairs(ExtractionManager.ActiveZones) do
         for playerId, playerData in pairs(PlayerManager.ActivePlayers) do
             local player = game.Players:GetPlayerByUserId(playerId)
