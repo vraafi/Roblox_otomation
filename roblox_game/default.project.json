@@ -1,0 +1,119 @@
+{
+  "name": "HardcoreExtractionFantasy",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "$path": "src/ReplicatedStorage"
+    },
+    "ServerScriptService": {
+      "$path": "src/ServerScriptService"
+    },
+    "StarterPlayer": {
+      "$className": "StarterPlayer",
+      "StarterPlayerScripts": {
+        "$path": "src/StarterPlayer/StarterPlayerScripts"
+      }
+    },
+    "Workspace": {
+      "$className": "Workspace",
+      "$properties": {
+        "StreamingEnabled": true,
+        "StreamingMinRadius": 64,
+        "StreamingTargetRadius": 1024,
+        "Gravity": 196.2,
+        "FallenPartsDestroyHeight": -500,
+        "FilteringEnabled": true
+      }
+    },
+    "Lighting": {
+      "$className": "Lighting",
+      "$properties": {
+        "Ambient":          [31, 31, 31],
+        "Brightness":       2.0,
+        "ColorShift_Bottom": [0, 0, 0],
+        "ColorShift_Top":    [0, 0, 0],
+        "GlobalShadows":    true,
+        "OutdoorAmbient":   [70, 70, 70],
+        "GeographicLatitude": 0.5,
+        "TimeOfDay":        "12:00:00",
+        "FogColor":         [200, 210, 200],
+        "FogEnd":           4000,
+        "FogStart":         1500,
+        "Technology":       "ShadowMap"
+      },
+      "Atmosphere": {
+        "$className": "Atmosphere",
+        "$properties": {
+          "Density":    0.35,
+          "Offset":     0.06,
+          "Color":      [199, 170, 120],
+          "Decay":      [87,  71,  54],
+          "Glare":      0.0,
+          "Haze":       2.0
+        }
+      },
+      "Bloom": {
+        "$className": "BloomEffect",
+        "$properties": {
+          "Enabled":   true,
+          "Intensity": 0.3,
+          "Size":      24,
+          "Threshold": 0.9
+        }
+      },
+      "DepthOfField": {
+        "$className": "DepthOfFieldEffect",
+        "$properties": {
+          "Enabled":     false,
+          "FarIntensity": 0.12,
+          "FocusDistance": 40,
+          "InFocusRadius": 6,
+          "NearIntensity": 0.1
+        }
+      },
+      "SunRays": {
+        "$className": "SunRaysEffect",
+        "$properties": {
+          "Enabled":   true,
+          "Intensity": 0.15,
+          "Spread":    0.5
+        }
+      },
+      "ColorCorrection": {
+        "$className": "ColorCorrectionEffect",
+        "$properties": {
+          "Enabled":    true,
+          "Brightness": 0.0,
+          "Contrast":   0.1,
+          "Saturation": 0.08,
+          "TintColor":  [255, 255, 255]
+        }
+      }
+    },
+    "StarterGui": {
+      "$className": "StarterGui",
+      "$properties": {
+        "ScreenOrientation": "LandscapeSensor",
+        "ShowDevelopmentGui": false
+      }
+    },
+    "SoundService": {
+      "$className": "SoundService",
+      "$properties": {
+        "AmbientReverb": "NoReverb",
+        "DistanceFactor": 3.33,
+        "DopplerScale": 0.0,
+        "RolloffScale": 1.25
+      }
+    },
+    "Teams": {
+      "$className": "Teams"
+    },
+    "TextChatService": {
+      "$className": "TextChatService",
+      "$properties": {
+        "ChatVersion": "TextChatService"
+      }
+    }
+  }
+}
