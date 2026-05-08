@@ -28,55 +28,33 @@
     "Lighting": {
       "$className": "Lighting",
       "$properties": {
-        "Ambient":          [31, 31, 31],
-        "Brightness":       2.0,
-        "ColorShift_Bottom": [0, 0, 0],
-        "ColorShift_Top":    [0, 0, 0],
-        "GlobalShadows":    true,
-        "OutdoorAmbient":   [70, 70, 70],
-        "GeographicLatitude": 0.5,
-        "TimeOfDay":        "12:00:00",
-        "FogColor":         [200, 210, 200],
-        "FogEnd":           4000,
-        "FogStart":         1500,
-        "Technology":       "ShadowMap"
+        "Ambient":            [4,  4,  10],
+        "Brightness":         0.0,
+        "ColorShift_Bottom":  [0,  0,   0],
+        "ColorShift_Top":     [0,  0,   0],
+        "GlobalShadows":      true,
+        "OutdoorAmbient":     [2,  2,   6],
+        "GeographicLatitude": 0.0,
+        "TimeOfDay":          "00:00:00",
+        "FogColor":           [0,  0,  10],
+        "FogEnd":             9000,
+        "FogStart":           8500,
+        "Technology":         "Future"
       },
-      "Atmosphere": {
-        "$className": "Atmosphere",
+      "Sky": {
+        "$className": "Sky",
         "$properties": {
-          "Density":    0.35,
-          "Offset":     0.06,
-          "Color":      [199, 170, 120],
-          "Decay":      [87,  71,  54],
-          "Glare":      0.0,
-          "Haze":       2.0
+          "StarCount":              5000,
+          "CelestialBodiesShown":   false
         }
       },
       "Bloom": {
         "$className": "BloomEffect",
         "$properties": {
           "Enabled":   true,
-          "Intensity": 0.3,
+          "Intensity": 0.8,
           "Size":      24,
-          "Threshold": 0.9
-        }
-      },
-      "DepthOfField": {
-        "$className": "DepthOfFieldEffect",
-        "$properties": {
-          "Enabled":     false,
-          "FarIntensity": 0.12,
-          "FocusDistance": 40,
-          "InFocusRadius": 6,
-          "NearIntensity": 0.1
-        }
-      },
-      "SunRays": {
-        "$className": "SunRaysEffect",
-        "$properties": {
-          "Enabled":   true,
-          "Intensity": 0.15,
-          "Spread":    0.5
+          "Threshold": 0.75
         }
       },
       "ColorCorrection": {
@@ -84,9 +62,17 @@
         "$properties": {
           "Enabled":    true,
           "Brightness": 0.0,
-          "Contrast":   0.1,
-          "Saturation": 0.08,
-          "TintColor":  [255, 255, 255]
+          "Contrast":   0.12,
+          "Saturation": 0.15,
+          "TintColor":  [200, 210, 255]
+        }
+      },
+      "SunRays": {
+        "$className": "SunRaysEffect",
+        "$properties": {
+          "Enabled":   false,
+          "Intensity": 0.0,
+          "Spread":    0.0
         }
       }
     },
