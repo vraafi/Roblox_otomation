@@ -9,11 +9,15 @@
 
 local SpaceshipLobby = {}
 
-local Players      = game:GetService("Players")
-local TweenService = game:GetService("TweenService")
-local Debris       = game:GetService("Debris")
-local RS           = game:GetService("ReplicatedStorage")
-local RunService   = game:GetService("RunService")
+local Players             = game:GetService("Players")
+local TweenService        = game:GetService("TweenService")
+local Debris              = game:GetService("Debris")
+local RS                  = game:GetService("ReplicatedStorage")
+local RunService          = game:GetService("RunService")
+local ServerScriptService = game:GetService("ServerScriptService")
+
+-- VisualAssetOverhaul required lazily inside Initialize to avoid circular deps
+local VisualAssets = nil
 
 -- ── Constants ────────────────────────────────────────────────
 local LOBBY_Y   = 1000
@@ -549,20 +553,80 @@ local EVENTS = { DoSupernova, DoBlackHole, DoComet, DoPlanetCollision }
 
 -- ════════════════════════════════════════════════════════════
 -- 3D DISPLAY MODELS  (item props on counter surfaces)
+-- Uses VisualAssetOverhaul for proper multi-part weapon models
 -- ════════════════════════════════════════════════════════════
 local function DisplayRifle(folder, pos)
-    -- Barrel
+    if VisualAssets then
+        local m = VisualAssets.BuildCustomWeapon({
+            Name = "M4A1_Display", SubType = "ModernFirearm"
+        }, pos + Vector3.new(0, 0.5, 0))
+        m.Parent = folder
+        return m
+    end
+    -- Fallback primitives
     PV(folder,"GunBarrel",Vector3.new(0.35,0.35,5), pos+Vector3.new(0,0.5,0),
         Color3.fromRGB(35,35,40), Enum.Material.Metal)
-    -- Body
     PV(folder,"GunBody",Vector3.new(0.55,0.55,2.2), pos+Vector3.new(0,0.3,-0.5),
         Color3.fromRGB(20,20,25), Enum.Material.Metal)
-    -- Grip
     PV(folder,"GunGrip",Vector3.new(0.4,0.8,0.4), pos+Vector3.new(0,-0.2,0.8),
         Color3.fromRGB(30,25,20), Enum.Material.SmoothPlastic)
-    -- Scope
     PV(folder,"GunScope",Vector3.new(0.3,0.4,1), pos+Vector3.new(0,0.8,-0.3),
         Color3.fromRGB(10,10,12), Enum.Material.SmoothPlastic)
+end
+
+local function DisplayWand(folder, pos, col)
+    if VisualAssets then
+        local m = VisualAssets.BuildCustomWeapon({
+            Name = "Wand_Display", SubType = "MagicWand",
+            Color = col or Color3.fromRGB(120,0,255)
+        }, pos + Vector3.new(0, 0.5, 0))
+        m.Parent = folder
+        return m
+    end
+    -- Fallback
+    local shaft = Instance.new("Part")
+    shaft.Size = Vector3.new(0.22,0.22,3.5); shaft.Position = pos+Vector3.new(0,0.5,0)
+    shaft.Color = Color3.fromRGB(90,55,20); shaft.Material = Enum.Material.Wood
+    shaft.Anchored = true; shaft.CanCollide = false; shaft.Parent = folder
+    local orb = Instance.new("Part")
+    orb.Shape = Enum.PartType.Ball; orb.Size = Vector3.new(0.8,0.8,0.8)
+    orb.Position = pos+Vector3.new(0,0.5,1.8)
+    orb.Color = col or Color3.fromRGB(120,0,255); orb.Material = Enum.Material.Neon
+    orb.Anchored = true; orb.CanCollide = false; orb.Parent = folder
+    Light(orb, col or Color3.fromRGB(120,0,255), 2, 10)
+end
+
+local function DisplaySword(folder, pos, enchanted)
+    if VisualAssets then
+        local m = VisualAssets.BuildCustomWeapon({
+            Name = "Sword_Display", SubType = "Sword",
+            IsEnchanted = enchanted, Color = Color3.fromRGB(0,200,255)
+        }, pos + Vector3.new(0, 1.5, 0))
+        m.Parent = folder
+        return m
+    end
+    -- Fallback
+    PV(folder,"SwordBlade",Vector3.new(0.1,3.5,0.45), pos+Vector3.new(0,1.5,0),
+        Color3.fromRGB(210,220,230), Enum.Material.Metal)
+end
+
+local function DisplayGlock(folder, pos)
+    if VisualAssets then
+        local m = VisualAssets.BuildCustomWeapon({
+            Name = "Glock_Display", SubType = "ModernFirearm"
+        }, pos + Vector3.new(0, 0.5, 0))
+        -- Scale the model down slightly for pistol look
+        if m and m.PrimaryPart then
+            local recv = m:FindFirstChild("Receiver")
+            if recv then
+                recv.Size = Vector3.new(0.4, 0.7, 1.6)
+            end
+        end
+        m.Parent = folder
+        return m
+    end
+    PV(folder,"GlockBody",Vector3.new(0.4,0.7,1.6), pos+Vector3.new(0,0.35,0),
+        Color3.fromRGB(22,22,22), Enum.Material.Metal)
 end
 
 local function DisplayHelmet(folder, pos)
@@ -625,6 +689,14 @@ end
 -- MAIN BUILD FUNCTION
 -- ════════════════════════════════════════════════════════════
 function SpaceshipLobby.GenerateVisualSpaceship()
+    -- Load VisualAssets once at generation time
+    if not VisualAssets then
+        local ok, mod = pcall(function()
+            return require(ServerScriptService:WaitForChild("VisualAssetOverhaul", 5))
+        end)
+        if ok then VisualAssets = mod end
+    end
+
     local old = workspace:FindFirstChild("SpaceshipLobby")
     if old then old:Destroy() end
 
@@ -810,11 +882,12 @@ function SpaceshipLobby.GenerateVisualSpaceship()
         local sl = Instance.new("SpotLight"); sl.Face = Enum.NormalId.Bottom
         sl.Brightness = 7; sl.Range = 44; sl.Angle = 48; sl.Color = GOLD; sl.Parent = spot
 
-        -- 3D Item displays on counter
+        -- 3D Item displays on counter (AAA weapon models via VisualAssets)
         DisplayRifle(root, Vector3.new(bx-18, FLOOR_TOP+3.5, bz-9))
-        DisplayHelmet(root, Vector3.new(bx-5,  FLOOR_TOP+3.5, bz-12))
-        DisplayBulletBox(root, Vector3.new(bx+8,  FLOOR_TOP+3.5, bz-9))
-        DisplayGoldBar(root, Vector3.new(bx+18, FLOOR_TOP+3.5, bz-9))
+        DisplayGlock(root, Vector3.new(bx-7,  FLOOR_TOP+3.5, bz-9))
+        DisplayHelmet(root, Vector3.new(bx+5,  FLOOR_TOP+3.5, bz-12))
+        DisplayBulletBox(root, Vector3.new(bx+14, FLOOR_TOP+3.5, bz-9))
+        DisplayGoldBar(root, Vector3.new(bx+22, FLOOR_TOP+3.5, bz-9))
 
         -- NPC
         BuildNPC(root, "Quartermaster Riggs",
@@ -848,12 +921,13 @@ function SpaceshipLobby.GenerateVisualSpaceship()
         local sl = Instance.new("SpotLight"); sl.Face = Enum.NormalId.Bottom
         sl.Brightness = 7; sl.Range = 44; sl.Angle = 48; sl.Color = GREEN; sl.Parent = spot
 
-        -- 3D Item displays
+        -- 3D Item displays (potions + magic wand + medkit)
         DisplayPotion(root, Vector3.new(bx-18, FLOOR_TOP+3.5, bz-9),  Color3.fromRGB(255,50,50))
         DisplayPotion(root, Vector3.new(bx-12, FLOOR_TOP+3.5, bz-9),  Color3.fromRGB(50,220,100))
-        DisplayPotion(root, Vector3.new(bx-6,  FLOOR_TOP+3.5, bz-9),  Color3.fromRGB(80,130,255))
-        DisplayPotion(root, Vector3.new(bx,    FLOOR_TOP+3.5, bz-9),  Color3.fromRGB(255,200,0))
-        DisplayMedKit(root, Vector3.new(bx+12, FLOOR_TOP+3.5, bz-9))
+        DisplayWand(root,   Vector3.new(bx-4,  FLOOR_TOP+3.5, bz-9),  Color3.fromRGB(120,0,255))
+        DisplayWand(root,   Vector3.new(bx+4,  FLOOR_TOP+3.5, bz-9),  Color3.fromRGB(0,200,255))
+        DisplayPotion(root, Vector3.new(bx+10, FLOOR_TOP+3.5, bz-9),  Color3.fromRGB(255,200,0))
+        DisplayMedKit(root, Vector3.new(bx+18, FLOOR_TOP+3.5, bz-9))
 
         BuildNPC(root, "Apothecary Vael",
             Vector3.new(bx, FLOOR_TOP, bz-19),
@@ -912,8 +986,8 @@ function SpaceshipLobby.GenerateVisualSpaceship()
             if not char then return end
             local hrp = char:FindFirstChild("HumanoidRootPart")
             if not hrp then return end
-            -- Teleport to Kalimantan spawn (game world at Y≈5)
-            hrp.CFrame = CFrame.new(50, 8, 50)
+            -- Teleport to Kalimantan spawn (Y=200 → player falls onto terrain via gravity)
+            hrp.CFrame = CFrame.new(50, 200, 50)
         end)
 
         -- Portal Keeper NPC (no shop)
@@ -1049,6 +1123,191 @@ function SpaceshipLobby.GenerateVisualSpaceship()
         local ePP = Instance.new("ProximityPrompt")
         ePP.ActionText = "Deposit Loot"; ePP.ObjectText = "Extraction Deposit"
         ePP.MaxActivationDistance = 20; ePP.Parent = pad
+    end
+
+    -- ════════════════════════════════════════════════════════
+    -- NPC #4 — GUNSMITH KODA  (kiri depan, x=-155, z=75)
+    -- Modifikasi & upgrade senjata
+    -- ════════════════════════════════════════════════════════
+    do
+        local bx, bz = -155, 75
+        PV(root,"GS_Back", Vector3.new(70,34,3),
+            Vector3.new(bx, FLOOR_TOP+17, bz+25), Color3.fromRGB(22,18,10))
+        local ctr = PV(root,"GS_Counter", Vector3.new(54,3,14),
+            Vector3.new(bx, FLOOR_TOP+1.5, bz+9), Color3.fromRGB(28,22,10))
+        local cTop = PV(root,"GS_CTop", Vector3.new(54.5,0.35,14.5),
+            Vector3.new(bx, FLOOR_TOP+3.2, bz+9), GOLD, Enum.Material.Neon, 0, true)
+        cTop.CastShadow = false; Light(cTop, GOLD, 2, 32)
+        local sign = PV(root,"GS_Sign", Vector3.new(55,7,0.6),
+            Vector3.new(bx, FLOOR_TOP+19, bz+27), DARK)
+        SGui(sign, Enum.NormalId.Back,
+            "GUNSMITH KODA\nMODIFIKASI SENJATA", 28, GOLD)
+        local spot = PV(root,"GS_Spot", Vector3.new(1.5,0.5,1.5),
+            Vector3.new(bx, CEIL_Y-3, bz+9), GOLD, Enum.Material.Neon, 0, true)
+        spot.CastShadow = false
+        local sl = Instance.new("SpotLight"); sl.Face = Enum.NormalId.Bottom
+        sl.Brightness = 7; sl.Range = 44; sl.Angle = 48; sl.Color = GOLD; sl.Parent = spot
+
+        -- Tools & weapon parts on counter
+        DisplayRifle(root, Vector3.new(bx-16, FLOOR_TOP+3.5, bz+9))
+        DisplayBulletBox(root, Vector3.new(bx-4, FLOOR_TOP+3.5, bz+9))
+        -- Scope prop
+        PV(root,"GS_Scope", Vector3.new(0.3,0.3,1.8),
+            Vector3.new(bx+8, FLOOR_TOP+4, bz+9), Color3.fromRGB(10,10,12), Enum.Material.SmoothPlastic)
+        -- Suppressor prop
+        PV(root,"GS_Supp", Vector3.new(0.35,0.35,0.9),
+            Vector3.new(bx+14, FLOOR_TOP+4, bz+9), Color3.fromRGB(40,40,40), Enum.Material.Metal)
+
+        BuildNPC(root, "Gunsmith Koda",
+            Vector3.new(bx, FLOOR_TOP, bz+19),
+            Color3.fromRGB(90,60,20), Color3.fromRGB(55,35,10),
+            "gunsmith",
+            "Bawa senjatamu kemari. Aku bisa pasang muzzle, scope, foregrip — apapun yang kau butuhkan.")
+    end
+
+    -- ════════════════════════════════════════════════════════
+    -- NPC #5 — BLACK MARKET REZARK  (kanan depan, x=155, z=75)
+    -- Item langka & ilegal
+    -- ════════════════════════════════════════════════════════
+    do
+        local bx, bz = 155, 75
+        PV(root,"BM_Back", Vector3.new(70,34,3),
+            Vector3.new(bx, FLOOR_TOP+17, bz+25), Color3.fromRGB(12,8,18))
+        local ctr = PV(root,"BM_Counter", Vector3.new(54,3,14),
+            Vector3.new(bx, FLOOR_TOP+1.5, bz+9), Color3.fromRGB(18,10,28))
+        local cTop = PV(root,"BM_CTop", Vector3.new(54.5,0.35,14.5),
+            Vector3.new(bx, FLOOR_TOP+3.2, bz+9), PURPLE, Enum.Material.Neon, 0, true)
+        cTop.CastShadow = false; Light(cTop, PURPLE, 2, 32)
+        local sign = PV(root,"BM_Sign", Vector3.new(55,7,0.6),
+            Vector3.new(bx, FLOOR_TOP+19, bz+27), DARK)
+        SGui(sign, Enum.NormalId.Back,
+            "REZARK — PASAR GELAP\nITEM LANGKA & RAHASIA", 26, PURPLE)
+        local spot = PV(root,"BM_Spot", Vector3.new(1.5,0.5,1.5),
+            Vector3.new(bx, CEIL_Y-3, bz+9), PURPLE, Enum.Material.Neon, 0, true)
+        spot.CastShadow = false
+        local sl = Instance.new("SpotLight"); sl.Face = Enum.NormalId.Bottom
+        sl.Brightness = 7; sl.Range = 44; sl.Angle = 48; sl.Color = PURPLE; sl.Parent = spot
+
+        -- Rare item displays
+        DisplayWand(root, Vector3.new(bx-16, FLOOR_TOP+3.5, bz+9), Color3.fromRGB(120,0,255))
+        DisplaySword(root, Vector3.new(bx-5, FLOOR_TOP+3.5, bz+9), true)
+        DisplayGoldBar(root, Vector3.new(bx+8, FLOOR_TOP+3.5, bz+9))
+        DisplayPotion(root, Vector3.new(bx+18, FLOOR_TOP+3.5, bz+9), Color3.fromRGB(255,50,255))
+
+        BuildNPC(root, "Rezark — Pasar Gelap",
+            Vector3.new(bx, FLOOR_TOP, bz+19),
+            Color3.fromRGB(18,8,32), Color3.fromRGB(12,4,22),
+            "blackmarket",
+            "Psst... aku punya barang yang tidak akan kau temukan di mana pun. Tapi harganya tidak murah.")
+    end
+
+    -- ════════════════════════════════════════════════════════
+    -- NPC #6 — MEDIC COMMANDER SARI  (tengah lobby, x=-80, z=35)
+    -- Layanan medis lanjutan
+    -- ════════════════════════════════════════════════════════
+    do
+        local bx, bz = -80, 35
+        local ctr = PV(root,"MC_Counter", Vector3.new(44,3,12),
+            Vector3.new(bx, FLOOR_TOP+1.5, bz), Color3.fromRGB(18,30,22))
+        local cTop = PV(root,"MC_CTop", Vector3.new(44.5,0.35,12.5),
+            Vector3.new(bx, FLOOR_TOP+3.2, bz), Color3.fromRGB(220,40,40), Enum.Material.Neon, 0, true)
+        cTop.CastShadow = false; Light(cTop, Color3.fromRGB(220,40,40), 2, 28)
+        local sign = PV(root,"MC_Sign", Vector3.new(44,7,0.6),
+            Vector3.new(bx, FLOOR_TOP+13, bz-7), DARK)
+        SGui(sign, Enum.NormalId.Front,
+            "MEDIC COMMANDER SARI\nLAYANAN MEDIS LANJUTAN", 24, Color3.fromRGB(220,40,40))
+
+        -- Medical displays
+        DisplayMedKit(root, Vector3.new(bx-15, FLOOR_TOP+3.5, bz))
+        DisplayPotion(root, Vector3.new(bx-5, FLOOR_TOP+3.5, bz), Color3.fromRGB(255,50,50))
+        DisplayPotion(root, Vector3.new(bx+5, FLOOR_TOP+3.5, bz), Color3.fromRGB(50,220,100))
+        -- Tourniquet prop
+        PV(root,"MC_Tourni", Vector3.new(1.2,0.4,0.4),
+            Vector3.new(bx+14, FLOOR_TOP+3.7, bz), Color3.fromRGB(0,80,180), Enum.Material.SmoothPlastic)
+
+        BuildNPC(root, "Medic Commander Sari",
+            Vector3.new(bx, FLOOR_TOP, bz-9),
+            Color3.fromRGB(220,60,60), Color3.fromRGB(180,180,180),
+            "medic",
+            "Lukamu tidak akan sembuh sendiri. Biarkan aku menanganinya sebelum kau masuk portal.")
+    end
+
+    -- ════════════════════════════════════════════════════════
+    -- NPC #7 — KARTOGRAFER BAYU  (tengah kanan, x=80, z=35)
+    -- Peta & informasi zona Kalimantan
+    -- ════════════════════════════════════════════════════════
+    do
+        local bx, bz = 80, 35
+        local ctr = PV(root,"KB_Counter", Vector3.new(44,3,12),
+            Vector3.new(bx, FLOOR_TOP+1.5, bz), Color3.fromRGB(20,22,30))
+        local cTop = PV(root,"KB_CTop", Vector3.new(44.5,0.35,12.5),
+            Vector3.new(bx, FLOOR_TOP+3.2, bz), CYAN, Enum.Material.Neon, 0, true)
+        cTop.CastShadow = false; Light(cTop, CYAN, 2, 28)
+        local sign = PV(root,"KB_Sign", Vector3.new(44,7,0.6),
+            Vector3.new(bx, FLOOR_TOP+13, bz-7), DARK)
+        SGui(sign, Enum.NormalId.Front,
+            "KARTOGRAFER BAYU\nPETA & INFO ZONA", 26, CYAN)
+
+        -- Map board as display
+        local mapBoard = PV(root,"KB_Map", Vector3.new(14,10,0.4),
+            Vector3.new(bx, FLOOR_TOP+9, bz-8), Color3.fromRGB(14,10,5))
+        Light(mapBoard, GOLD, 1, 15)
+        local sg = Instance.new("SurfaceGui"); sg.Face = Enum.NormalId.Front
+        sg.CanvasSize = Vector2.new(280,200); sg.Parent = mapBoard
+        local ml = Instance.new("TextLabel"); ml.Size = UDim2.new(1,0,1,0)
+        ml.BackgroundTransparency = 1; ml.Text = "KALIMANTAN\nBIONES: Hutan Dalam\nGunung | Pantai\nDelta Sungai"
+        ml.Font = Enum.Font.Code; ml.TextSize = 18; ml.TextColor3 = Color3.fromRGB(200,180,100)
+        ml.TextWrapped = true; ml.TextXAlignment = Enum.TextXAlignment.Left; ml.Parent = sg
+
+        -- Compass prop
+        PV(root,"KB_Compass", Vector3.new(0.8,0.15,0.8),
+            Vector3.new(bx-8, FLOOR_TOP+3.6, bz), Color3.fromRGB(200,175,50), Enum.Material.Metal)
+
+        BuildNPC(root, "Kartografer Bayu",
+            Vector3.new(bx, FLOOR_TOP, bz-9),
+            Color3.fromRGB(60,80,50), Color3.fromRGB(40,55,30),
+            "kartografer",
+            "Kalimantan luas dan berbahaya. Beli petamu sebelum tersesat di dalam hutan dalam.")
+    end
+
+    -- ════════════════════════════════════════════════════════
+    -- NPC #8 — INSINYUR APEX  (tengah, x=0, z=-45)
+    -- Kerajinan tangan & upgrade teknologi
+    -- ════════════════════════════════════════════════════════
+    do
+        local bx, bz = 0, -45
+        local ctr = PV(root,"IA_Counter", Vector3.new(50,3,12),
+            Vector3.new(bx, FLOOR_TOP+1.5, bz), Color3.fromRGB(10,16,24))
+        local cTop = PV(root,"IA_CTop", Vector3.new(50.5,0.35,12.5),
+            Vector3.new(bx, FLOOR_TOP+3.2, bz), CYAN, Enum.Material.Neon, 0, true)
+        cTop.CastShadow = false; Light(cTop, CYAN, 2, 28)
+        local sign = PV(root,"IA_Sign", Vector3.new(50,7,0.6),
+            Vector3.new(bx, FLOOR_TOP+13, bz-7), DARK)
+        SGui(sign, Enum.NormalId.Front,
+            "INSINYUR APEX\nKERAJINAN & UPGRADE TEKNOLOGI", 24, CYAN)
+
+        -- Tech item displays
+        DisplayRifle(root, Vector3.new(bx-18, FLOOR_TOP+3.5, bz))
+        DisplayWand(root, Vector3.new(bx-5, FLOOR_TOP+3.5, bz), Color3.fromRGB(0,255,200))
+        -- CPU/Circuit board prop
+        PV(root,"IA_CPU", Vector3.new(2,0.2,2),
+            Vector3.new(bx+8, FLOOR_TOP+3.6, bz), Color3.fromRGB(0,80,40), Enum.Material.SmoothPlastic)
+        -- Core crystal
+        local techCore = PV(root,"IA_Core", Vector3.new(0.8,0.8,0.8),
+            Vector3.new(bx+16, FLOOR_TOP+4, bz), Color3.fromRGB(0,255,255), Enum.Material.Neon, 0, true)
+        techCore.CastShadow = false; Light(techCore, CYAN, 3, 12)
+        -- Spotlight
+        local spot = PV(root,"IA_Spot", Vector3.new(1.5,0.5,1.5),
+            Vector3.new(bx, CEIL_Y-3, bz), CYAN, Enum.Material.Neon, 0, true)
+        spot.CastShadow = false
+        local sl = Instance.new("SpotLight"); sl.Face = Enum.NormalId.Bottom
+        sl.Brightness = 6; sl.Range = 40; sl.Angle = 48; sl.Color = CYAN; sl.Parent = spot
+
+        BuildNPC(root, "Insinyur APEX",
+            Vector3.new(bx, FLOOR_TOP, bz-9),
+            Color3.fromRGB(20,40,80), Color3.fromRGB(14,26,52),
+            "insinyur",
+            "Teknologi dan sihir bisa bergabung di tanganku. Bawa Monster Core dan senjatamu — aku bisa upgrade keduanya.")
     end
 
     -- ── SPACE BACKGROUND + ANIMATED ASTEROIDS ────────────────
